@@ -11,16 +11,12 @@ try {
     console.error(err);
 }
 
-async function main() {
+function main() {
     let rawdata = fs.readFileSync(path.join("out", "bom.json"));
     let jsonData = JSON.parse(rawdata);
 
-    const packageData = {
-        name: jsonData["components"]["name"],
-        json: jsonData["components"]
-    };
-    for (let x in packageData.json) {
-        let packageInfo = packageData.json[x];
+    for (let x in jsonData["components"]) {
+        let packageInfo = jsonData["components"][x];
         if (!hasLicense(packageInfo)) {
             //TODO log packages without license
             continue;
@@ -33,7 +29,7 @@ async function main() {
         if (copyright !== "") {
             insertCopyrightInformation(packageInfo, copyright);
         }
-        await Sleep(1000);
+        //await Sleep(1000);
     }
 }
 
@@ -65,18 +61,19 @@ async function retrieveCopyrightInformation(packageInfo) {
     for (let y in extRefs) {
         url = extRefs[y]["url"];
         if (url.includes("github.com")) {
-            license = await downloadLicenseFromGithub(url);
+            license = await downloadLicenseFromGithub(url, packageInfo);
         } else {
             license = await downloadLicenseFromExternalWebsite(url);
         }
         if (license === null) {
             continue;
         }
-        try {
-            fs.writeFileSync(path.join("out", "licenses", `${packageInfo.name}${y}.txt`), license);
-        } catch (err) {
-            console.error(err);
-        }
+        // try {
+        //     let fileName = generateFileName(packageInfo);
+        //     fs.writeFileSync(path.join("out", "licenses", `${packageInfo.group}-${packageInfo.name}${y}.txt`), license);
+        // } catch (err) {
+        //     console.error(err);
+        // }
         let copyright = extractCopyright(license);
         if (copyright !== "") {
             return copyright;
@@ -84,6 +81,23 @@ async function retrieveCopyrightInformation(packageInfo) {
     }
     handleNoCopyrightFound(packageInfo);
     return "";
+}
+
+function generateFileName(packageInfo) {
+    let fileName = "";
+    if (packageInfo["group"] != "") {
+        fileName += packageInfo["group"] + "-";
+    }
+    if (packageInfo["name"] != "") {
+        fileName += packageInfo["name"] + "-";
+    }
+    if (packageInfo["version"] != "") {
+        fileName += packageInfo["version"];
+    }
+    if (fileName === "") {
+        fileName = "unnamed";
+    }
+    return fileName.charAt(fileName.length - 1) == '-' ? fileName.substring(0,fileName.length - 1) : fileName;;
 }
 
 function handleNoCopyrightFound(packageInfo) {
@@ -101,14 +115,17 @@ async function downloadLicenseFromGithub(url) {
         });
         for (let i in repoContent["data"]) {
             let fileName = repoContent["data"][i]["name"];
-            if (fileName.toLowerCase().includes("license")) {
-                let licenseFile = await makeGetRequest(repoContent["data"][i]["download_url"]);
-                return licenseFile;
-            }
+            if (fileName.toLowerCase() === "license" || fileName.toLowerCase().match(new RegExp("license\.[\w]*"))) {          
+                return licenseFile = await makeGetRequest(repoContent["data"][i]["download_url"]);
+            } 
         }
     } catch (err) {
-        console.error(err);
-        console.log(apiLink);
+        if (err.status == "404") {
+            console.log(`Repository with URL:${url} not found.`);
+        } else {
+            console.error(err);
+            console.log(`${repoOwner}/${repoName}`);
+        }
         return null;
     }
     return null;
@@ -116,6 +133,7 @@ async function downloadLicenseFromGithub(url) {
 
 function downloadLicenseFromExternalWebsite(url) {
     //TODO try to download other website and search for copyright notice
+    return null;
 }
 
 function filterRepoInfoFromURL(url) {
