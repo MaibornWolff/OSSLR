@@ -1,21 +1,36 @@
 const fs = require('fs');
 const path = require('path');
 const octokit = require("octokit");
+const cliProgress = require('cli-progress');
 var githubClient;
 
 try {
     const accessToken = fs.readFileSync('access-token', 'utf8');
     githubClient = new octokit.Octokit({ auth: accessToken });
     main();
-} catch (err) {
+} catch(err) {
+    console.error("Authentication with access-token failed.");
     console.error(err);
 }
 
 function main() {
-    let rawdata = fs.readFileSync(path.join("out", "bom.json"));
-    let jsonData = JSON.parse(rawdata);
+    try {
+        let bomPath = path.join("out", "bom.json");
+        let rawdata = fs.readFileSync(bomPath);
+        let jsonData = JSON.parse(rawdata);
+        insertCopyrightInformation(jsonData);
+    } catch(err) {
+        console.error(`Couldn't load bom.json from ${bomPath}.`)
+    }
+}
 
+async function insertCopyrightInformation(jsonData) {
+    console.log(`Retreiving License Information...`);
+    const progBar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
+    progBar.start(jsonData["components"].length, 0);
     for (let x in jsonData["components"]) {
+        progBar.increment();
+        // console.log(`Package ${parseInt(x)+1}/${jsonData["components"].length - 1}`);
         let packageInfo = jsonData["components"][x];
         if (!hasLicense(packageInfo)) {
             //TODO log packages without license
@@ -25,19 +40,16 @@ function main() {
             //TODO log packages without external refs
             continue;
         }        
-        let copyright = retrieveCopyrightInformation(packageInfo);
+        let copyright = await retrieveCopyrightInformation(packageInfo);
         if (copyright !== "") {
-            insertCopyrightInformation(packageInfo, copyright);
+            insertCopyrightIntoBom(packageInfo, copyright);
         }
-        //await Sleep(1000);
     }
+    progBar.stop();
+    console.log("Done!");
 }
 
-function Sleep(milliseconds) {
-    return new Promise(resolve => setTimeout(resolve, milliseconds));
-}
-
-function insertCopyrightInformation(packageInfo, copyright) {
+function insertCopyrightIntoBom(packageInfo, copyright) {
     //TODO Add functionality to insert copyright into pom.json
 }
 
@@ -121,7 +133,7 @@ async function downloadLicenseFromGithub(url) {
         }
     } catch (err) {
         if (err.status == "404") {
-            console.log(`Repository with URL:${url} not found.`);
+            console.log(`\nRepository with URL:${url} not found.`);
         } else {
             console.error(err);
             console.log(`${repoOwner}/${repoName}`);
@@ -150,7 +162,6 @@ function makeGetRequest(path) {
         axios.get(path).then(
             (response) => {
                 var result = response.data;
-                console.log('Processing Request');
                 resolve(result);
             },
             (error) => {
@@ -158,4 +169,8 @@ function makeGetRequest(path) {
             }
         );
     });
+}
+
+function Sleep(milliseconds) {
+    return new Promise(resolve => setTimeout(resolve, milliseconds));
 }
