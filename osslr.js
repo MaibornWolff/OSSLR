@@ -29,9 +29,9 @@ async function insertCopyrightInformation(jsonData) {
     console.log(`Retreiving License Information...`);
     const progBar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
     progBar.start(jsonData["components"].length, 0);
-    for (let x in jsonData["components"]) {
+    for (let i in jsonData["components"]) {
         progBar.increment();
-        let packageInfo = jsonData["components"][x];
+        let packageInfo = jsonData["components"][i];
         if (!hasLicense(packageInfo)) {
             //TODO log packages without license
             continue;
@@ -40,7 +40,7 @@ async function insertCopyrightInformation(jsonData) {
             //TODO log packages without external refs
             continue;
         }
-        let copyright = await retrieveCopyrightInformation(packageInfo, x);
+        let copyright = await retrieveCopyrightInformation(packageInfo);
         if (copyright !== "") {
             insertCopyrightIntoBom(packageInfo, copyright);
         }
@@ -68,15 +68,15 @@ function hasExternalRefs(packageInfo) {
 }
 
 
-async function retrieveCopyrightInformation(packageInfo, x) {
+async function retrieveCopyrightInformation(packageInfo) {
     const extRefs = packageInfo["externalReferences"];
     let license = null;
-    for (let y in extRefs) {
-        url = extRefs[y]["url"];
+    for (let i in extRefs) {
+        url = extRefs[i]["url"];
         if (url.includes("github.com")) {
-            //license = await downloadLicenseFromGithub(url);
+            license = await downloadLicenseFromGithub(url);
         } else {
-            license = await downloadLicenseFromExternalWebsite(url, x);
+            license = await downloadLicenseFromExternalWebsite(url);
         }
         if (license === null) {
             continue;
@@ -134,7 +134,7 @@ async function downloadLicenseFromGithub(url) {
         }
     } catch (err) {
         if (err.status == "404") {
-            console.error(`\nRepository with URL:${url} not found.`);
+            console.error(`\nRepository with URL ${url} not found.`);
         } else {
             console.error(err);
             console.error(`${repoOwner}/${repoName}`);
@@ -144,16 +144,16 @@ async function downloadLicenseFromGithub(url) {
     return null;
 }
 
-async function downloadLicenseFromExternalWebsite(url, x) {
+async function downloadLicenseFromExternalWebsite(url) {
     try {
         return await makeGetRequest(url);
-    } catch(err) {
+    } catch (err) {
         if (err["response"] !== undefined) {
-             console.error(`\nError: Request failed with status ${err["response"]["status"]}. ${err["response"]["statusText"]}.`);
+            console.error(`\nError: Request ${url} failed with status ${err["response"]["status"]}. ${err["response"]["statusText"]}.`);
         } else {
             console.error(err);
         }
-        return null;        
+        return null;
     }
 }
 
