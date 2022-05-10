@@ -1,23 +1,23 @@
-const fs = require('fs');
-const path = require('path');
-const octokit = require("octokit");
-const cliProgress = require('cli-progress');
-const axios = require('axios');
+import { readFileSync , writeFileSync} from 'fs';
+import { join } from 'path';;
+import { Octokit } from 'octokit';
+import cliProgress from 'cli-progress';
+import Axios from 'axios';
 var githubClient;
 
 try {
-    const accessToken = fs.readFileSync('access-token', 'utf8');
-    githubClient = new octokit.Octokit({ auth: accessToken });
+    const accessToken = readFileSync('access-token', 'utf8');
+    githubClient = new Octokit({ auth: accessToken });
     main();
 } catch (err) {
     console.error("Authentication with access-token failed.");
     console.error(err);
 }
-
+2
 function main() {
     try {
-        let bomPath = path.join("out", "bom.json");
-        let rawdata = fs.readFileSync(bomPath);
+        let bomPath = join("out", "bom.json");
+        let rawdata = readFileSync(bomPath);
         let jsonData = JSON.parse(rawdata);
         insertCopyrightInformation(jsonData);
     } catch (err) {
@@ -72,7 +72,7 @@ async function retrieveCopyrightInformation(packageInfo) {
     const extRefs = packageInfo["externalReferences"];
     let license = null;
     for (let i in extRefs) {
-        url = extRefs[i]["url"];
+        let url = extRefs[i]["url"];
         if (url.includes("github.com")) {
             license = await downloadLicenseFromGithub(url);
         } else {
@@ -83,7 +83,7 @@ async function retrieveCopyrightInformation(packageInfo) {
         }
         try {
             let fileName = generateFileName(packageInfo);
-            fs.writeFileSync(path.join("out", "licenses", `${fileName}.txt`), license);
+            writeFileSync(join("out", "licenses", `${fileName}.txt`), license);
         } catch (err) {
             console.error(err);
         }
@@ -167,7 +167,7 @@ function filterRepoInfoFromURL(url) {
 
 function makeGetRequest(path) {
     return new Promise(function (resolve, reject) {
-        axios.get(path).then(
+        Axios.get(path).then(
             (response) => {
                 var result = response.data;
                 resolve(result);
@@ -177,13 +177,4 @@ function makeGetRequest(path) {
             }
         );
     });
-}
-
-function writeToFile(content, packageInfo, directory) {
-    try {
-        let fileName = generateFileName(packageInfo);
-        fs.writeFileSync(path.join("out", directory, fileName), content);
-    } catch (err) {
-        console.error(err);
-    }
 }
