@@ -1,9 +1,11 @@
-import { readFileSync , writeFileSync} from 'fs';
-import { join } from 'path';;
+import { readFileSync, writeFileSync } from 'fs';
+import { join } from 'path';
 import { Octokit } from 'octokit';
 import cliProgress from 'cli-progress';
 import Axios from 'axios';
 var githubClient;
+var problems = "";
+var copyrights = "";
 
 try {
     const accessToken = readFileSync('access-token', 'utf8');
@@ -13,7 +15,7 @@ try {
     console.error("Authentication with access-token failed.");
     console.error(err);
 }
-2
+
 function main() {
     try {
         let bomPath = join("out", "bom.json");
@@ -47,14 +49,28 @@ async function insertCopyrightInformation(jsonData) {
     }
     progBar.stop();
     console.log("Done!");
+    writeFileSync(join("out", "problems.txt"), problems);
+    writeFileSync(join("out", "copyrights.txt"), copyrights);
 }
 
 function insertCopyrightIntoBom(packageInfo, copyright) {
     //TODO Add functionality to insert copyright into pom.json
 }
 
-function extractCopyright(packageData) {
+function extractCopyright(license, packageData) {
     //TODO Add extraction functionality
+    let re1 = new RegExp("copyright (©|\\(c\\)) [0-9]+.*", 'i');
+    let re2 = new RegExp("(©|\\(c\\)) copyright [0-9]+.*", 'i');
+    let re3 = new RegExp("copyright [0-9]+.*", 'i');
+    if (license.match(re1)) {
+        copyrights += re1.exec(license)[0] + "\n";
+    } else if (license.match(re2)) {
+        copyrights += re2.exec(license)[0] + "\n";
+    } else if (license.match(re3)) {
+        copyrights += re3.exec(license)[0] + "\n";
+    } else if (license.toLowerCase().includes("copyright")) {
+        problems += generateFileName(packageData) + "\n";
+    }
 }
 
 function hasLicense(packageInfo) {
@@ -87,7 +103,7 @@ async function retrieveCopyrightInformation(packageInfo) {
         } catch (err) {
             console.error(err);
         }
-        let copyright = extractCopyright(license);
+        let copyright = extractCopyright(license, packageInfo);
         if (copyright !== "") {
             return copyright;
         }
@@ -128,7 +144,7 @@ async function downloadLicenseFromGithub(url) {
         });
         for (let i in repoContent["data"]) {
             let fileName = repoContent["data"][i]["name"];
-            if (fileName.toLowerCase() === "license" || fileName.toLowerCase().match(new RegExp("license\.[\w]*"))) {
+            if (fileName.toLowerCase() === "license" || fileName.match(new RegExp("license\.[\w]*"), 'i')) {
                 return await makeGetRequest(repoContent["data"][i]["download_url"]);
             }
         }
