@@ -1,5 +1,5 @@
 /* eslint-disable no-useless-escape */
-import { readFileSync, writeFileSync } from 'fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import * as path from 'path';
 import { Octokit } from 'octokit';
 import cliProgress from 'cli-progress';
@@ -55,11 +55,11 @@ async function insertCopyrightInformation(jsonData) {
             continue;
         }
         let copyright = await retrieveCopyrightInformation(packageInfo);
-        if (copyright == '') {            
+        if (copyright == '') {
             util.addToLog(packageInfo, 'copyright');
             continue;
         }
-        //copyright = removeLinksFromCopyright(copyright);
+        copyright = removeLinksFromCopyright(copyright);
         insertCopyrightIntoBom(packageInfo, copyright);
     }
     progBar.stop();
@@ -146,6 +146,9 @@ async function retrieveCopyrightInformation(packageInfo) {
         }
         try {
             let fileName = util.generatePackageName(packageInfo);
+            if (!existsSync(path.join('out', 'licenses'))) {
+                mkdirSync(path.join('out', 'licenses'));
+            }
             writeFileSync(path.join('out', 'licenses', `${fileName}.txt`), license);
         } catch (err) {
             console.error(err);
