@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { createLogger, transports, format } from 'winston';
 
 let logger;
@@ -37,7 +38,7 @@ export function generatePackageName(packageInfo) {
     if (packageInfo['version'].trim() != '') {
         fileName += packageInfo['version'];
     }
-    return fileName.charAt(fileName.length - 1) == '-' ? fileName.substring(0, fileName.length - 1) : fileName;;
+    return fileName.charAt(fileName.length - 1) == '-' ? fileName.substring(0, fileName.length - 1) : fileName;
 }
 
 function generateLogMessage(packageInfo, level) {
@@ -45,9 +46,9 @@ function generateLogMessage(packageInfo, level) {
         case 'license':
             return `No License found for: ${generatePackageName(packageInfo)}`;
         case 'extRefs':
-            return `No external references found for: ${generatePackageName(packageInfo)}`
+            return `No external references found for: ${generatePackageName(packageInfo)}`;
         case 'copyright':
-            return `Unable to extract copyright notice for: ${generatePackageName(packageInfo)}`
+            return `Unable to extract copyright notice for: ${generatePackageName(packageInfo)}`;
         default:
             console.error(`Error: Unknown log level: ${level}. No log entry created for package: ${generatePackageName(packageInfo)}`);
             return '';
