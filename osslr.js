@@ -3,14 +3,18 @@ import { join } from 'path';
 import { Octokit } from 'octokit';
 import cliProgress from 'cli-progress';
 import Axios from 'axios';
-// var problems = '';
+import * as winston from 'winston';
+
+var problems = '';
 // var copyrights = '';
 var githubClient;
+var logger;
 
 main();
 
 function main() {
     githubClient = createGithubClient();
+    logger = initializeLogger();
     if (githubClient == null) {
         return;
     }
@@ -21,6 +25,41 @@ function main() {
         insertCopyrightInformation(jsonData);
     } catch (err) {
         console.error(`Couldn't load bom.json from ${bomPath}.`);
+    }
+}
+
+function initializeLogger() {
+    return winston.createLogger({
+        levels: { license: 0, extRefs: 1 , copyright: 2},
+        format: winston.format.simple(),
+        transports: [
+            new winston.transports.File({ filename: 'combined.log', level: 'copyright' })
+        ],
+    });
+}
+
+function addToLog(packageInfo, level) {
+    let message = generateLogMessage(packageInfo, level);
+    if (message == '') {
+        return;
+    }
+    logger.log({
+        level: level,
+        message: message
+    });
+}
+
+function generateLogMessage(packageInfo, level) {
+    switch(level) {
+        case 'license':
+            return `No License found for: ${generatePackageName(packageInfo)}`;
+        case 'extRefs':
+            return `No external references found for: ${generatePackageName(packageInfo)}`
+        case 'copyright':
+            return `Unable to extract copyright notice for: ${generatePackageName(packageInfo)}`
+        default:
+            console.error(`Error: Unknown log level: ${level}. No log entry created for package: ${generatePackageName(packageInfo)}`);
+            return '';
     }
 }
 
@@ -44,16 +83,20 @@ async function insertCopyrightInformation(jsonData) {
         let packageInfo = jsonData['components'][i];
         if (!hasLicense(packageInfo)) {
             //TODO log packages without license
+            addToLog(packageInfo, 'license');
             continue;
         }
         if (!hasExternalRefs(packageInfo)) {
             //TODO log packages without external refs
+            addToLog(packageInfo, 'extRefs');
             continue;
         }
         let copyright = await retrieveCopyrightInformation(packageInfo);
-        if (copyright !== '') {
-            insertCopyrightIntoBom(packageInfo, copyright);
+        if (copyright == '') {
+            addToLog(packageInfo, 'copyright');
+            continue;
         }
+        insertCopyrightIntoBom(packageInfo, copyright);
     }
     progBar.stop();
     console.log('Done!');
@@ -74,7 +117,7 @@ function insertCopyrightIntoBom(packageInfo, copyright) {
     }
 }
 
-function extractCopyright(license, packageData) {
+function extractCopyright(license, packageInfo) {
     //TODO Finalize extraction functionality
     let re1 = new RegExp('copyright (©|\\(c\\)) [0-9]+.*', 'i');
     let re2 = new RegExp('(©|\\(c\\)) copyright [0-9]+.*', 'i');
@@ -89,7 +132,7 @@ function extractCopyright(license, packageData) {
         return re3.exec(license)[0];
         // copyrights += re3.exec(license)[0] + '\n';
     } else if (license.toLowerCase().includes('copyright')) {
-        problems += generateFileName(packageData) + '\n';
+        problems += generatePackageName(packageInfo) + '\n';
         return '';
     }
     return '';
@@ -120,7 +163,7 @@ async function retrieveCopyrightInformation(packageInfo) {
             continue;
         }
         try {
-            let fileName = generateFileName(packageInfo);
+            let fileName = generatePackageName(packageInfo);
             writeFileSync(join('out', 'licenses', `${fileName}.txt`), license);
         } catch (err) {
             console.error(err);
@@ -134,19 +177,19 @@ async function retrieveCopyrightInformation(packageInfo) {
     return '';
 }
 
-function generateFileName(packageInfo) {
+function generatePackageName(packageInfo) {
     let fileName = '';
-    if (packageInfo['group'] != '') {
+    if (packageInfo['group'].trim() != '') {
         fileName += packageInfo['group'] + '-';
     }
-    if (packageInfo['name'] != '') {
+    if (packageInfo['name'].trim() != '') {
         fileName += packageInfo['name'] + '-';
     }
-    if (packageInfo['version'] != '') {
-        fileName += packageInfo['version'];
-    }
     if (fileName === '') {
-        fileName = 'unnamed';
+        fileName = 'unnamed-';
+    }
+    if (packageInfo['version'].trim() != '') {
+        fileName += packageInfo['version'];
     }
     return fileName.charAt(fileName.length - 1) == '-' ? fileName.substring(0, fileName.length - 1) : fileName;;
 }
