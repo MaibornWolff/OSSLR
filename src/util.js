@@ -1,7 +1,7 @@
 /* eslint-disable indent */
 import { createLogger, transports, format } from 'winston';
 
-let logger;
+let logger = null;
 
 export function initializeLogger() {
     logger = createLogger({
