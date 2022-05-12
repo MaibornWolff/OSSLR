@@ -41,7 +41,7 @@ export function generatePackageName(packageInfo) {
     return fileName.charAt(fileName.length - 1) == '-' ? fileName.substring(0, fileName.length - 1) : fileName;
 }
 
-function generateLogMessage(packageInfo, level) {
+export function generateLogMessage(packageInfo, level) {
     switch (level) {
         case 'license':
             return `No License found for: ${generatePackageName(packageInfo)}`;
