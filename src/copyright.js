@@ -172,7 +172,7 @@ async function downloadLicenseFromExternalWebsite(url) {
     }
 }
 
-function filterRepoInfoFromURL(url) {
+export function filterRepoInfoFromURL(url) {
     let re = new RegExp('github.com\/([\\w\-]+)\/([\\w\-\.]+)');
     url = re.exec(url);
     let user = url[1];

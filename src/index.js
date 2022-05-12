@@ -15,8 +15,8 @@ function main() {
     util.initializeLogger();
     let bomPath = path.join('out', 'bom.json');
     try {
-        let rawdata = readFileSync(bomPath);
-        let jsonData = JSON.parse(rawdata);
+        let rawData = readFileSync(bomPath);
+        let jsonData = JSON.parse(rawData);
         insertCopyrightInformation(jsonData, githubClient);
     } catch (err) {
         console.error(`Couldn't load bom.json from ${bomPath}.`);
