@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import 'mocha';
-import 'mocha-sinon';
+// import 'mocha-sinon';
 import { assert } from 'chai';
 import { removeOverheadFromCopyright, insertCopyrightIntoBom, hasLicense, hasExternalRefs } from '../src/copyright.js';
 
