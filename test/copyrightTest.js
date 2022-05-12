@@ -1,7 +1,9 @@
 /* eslint-disable no-undef */
 import 'mocha';
+import 'mocha-sinon';
 import { assert } from 'chai';
-import { removeOverheadFromCopyright, insertCopyrightIntoBom } from '../src/copyright.js';
+import { removeOverheadFromCopyright, insertCopyrightIntoBom, hasLicense, hasExternalRefs } from '../src/copyright.js';
+
 
 describe('removeOverheadFromCopyright', function () {
     it('should remove html tags', function () {
@@ -39,13 +41,58 @@ describe('insertCopyrightIntoBom', function () {
                 }
             ]
         };
+        this.sinon.stub(console, 'error');
     });
     it('should add an entry containing the copyright notice into the bom', function () {
         assert.equal(insertCopyrightIntoBom(packageInfo, 'Copyright notice')['licenses'][0]['license']['copyright'], 'Copyright notice');
     });
 
     it('should return unchanged bom if no license entry exists', function () {
-        packageInfo['license'] = [];
+        packageInfo['licenses'] = [];
         assert.equal(insertCopyrightIntoBom(packageInfo, 'Copyright notice'), packageInfo);
+    });
+});
+
+describe('hasLicense', function () {
+    let packageInfo;
+    beforeEach(function () {
+        packageInfo = {
+            'licenses': [
+                {
+                    'license': {
+                        'id': 'MIT',
+                        'url': 'https://opensource.org/licenses/MIT'
+                    }
+                }
+            ]
+        };
+    });
+    it('should return whether license information are available for the given package', function () {
+        assert.isTrue(hasLicense(packageInfo));
+        packageInfo['licenses'] = [];
+        assert.isFalse(hasLicense(packageInfo));
+    });
+});
+
+describe('hasExternalReferences', function () {
+    let packageInfo;
+    beforeEach(function () {
+        packageInfo = {
+            'externalReferences': [
+                {
+                    'type': 'website',
+                    'url': 'https://github.com/readme'
+                },
+                {
+                    'type': 'vcs',
+                    'url': 'git+https://github.com/plugins.git'
+                }
+            ],
+        };
+    });
+    it('should return whether external references are available for the given package', function () {
+        assert.isTrue(hasExternalRefs(packageInfo));
+        packageInfo['externalReferences'] = [];
+        assert.isFalse(hasExternalRefs(packageInfo));
     });
 });

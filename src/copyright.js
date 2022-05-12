@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import cliProgress from 'cli-progress';
 import * as path from 'path';
@@ -8,7 +9,7 @@ import * as util from './util.js';
 let copyrights = '';
 
 export async function insertCopyrightInformation(jsonData, githubClient) {
-    console.log('Retreiving License Information...');
+    console.log('Retrieving License Information...');
     const progBar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
     progBar.start(jsonData['components'].length, 0);
     for (let i in jsonData['components']) {
@@ -42,7 +43,7 @@ export async function insertCopyrightInformation(jsonData, githubClient) {
 }
 
 export function removeOverheadFromCopyright(copyright) {
-    // remove everything in brackets excpet the (c)
+    // remove everything in brackets except the (c)
     var re = /\([^)]*\)|<[^>]*>/g;
 
     let matches = copyright.match(re);
@@ -51,7 +52,7 @@ export function removeOverheadFromCopyright(copyright) {
             copyright = copyright.replace(matches[i], '');
         }
     }
-    // remove unnecessary whitespaces
+    // remove unnecessary whitespace
     return copyright.replace(/\s\s+/g, ' ').trim();
 }
 
@@ -91,14 +92,14 @@ function extractCopyright(license) {
 //     return '';
 // }
 
-function hasLicense(packageInfo) {
+export function hasLicense(packageInfo) {
     // Check if cdxgen found license
     return Array.isArray(packageInfo['licenses']) && packageInfo['licenses'].length > 0;
 }
 
-function hasExternalRefs(packageInfo) {
+export function hasExternalRefs(packageInfo) {
     // Check if any external resources exist
-    return typeof packageInfo['externalReferences'] !== 'undefined';
+    return Array.isArray(packageInfo['externalReferences']) && packageInfo['externalReferences'].length > 0;
 }
 
 async function retrieveCopyrightInformation(packageInfo, githubClient) {
