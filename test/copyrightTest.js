@@ -41,7 +41,7 @@ describe('insertCopyrightIntoBom', function () {
                 }
             ]
         };
-        this.sinon.stub(console, 'error');
+        // this.sinon.stub(console, 'error');
     });
     it('should add an entry containing the copyright notice into the bom', function () {
         assert.equal(insertCopyrightIntoBom(packageInfo, 'Copyright notice')['licenses'][0]['license']['copyright'], 'Copyright notice');

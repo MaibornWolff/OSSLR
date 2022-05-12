@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import 'mocha';
-import 'mocha-sinon';
+// import 'mocha-sinon';
 import { assert } from 'chai';
 import { generatePackageName, generateLogMessage } from '../src/util.js';
 
@@ -42,7 +42,7 @@ describe('generateLogMessage', function() {
             'name': '',
             'version': ''
         };
-        this.sinon.stub(console, 'error');
+        //this.sinon.stub(console, 'error');
     });
 
     it('should generate appropriate log message for the license level', function() {
