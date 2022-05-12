@@ -28,7 +28,7 @@ export async function insertCopyrightInformation(jsonData, githubClient) {
             continue;
         }
         copyright = removeOverheadFromCopyright(copyright);
-        insertCopyrightIntoBom(packageInfo, copyright);
+        packageInfo = insertCopyrightIntoBom(packageInfo, copyright);
     }
     progBar.stop();
     console.log('Done!');
@@ -55,11 +55,13 @@ export function removeOverheadFromCopyright(copyright) {
     return copyright.replace(/\s\s+/g, ' ').trim();
 }
 
-function insertCopyrightIntoBom(packageInfo, copyright) {
+export function insertCopyrightIntoBom(packageInfo, copyright) {
     try {
         packageInfo['licenses'][0]['license'].copyright = copyright;
+        return packageInfo;
     } catch (err) {
         console.error(err);
+        return packageInfo;
     }
 }
 
