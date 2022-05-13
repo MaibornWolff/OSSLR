@@ -1,0 +1,3 @@
+[C|c]opyright \(c\) \d+(?=)-\w+ \w+ \w+
+\(c\) [C|c]opyright \d+(?=)-\w+ \w+ \w+
+[©] [C|c]opyright \d+(?=)-\w+ \w+ \w+
