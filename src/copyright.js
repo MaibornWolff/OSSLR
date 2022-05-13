@@ -7,7 +7,12 @@ import * as util from './util.js';
 
 //var problems = '';
 let copyrights = '';
-
+/**
+ * Main loop of the script, coordinating the download of license information, the extraction of
+ * the copyright notice and the insertion of the information into the existing bom.
+ * @param {object} jsonData Content of the bom.json file.
+ * @param {object} githubClient Instance of the githubClient used to communicate with github.com.
+ */
 export async function insertCopyrightInformation(jsonData, githubClient) {
     console.log('Retrieving License Information...');
     const progBar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
@@ -42,6 +47,12 @@ export async function insertCopyrightInformation(jsonData, githubClient) {
     }
 }
 
+/**
+ * Removes html tags and other artifacts not filtered out
+ * by the regex from the copyright string.
+ * @param {string} copyright The original extracted copyright notice.
+ * @returns {string} The updated copyright notice.
+ */
 export function removeOverheadFromCopyright(copyright) {
     // remove everything in brackets except the (c)
     var re = /\([^)]*\)|<[^>]*>/g;
@@ -56,6 +67,12 @@ export function removeOverheadFromCopyright(copyright) {
     return copyright.replace(/\s\s+/g, ' ').trim();
 }
 
+/**
+ * Adds a new entry containing the copyright notice to the bom.
+ * @param {object} packageInfo Entry from bom.json containing information for one package.
+ * @param {string} copyright The copyright notice to be inserted.
+ * @returns {string} The updated json entry.
+ */
 export function insertCopyrightIntoBom(packageInfo, copyright) {
     try {
         packageInfo['licenses'][0]['license'].copyright = copyright;
@@ -92,19 +109,34 @@ function extractCopyright(license) {
 //     return '';
 // }
 
+/**
+ * Checks whether the bom contains license information for the given package.
+ * @param {object} packageInfo Entry from bom.json containing information for one package.
+ * @returns {boolean} Whether the packageInfo contains a license.
+ */
 export function hasLicense(packageInfo) {
-    // Check if cdxgen found license
     return Array.isArray(packageInfo['licenses']) && packageInfo['licenses'].length > 0;
 }
 
+/**
+ * Checks whether the bom contains external references for the given package.
+ * @param {object} packageInfo Entry from bom.json containing information for one package.
+ * @returns {boolean} Whether the packageInfo contains external references.
+ */
 export function hasExternalRefs(packageInfo) {
-    // Check if any external resources exist
     return Array.isArray(packageInfo['externalReferences']) && packageInfo['externalReferences'].length > 0;
 }
 
+/**
+ * Downloads license information and tries to extract copyright notice from it.
+ * @param {object} packageInfo Entry from bom.json containing information for one package.
+ * @param {object} githubClient Instance of the githubClient used to communicate with github.com.
+ * @returns {string} The extracted copyright notice. Empty string if none was found.
+ */
 async function retrieveCopyrightInformation(packageInfo, githubClient) {
     const extRefs = packageInfo['externalReferences'];
-    let license = null;
+    let license = '';
+    let copyright = '';
     for (let i in extRefs) {
         let url = extRefs[i]['url'];
         if (url.includes('github.com')) {
@@ -112,7 +144,7 @@ async function retrieveCopyrightInformation(packageInfo, githubClient) {
         } else {
             license = await downloadLicenseFromExternalWebsite(url);
         }
-        if (license === null) {
+        if (license == '') {
             continue;
         }
         try {
@@ -124,18 +156,26 @@ async function retrieveCopyrightInformation(packageInfo, githubClient) {
         } catch (err) {
             console.error(err);
         }
-        let copyright = extractCopyright(license);
+        copyright = extractCopyright(license);
         if (copyright !== '') {
             return copyright;
         }
     }
-    return '';
+    return copyright;
 }
 
+/**
+ * Downloads the content of the github repository with the given URL and
+ * returns the license file if it exists.
+ * @param {string} url The API-URL of the github repository.
+ * @param {object} githubClient Instance of the githubClient used to communicate with github.com.
+ * @returns {string} The content of the license file. Empty string if none was found.
+ */
 async function downloadLicenseFromGithub(url, githubClient) {
     let repoInfo = filterRepoInfoFromURL(url);
     let repoOwner = repoInfo[0];
     let repoName = repoInfo[1];
+    let license = '';
     try {
         let repoContent = await githubClient.rest.repos.getContent({
             owner: repoOwner,
@@ -144,7 +184,7 @@ async function downloadLicenseFromGithub(url, githubClient) {
         for (let i in repoContent['data']) {
             let fileName = repoContent['data'][i]['name'];
             if (fileName.toLowerCase() === 'license' || fileName.match(new RegExp('license\.[\w]*'), 'i')) {
-                return await makeGetRequest(repoContent['data'][i]['download_url']);
+                license = await makeGetRequest(repoContent['data'][i]['download_url']);
             }
         }
     } catch (err) {
@@ -154,24 +194,36 @@ async function downloadLicenseFromGithub(url, githubClient) {
             console.error(err);
             console.error(`${repoOwner}/${repoName}`);
         }
-        return null;
+        return license;
     }
-    return null;
+    return license;
 }
 
+/**
+ * Downloads the website with the given URL.
+ * @param {string} url The URL of the website to be downloaded.
+ * @returns {string} A string containing the content of the website as html.
+ */
 async function downloadLicenseFromExternalWebsite(url) {
     try {
         return await makeGetRequest(url);
     } catch (err) {
-        if (err['response'] !== undefined) {
+        if (err.response) {
             console.error(`\nError: Request ${url} failed with status ${err['response']['status']}. ${err['response']['statusText']}.`);
+        } else if (err.code == 'ENOTFOUND') {
+            console.error(`\nError: No response for the request ${url}.`);
         } else {
-            console.error(err);
+            console.error(`\nAxiosError: ${err.code}.`);
         }
-        return null;
+        return '';
     }
 }
 
+/**
+ * Extracts the username and repository name form a github URL.
+ * @param {string} url URL to the github repository.
+ * @returns {string[]} A string array containing the extracted username and repository name
+ */
 export function filterRepoInfoFromURL(url) {
     let re = new RegExp('github.com\/([\\w\-]+)\/([\\w\-\.]+)');
     url = re.exec(url);
@@ -180,9 +232,14 @@ export function filterRepoInfoFromURL(url) {
     return [user, repo];
 }
 
-function makeGetRequest(path) {
+/**
+ * Performs a GET request for the given URL.
+ * @param {string} url  The URL for the request.
+ * @returns {promise} Of the result of the GET request.
+ */
+function makeGetRequest(url) {
     return new Promise(function (resolve, reject) {
-        Axios.get(path).then(
+        Axios.get(url).then(
             (response) => {
                 var result = response.data;
                 resolve(result);

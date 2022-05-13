@@ -13,10 +13,10 @@ let logger = null;
  */
 export function initializeLogger() {
     logger = createLogger({
-        levels: { license: 0, extRefs: 1, copyright: 2 },
+        levels: { license: 0, extRefs: 1, copyright: 2, error: 3 },
         format: format.simple(),
         transports: [
-            new transports.File({ filename: 'combined.log', level: 'copyright' })
+            new transports.File({ filename: 'copyright.log', level: 'copyright' })
         ],
     });
 }
@@ -38,7 +38,7 @@ export function addToLog(packageInfo, level) {
 /**
  * Generates a name for the given package in the form: "group-name-version".
  * @param {object} packageInfo Entry from bom.json containing information for one package.
- * @return {string} The generated name for the package.
+ * @returns {string} The generated name for the package.
  */
 export function generatePackageName(packageInfo) {
     let fileName = '';
