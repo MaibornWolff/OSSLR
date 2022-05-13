@@ -20,16 +20,19 @@ export async function insertCopyrightInformation(jsonData, githubClient) {
         progBar.increment();
         let packageInfo = jsonData['components'][i];
         if (!hasLicense(packageInfo)) {
-            util.addToLog(packageInfo, 'license');
+            let message = util.generateLogMessage(packageInfo, 'License');
+            util.addToLog(message, 'License');
             continue;
         }
         if (!hasExternalRefs(packageInfo)) {
-            util.addToLog(packageInfo, 'extRefs');
+            let message = util.generateLogMessage(packageInfo, 'ExtRefs');
+            util.addToLog(message, 'ExtRefs');
             continue;
         }
         let copyright = await retrieveCopyrightInformation(packageInfo, githubClient);
         if (copyright == '') {
-            util.addToLog(packageInfo, 'copyright');
+            let message = util.generateLogMessage(packageInfo, 'Copyright');
+            util.addToLog(message, 'Copyright');
             continue;
         }
         copyright = removeOverheadFromCopyright(copyright);
@@ -77,7 +80,7 @@ export function insertCopyrightIntoBom(packageInfo, copyright) {
         packageInfo['licenses'][0]['license'].copyright = copyright;
         return packageInfo;
     } catch (err) {
-        console.error(err);
+        util.addToLog(err, 'Error');
         return packageInfo;
     }
 }
@@ -188,10 +191,9 @@ async function downloadLicenseFromGithub(url, githubClient) {
         }
     } catch (err) {
         if (err.status == '404') {
-            console.error(`\nRepository with URL ${url} not found.`);
+            util.addToLog(`Repository with URL ${url} not found.`, 'Error');
         } else {
-            console.error(err);
-            console.error(`${repoOwner}/${repoName}`);
+            util.addToLog(err, 'Error');
         }
         return license;
     }
@@ -207,13 +209,13 @@ async function downloadLicenseFromExternalWebsite(url) {
     try {
         return await makeGetRequest(url);
     } catch (err) {
-        if (err.response) {
-            console.error(`\nError: Request ${url} failed with status ${err['response']['status']}. ${err['response']['statusText']}.`);
+        let errorMessage = `AxiosError: ${err.code}.`;
+        if (err.response) {            
+            errorMessage = `Request ${url} failed with status ${err['response']['status']}. ${err['response']['statusText']}.`;
         } else if (err.code == 'ENOTFOUND') {
-            console.error(`\nError: No response for the request ${url}.`);
-        } else {
-            console.error(`\nAxiosError: ${err.code}.`);
+            errorMessage = `No response for the request ${url}.`;
         }
+        util.addToLog(errorMessage, 'Error');
         return '';
     }
 }
