@@ -5,7 +5,6 @@ import * as path from 'path';
 import Axios from 'axios';
 import * as util from './util.js';
 
-//var problems = '';
 let copyrights = '';
 /**
  * Main loop of the script, coordinating the download of license information, the extraction of
