@@ -1,33 +1,34 @@
+"use strict";
+exports.__esModule = true;
 /* eslint-disable no-useless-escape */
-import { readFileSync } from 'fs';
-import * as path from 'path';
-import { Octokit } from 'octokit';
-import * as util from './util.js';
-import { insertCopyrightInformation } from './copyright.js';
-
+var fs_1 = require("fs");
+var path = require("path");
+var octokit_1 = require("octokit");
+var util = require("./util.js");
+var copyright_js_1 = require("./copyright.js");
 main();
-
 function main() {
-    let githubClient = createGithubClient();
+    var githubClient = createGithubClient();
     if (githubClient == null) {
         return;
     }
     util.initializeLogger();
-    let bomPath = path.join('out', 'bom.json');
+    var bomPath = path.join('out', 'bom.json');
     try {
-        let rawData = readFileSync(bomPath);
-        let jsonData = JSON.parse(rawData);
-        insertCopyrightInformation(jsonData, githubClient);
-    } catch (err) {
-        console.error(`Couldn't load bom.json from ${bomPath}.`);
+        var rawData = (0, fs_1.readFileSync)(bomPath);
+        var jsonData = JSON.parse(rawData.toString());
+        (0, copyright_js_1.insertCopyrightInformation)(jsonData, githubClient);
+    }
+    catch (err) {
+        console.error("Couldn't load bom.json from ".concat(bomPath, "."));
     }
 }
-
 function createGithubClient() {
     try {
-        const accessToken = readFileSync('access-token', 'utf8');
-        return new Octokit({ auth: accessToken });
-    } catch (err) {
+        var accessToken = (0, fs_1.readFileSync)('access-token', 'utf8');
+        return new octokit_1.Octokit({ auth: accessToken });
+    }
+    catch (err) {
         console.error('Authentication with access-token failed.');
         console.error(err);
         return null;

@@ -1,20 +1,27 @@
 {
-  "type": "module",
   "main": "src/index.js",
   "dependencies": {
+    "@octokit/rest": "^18.12.0",
+    "@octokit/types": "^6.34.0",
+    "@types/axios": "^0.14.0",
+    "@types/cli-progress": "^3.11.0",
+    "@types/winston": "^2.4.4",
     "axios": "^0.27.2",
-    "cli-progress": "^3.11.0",
+    "cli-progress": "^3.11.1",
     "octokit": "^1.7.1",
+    "typescript": "^4.6.4",
     "winston": "^3.7.2"
   },
   "devDependencies": {
+    "@types/chai": "^4.3.1",
+    "@types/mocha": "^9.1.1",
     "chai": "^4.3.6",
     "eslint": "^8.15.0",
     "mocha": "^10.0.0",
-    "mocha-sinon": "^2.1.2"
+    "ts-node": "^10.8.0"
   },
   "scripts": {
-    "test": "mocha",
-    "start": "node src/index.js"
+    "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'test/**/*.ts'",
+    "start": "tsc src/index.ts && node src/index.js"
   }
 }
