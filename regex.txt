@@ -1,3 +1,5 @@
-[C|c]opyright \(c\) \d+(?=)-\w+ \w+ \w+
-\(c\) [C|c]opyright \d+(?=)-\w+ \w+ \w+
-[©] [C|c]opyright \d+(?=)-\w+ \w+ \w+
+Copyright \(c\).*
+\(c\) [C|c]opyright.*
+[©] [C|c]opyright.*
+Copyright [©].*
+Copyright \(c\) \w+ \w+ \d+(?=)- \d
