@@ -1,5 +1,5 @@
 {
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "dependencies": {
     "@octokit/rest": "^18.12.0",
     "@octokit/types": "^6.34.0",
@@ -22,6 +22,6 @@
   },
   "scripts": {
     "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'test/**/*.ts'",
-    "start": "tsc src/index.ts && node src/index.js"
+    "start": "tsc && node build/src/index.js"
   }
 }

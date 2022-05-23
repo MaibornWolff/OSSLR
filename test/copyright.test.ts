@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 import 'mocha';
 import { assert } from 'chai';
-import { removeOverheadFromCopyright, insertCopyrightIntoBom, hasLicense, hasExternalRefs, filterRepoInfoFromURL } from '../src/copyright.js';
+import { removeOverheadFromCopyright, insertCopyrightIntoBom, hasLicense, hasExternalRefs, filterRepoInfoFromURL } from '../dist/src/copyright.js';
 
 
 describe('removeOverheadFromCopyright', function () {

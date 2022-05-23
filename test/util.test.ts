@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 import 'mocha';
 import { assert } from 'chai';
-import { generatePackageName, generateLogMessage } from '../src/util.js';
+import { generatePackageName, generateLogMessage } from '../dist/src/util.js';
 
 describe('generatePackageName', function () {
     let packageInfo = {
