@@ -5,7 +5,6 @@ import * as path from 'path';
 import Axios from 'axios';
 import * as util from './util.js';
 
-let copyrights = '';
 /**
  * Main loop of the script, coordinating the download of license information, the extraction of
  * the copyright notice and the insertion of the information into the existing bom.
@@ -42,8 +41,6 @@ export async function insertCopyrightInformation(jsonData, githubClient) {
     console.log('Done!');
     try {
         writeFileSync(path.join('out', 'updatedBom.json'), JSON.stringify(jsonData, null, '\t'));
-        // writeFileSync(path.join('out', 'problems.txt'), problems);
-        writeFileSync(path.join('out', 'copyrights.txt'), copyrights);
     } catch (err) {
         console.error(err);
     }
@@ -57,9 +54,9 @@ export async function insertCopyrightInformation(jsonData, githubClient) {
  */
 export function removeOverheadFromCopyright(copyright) {
     // remove everything in brackets except the (c)
-    var re = /\([^)]*\)|<[^>]*>/g;
+    let re1 = /\([^)]*\)|<[^>]*>/g;
 
-    let matches = copyright.match(re);
+    let matches = copyright.match(re1);
     for (let i in matches) {
         if (matches[i].toLowerCase() != '(c)') {
             copyright = copyright.replace(matches[i], '');
@@ -76,40 +73,32 @@ export function removeOverheadFromCopyright(copyright) {
  * @returns {string} The updated json entry.
  */
 export function insertCopyrightIntoBom(packageInfo, copyright) {
-    try {
-        packageInfo['licenses'][0]['license'].copyright = copyright;
-        return packageInfo;
-    } catch (err) {
-        util.addToLog(err, 'Error');
-        return packageInfo;
-    }
+    packageInfo['licenses'][0]['license'].copyright = copyright;
+    return packageInfo;
 }
 
+/**
+ * Extracts copyright notice from license file or website.
+ * @param {string} license Content of a license file or website potentially containing copyright notice.
+ * @returns {string} Extracted copyright notice. Empty string if no matches found.
+ */
 function extractCopyright(license) {
-    // Your code goes here. Return copyright notice as a string
+    const regExps = [
+        new RegExp('(©|\\(c\\))? ?copyright (©|\\(c\\))? ?[0-9]+.*', 'i'),
+        new RegExp('(©|\\(c\\)) copyright.*', 'i'),
+        new RegExp('copyright (©|\\(c\\)).*', 'i'),
+        new RegExp('copyright [0-9]+.*', 'i')
+    ];
+    for (let i in regExps) {
+        if (license.match(regExps[i])) {
+            return regExps[i].exec(license)[0];
+        }
+    }
+    if (license.match(new RegExp('copyright.*', 'i'))) {
+        util.addToLog(new RegExp('copyright.*', 'i').exec(license)[0], 'Debug');
+    }
     return '';
 }
-
-// function extractCopyright(license) {
-//     //TODO Finalize extraction functionality
-//     let re1 = new RegExp('copyright (©|\\(c\\)) [0-9]+.*', 'i');
-//     let re2 = new RegExp('(©|\\(c\\)) copyright [0-9]+.*', 'i');
-//     let re3 = new RegExp('copyright [0-9]+.*', 'i');
-//     if (license.match(re1)) {
-//         copyrights += re1.exec(license)[0] + '\n';
-//         return re1.exec(license)[0];
-//     } else if (license.match(re2)) {
-//         copyrights += re2.exec(license)[0] + '\n';
-//         return re2.exec(license)[0];
-//     } else if (license.match(re3)) {
-//         copyrights += re3.exec(license)[0] + '\n';
-//         return re3.exec(license)[0];
-//     } else if (license.toLowerCase().includes('copyright')) {
-//         // problems += util.generatePackageName(packageInfo) + '\n';
-//         return '';
-//     }
-//     return '';
-// }
 
 /**
  * Checks whether the bom contains license information for the given package.
@@ -210,7 +199,7 @@ async function downloadLicenseFromExternalWebsite(url) {
         return await makeGetRequest(url);
     } catch (err) {
         let errorMessage = `AxiosError: ${err.code}.`;
-        if (err.response) {            
+        if (err.response) {
             errorMessage = `Request ${url} failed with status ${err['response']['status']}. ${err['response']['statusText']}.`;
         } else if (err.code == 'ENOTFOUND') {
             errorMessage = `No response for the request ${url}.`;

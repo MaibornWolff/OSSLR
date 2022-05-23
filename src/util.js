@@ -4,6 +4,7 @@ import { createLogger, transports, format } from 'winston';
 
 let licenseLogger = null;
 let errorLogger = null;
+let debugLogger = null;
 /**
  * Initializes the logger instances used for documenting
  * packages where no copyright notice could be found and error messages.
@@ -28,6 +29,13 @@ export function initializeLogger() {
             new transports.File({ filename: 'error.log', level: 'Error' })
         ],
     });
+    debugLogger = createLogger({
+        levels: { Debug: 0 },
+        format: format.simple(),
+        transports: [
+            new transports.File({ filename: 'debug.log', level: 'Debug' })
+        ],
+    });
 }
 
 /**
@@ -38,6 +46,11 @@ export function initializeLogger() {
 export function addToLog(message, level) {
     if (level == 'Error') {
         errorLogger.log({
+            level: level,
+            message: message
+        });
+    } else if (level == 'Debug') {
+        debugLogger.log({
             level: level,
             message: message
         });

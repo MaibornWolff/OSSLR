@@ -1,6 +1,5 @@
 /* eslint-disable no-undef */
 import 'mocha';
-// import 'mocha-sinon';
 import { assert } from 'chai';
 import { generatePackageName, generateLogMessage } from '../src/util.js';
 
@@ -42,22 +41,21 @@ describe('generateLogMessage', function() {
             'name': '',
             'version': ''
         };
-        //this.sinon.stub(console, 'error');
     });
 
     it('should generate appropriate log message for the license level', function() {
-        assert.equal(generateLogMessage(packageInfo, 'license'), 'No License found for: unnamed');
+        assert.equal(generateLogMessage(packageInfo, 'License'), 'No License found for: unnamed');
     });
 
     it('should generate appropriate log message for the extRefs level', function() {
-        assert.equal(generateLogMessage(packageInfo, 'extRefs'), 'No external references found for: unnamed');
+        assert.equal(generateLogMessage(packageInfo, 'ExtRefs'), 'No external references found for: unnamed');
     });
 
     it('should generate appropriate log message for the copyright level', function() {
-        assert.equal(generateLogMessage(packageInfo, 'copyright'), 'Unable to extract copyright notice for: unnamed');
+        assert.equal(generateLogMessage(packageInfo, 'Copyright'), 'Unable to extract copyright notice for: unnamed');
     });
 
     it('should return empty string if a different level is passed', function() {
-        assert.equal(generateLogMessage(packageInfo, 'error'), '');
+        assert.equal(generateLogMessage(packageInfo, 'Error'), '');
     });
 });

@@ -1,6 +1,5 @@
 /* eslint-disable no-undef */
 import 'mocha';
-// import 'mocha-sinon';
 import { assert } from 'chai';
 import { removeOverheadFromCopyright, insertCopyrightIntoBom, hasLicense, hasExternalRefs, filterRepoInfoFromURL } from '../src/copyright.js';
 
@@ -41,15 +40,9 @@ describe('insertCopyrightIntoBom', function () {
                 }
             ]
         };
-        // this.sinon.stub(console, 'error');
     });
     it('should add an entry containing the copyright notice into the bom', function () {
         assert.equal(insertCopyrightIntoBom(packageInfo, 'Copyright notice')['licenses'][0]['license']['copyright'], 'Copyright notice');
-    });
-
-    it('should return unchanged bom if no license entry exists', function () {
-        packageInfo['licenses'] = [];
-        assert.equal(insertCopyrightIntoBom(packageInfo, 'Copyright notice'), packageInfo);
     });
 });
 
