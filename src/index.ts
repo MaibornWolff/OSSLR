@@ -2,8 +2,8 @@
 import { readFileSync } from 'fs';
 import * as path from 'path';
 import { Octokit } from "octokit";
-import * as util from './util.js';
-import { insertCopyrightInformation } from './copyright.js';
+import * as util from './util';
+import { insertCopyrightInformation } from './copyright';
 
 main();
 
