@@ -1,4 +1,4 @@
-class PackageInfo {
+export class PackageInfo {
   group: string;
   name: string;
   version: string;
