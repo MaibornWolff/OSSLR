@@ -14,7 +14,7 @@ let debugLogger = null;
  * copyright: unable to extract copyright notice from external refs.
  * error: error messages.
  */
-export function initializeLogger() {
+export function initializeLogger(): void {
     licenseLogger = createLogger({
         levels: { License: 0, ExtRefs: 1, Copyright: 2 },
         format: format.simple(),
@@ -43,7 +43,7 @@ export function initializeLogger() {
  * @param {object} packageInfo Entry from bom.json containing information for one package.
  * @param {string} level The level of the log message.
  */
-export function addToLog(message, level) {
+export function addToLog(message: string, level: string): void {
     if (level == 'Error') {
         errorLogger.log({
             level: level,
@@ -67,7 +67,7 @@ export function addToLog(message, level) {
  * @param {object} packageInfo Entry from bom.json containing information for one package.
  * @returns {string} The generated name for the package.
  */
-export function generatePackageName(packageInfo) {
+export function generatePackageName(packageInfo: object): string {
     let fileName = '';
     if (packageInfo['group'].trim() != '') {
         fileName += packageInfo['group'] + '-';
@@ -90,7 +90,7 @@ export function generatePackageName(packageInfo) {
  * @param {string} level The level of the log message.
  * @returns {string} The message to be added to the log.
  */
-export function generateLogMessage(packageInfo, level) {
+export function generateLogMessage(packageInfo: object, level: string): string {
     switch (level) {
         case 'License':
             return `No License found for: ${generatePackageName(packageInfo)}`;
