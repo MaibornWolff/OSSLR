@@ -12,7 +12,6 @@ import { Octokit } from 'octokit';
  * @param {object} githubClient Instance of the githubClient used to communicate with github.com.
  */
 export async function insertCopyrightInformation(jsonData: object, githubClient: Octokit) {
-    console.log(typeof githubClient);
     console.log('Retrieving License Information...');
     const progBar = new SingleBar({}, Presets.shades_classic);
     progBar.start(jsonData['components'].length, 0);

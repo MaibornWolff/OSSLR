@@ -1,7 +1,7 @@
 # Use Data
 access-token
-/out
-/build
+out
+build
 
 # Logs
 logs
