@@ -40,3 +40,16 @@ export function generateLogMessage(packageInfo: object, level: string): string {
             return '';
     }
 }
+
+/**
+ * Extracts the username and repository name form a github URL.
+ * @param {string} url URL to the github repository.
+ * @returns {string[]} A string array containing the extracted username and repository name
+ */
+ export function filterRepoInfoFromURL(url: string): string[] {
+    let re = new RegExp('github.com\/([\\w\-]+)\/([\\w\-\.]+)');
+    let filtered = re.exec(url);
+    let user = filtered[1];
+    let repo = filtered[2].replace(new RegExp('.git$'), '');
+    return [user, repo];
+}

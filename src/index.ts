@@ -2,9 +2,8 @@
 import { readFileSync } from 'fs';
 import * as path from 'path';
 import { Octokit } from "octokit";
-import * as util from './util';
 import { insertCopyrightInformation } from './copyright';
-import { Level, Logger } from './logging';
+import { Logger } from './logging';
 
 main();
 
