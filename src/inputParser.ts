@@ -18,7 +18,7 @@ abstract class InputParser {
             console.error(`Couldn't load bom.json from ${url}.`);
         }
     }
-    abstract parseInput(url: string): PackageInfo;
+    abstract parseInput(url: string): PackageInfo[];
 }
 
 class CycloneDXParser extends InputParser {
