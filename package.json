@@ -1,11 +1,7 @@
 {
   "main": "dist/index.js",
   "dependencies": {
-    "@octokit/rest": "^18.12.0",
-    "@octokit/types": "^6.34.0",
-    "@types/axios": "^0.14.0",
     "@types/cli-progress": "^3.11.0",
-    "@types/winston": "^2.4.4",
     "axios": "^0.27.2",
     "cli-progress": "^3.11.1",
     "octokit": "^1.7.1",
@@ -19,6 +15,9 @@
     "eslint": "^8.15.0",
     "mocha": "^10.0.0",
     "ts-node": "^10.8.0"
+  },
+  "optionalDependencies": {
+    "fsevents": "2.1.2"
   },
   "scripts": {
     "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'test/**/*.ts'",
