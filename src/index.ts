@@ -7,7 +7,7 @@ import { Logger } from './logging';
 
 main();
 
-export function main(): void {
+function main(): void {
     let githubClient = createGithubClient();
     if (githubClient == null) {
         return;
@@ -22,7 +22,7 @@ export function main(): void {
         console.error(`Couldn't load bom.json from ${bomPath}.`);
     }
 }
-export function createGithubClient(): Octokit {
+function createGithubClient(): Octokit {
     try {
         const accessToken = readFileSync('access-token', 'utf8');
         return new Octokit({ auth: accessToken });

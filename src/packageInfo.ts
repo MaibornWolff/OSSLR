@@ -1,4 +1,4 @@
-export class PackageInfo {
+export interface PackageInfo {
   group: string;
   name: string;
   version: string;

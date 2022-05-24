@@ -4,7 +4,7 @@ import { Logform } from "winston";
 import { Logger } from "./logging";
 import * as util from './util';
 
-class GithubClient {
+export class GithubClient {
     octokit: Octokit;
 
     constructor(tokenUrl: string) {
@@ -25,7 +25,6 @@ class GithubClient {
         let repoInfo = util.filterRepoInfoFromURL(url);
         let repoOwner = repoInfo[0];
         let repoName = repoInfo[1];
-        let license = '';
         try {
             let repoContent = this.octokit.rest.repos.getContent({
                 owner: repoOwner,

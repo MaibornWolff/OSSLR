@@ -37,20 +37,22 @@ class CycloneDXParser extends InputParser {
         super.rawData = JSON.parse(data);
         let packageInfos = [];
         for (let pkg in super.rawData['components']) {
-            let packageInfo = new PackageInfo();
-            packageInfo.group = pkg['group'];
-            packageInfo.name = pkg['name'];
-            packageInfo.version = pkg['version'];;
+            
             let licenses = [];
             for (let license in pkg['licenses']) {
                 licenses.push(license);
             }
-            packageInfo.licenses = licenses;
             let extRefs = [];
             for (let extRef in pkg['externalReferences']) {
                 extRefs.push(extRef['url']);
             }
-            packageInfo.externalReferences = extRefs;
+            let packageInfo = {
+                group: pkg['group'],
+                name: pkg['name'],
+                version : pkg['version'],
+                licenses: licenses,
+                externalReferences: extRefs
+            };
             packageInfos.push(packageInfo);
         }
         return packageInfos;
