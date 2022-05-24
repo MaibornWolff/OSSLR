@@ -5,13 +5,14 @@ import * as path from 'path';
 import Axios from 'axios';
 import * as util from './util';
 import { Octokit } from 'octokit';
+import { Logger } from './logging';
 /**
  * Main loop of the script, coordinating the download of license information, the extraction of
  * the copyright notice and the insertion of the information into the existing bom.
  * @param {object} jsonData Content of the bom.json file.
  * @param {object} githubClient Instance of the githubClient used to communicate with github.com.
  */
-export async function insertCopyrightInformation(jsonData: object, githubClient: Octokit) {
+export async function insertCopyrightInformation(jsonData: object, githubClient: Octokit, logger: Logger) {
     console.log('Retrieving License Information...');
     const progBar = new SingleBar({}, Presets.shades_classic);
     progBar.start(jsonData['components'].length, 0);
@@ -20,18 +21,18 @@ export async function insertCopyrightInformation(jsonData: object, githubClient:
         let packageInfo = jsonData['components'][i];
         if (!hasLicense(packageInfo)) {
             let message = util.generateLogMessage(packageInfo, 'License');
-            util.addToLog(message, 'License');
+            logger.addToLog(message, 'License');
             continue;
         }
         if (!hasExternalRefs(packageInfo)) {
             let message = util.generateLogMessage(packageInfo, 'ExtRefs');
-            util.addToLog(message, 'ExtRefs');
+            logger.addToLog(message, 'ExtRefs');
             continue;
         }
-        let copyright = await retrieveCopyrightInformation(packageInfo, githubClient);
+        let copyright = await retrieveCopyrightInformation(packageInfo, githubClient, logger);
         if (copyright == '') {
             let message = util.generateLogMessage(packageInfo, 'Copyright');
-            util.addToLog(message, 'Copyright');
+            logger.addToLog(message, 'Copyright');
             continue;
         }
         copyright = removeOverheadFromCopyright(copyright);
@@ -82,7 +83,7 @@ export function insertCopyrightIntoBom(packageInfo: object, copyright: string): 
  * @param {string} license Content of a license file or website potentially containing copyright notice.
  * @returns {string} Extracted copyright notice. Empty string if no matches found.
  */
-function extractCopyright(license: string): string {
+function extractCopyright(license: string, logger: Logger): string {
     const regExps = [
         new RegExp('(©|\\(c\\))? ?copyright (©|\\(c\\))? ?[0-9]+.*', 'i'),
         new RegExp('(©|\\(c\\)) copyright.*', 'i'),
@@ -95,7 +96,7 @@ function extractCopyright(license: string): string {
         }
     }
     if (license.match(new RegExp('copyright.*', 'i'))) {
-        util.addToLog(new RegExp('copyright.*', 'i').exec(license)[0], 'Debug');
+        logger.addToLog(new RegExp('copyright.*', 'i').exec(license)[0], 'Debug');
     }
     return '';
 }
@@ -124,16 +125,16 @@ export function hasExternalRefs(packageInfo: object): boolean {
  * @param {object} githubClient Instance of the githubClient used to communicate with github.com.
  * @returns {string} The extracted copyright notice. Empty string if none was found.
  */
-async function retrieveCopyrightInformation(packageInfo: object, githubClient: Octokit): Promise<string> {
+async function retrieveCopyrightInformation(packageInfo: object, githubClient: Octokit, logger: Logger): Promise<string> {
     const extRefs = packageInfo['externalReferences'];
     let license = '';
     let copyright = '';
     for (let i in extRefs) {
         let url = extRefs[i]['url'];
         if (url.includes('github.com')) {
-            license = await downloadLicenseFromGithub(url, githubClient);
+            license = await downloadLicenseFromGithub(url, githubClient, logger);
         } else {
-            license = await downloadLicenseFromExternalWebsite(url);
+            license = await downloadLicenseFromExternalWebsite(url, logger);
         }
         if (license == '') {
             continue;
@@ -147,7 +148,7 @@ async function retrieveCopyrightInformation(packageInfo: object, githubClient: O
         } catch (err) {
             console.error(err);
         }
-        copyright = extractCopyright(license);
+        copyright = extractCopyright(license, logger);
         if (copyright !== '') {
             return copyright;
         }
@@ -162,7 +163,7 @@ async function retrieveCopyrightInformation(packageInfo: object, githubClient: O
  * @param {object} githubClient Instance of the githubClient used to communicate with github.com.
  * @returns {string} The content of the license file. Empty string if none was found.
  */
-async function downloadLicenseFromGithub(url: string, githubClient: Octokit): Promise<string> {
+async function downloadLicenseFromGithub(url: string, githubClient: Octokit, logger: Logger): Promise<string> {
     let repoInfo = filterRepoInfoFromURL(url);
     let repoOwner = repoInfo[0];
     let repoName = repoInfo[1];
@@ -181,9 +182,9 @@ async function downloadLicenseFromGithub(url: string, githubClient: Octokit): Pr
         }
     } catch (err) {
         if (err.status == '404') {
-            util.addToLog(`Repository with URL ${url} not found.`, 'Error');
+            logger.addToLog(`Repository with URL ${url} not found.`, 'Error');
         } else {
-            util.addToLog(err, 'Error');
+            logger.addToLog(err, 'Error');
         }
         return license;
     }
@@ -195,7 +196,7 @@ async function downloadLicenseFromGithub(url: string, githubClient: Octokit): Pr
  * @param {string} url The URL of the website to be downloaded.
  * @returns {string} A string containing the content of the website as html.
  */
-async function downloadLicenseFromExternalWebsite(url: string): Promise<string> {
+async function downloadLicenseFromExternalWebsite(url: string, logger: Logger): Promise<string> {
     try {
         return await makeGetRequest(url);
     } catch (err) {
@@ -205,7 +206,7 @@ async function downloadLicenseFromExternalWebsite(url: string): Promise<string> 
         } else if (err.code == 'ENOTFOUND') {
             errorMessage = `No response for the request ${url}.`;
         }
-        util.addToLog(errorMessage, 'Error');
+        logger.addToLog(errorMessage, 'Error');
         return '';
     }
 }
