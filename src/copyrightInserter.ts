@@ -1,7 +1,4 @@
 import { SingleBar, Presets } from "cli-progress";
-import { existsSync, mkdirSync, writeFileSync } from "fs";
-import path = require("path");
-import { removeOverheadFromCopyright } from "./copyright";
 import { CopyrightParser } from "./copyrightParser";
 import { CycloneDXParser } from "./cycloneDXParser";
 import { InputParser } from "./inputParser";
@@ -93,8 +90,8 @@ export class CopyrightInserter {
           this.packageInfos[i].licenseTexts[j],
           this.logger
         );
-        if (copyright === ''){
-            continue;
+        if (copyright === '') {
+          continue;
         }
         copyright = copyrightParser.removeOverheadFromCopyright(copyright);
         this.packageInfos[i].copyright.push(copyright);

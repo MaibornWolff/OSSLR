@@ -22,7 +22,7 @@ export class CycloneDXParser extends InputParser {
                 throw new Error(`Unsupported file format ${this.format}`);
         }
     }
-    
+
     /**
      * Parser for bom files in json format.
      * @param data The content of the bom file to be parsed.
@@ -41,7 +41,7 @@ export class CycloneDXParser extends InputParser {
             for (let j in pkg['externalReferences']) {
                 extRefs.push(pkg['externalReferences'][j]['url']);
             }
-            let packageInfo = {
+            let packageInfo: PackageInfo = {
                 group: pkg['group'],
                 name: pkg['name'],
                 version: pkg['version'],

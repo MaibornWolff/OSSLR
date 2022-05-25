@@ -5,8 +5,9 @@ import {
   removeOverheadFromCopyright,
   insertCopyrightIntoBom,
   hasLicense,
-  hasExternalRefs,
+  hasExternalRefs
 } from "../src/copyright";
+import { PackageInfo } from "../src/packageInfo";
 
 describe("removeOverheadFromCopyright", function () {
   it("should remove html tags", function () {
@@ -65,47 +66,54 @@ describe("insertCopyrightIntoBom", function () {
   it("should add an entry containing the copyright notice into the bom", function () {
     assert.equal(
       insertCopyrightIntoBom(packageInfo, "Copyright notice")["licenses"][0][
-        "license"
+      "license"
       ]["copyright"],
       "Copyright notice"
     );
   });
 });
 
-// describe('hasLicense', function () {
-//     let packageInfo = {
-//         'licenses': [
-//             {
-//                 'license': {
-//                     'id': 'MIT',
-//                     'url': 'https://opensource.org/licenses/MIT'
-//                 }
-//             }
-//         ]
-//     };
-//     it('should return whether license information are available for the given package', function () {
-//         assert.isTrue(hasLicense(packageInfo));
-//         packageInfo['licenses'] = [];
-//         assert.isFalse(hasLicense(packageInfo));
-//     });
-// });
+describe('hasLicense', function () {
+  let packageInfo: PackageInfo = {
+    group: 'group',
+    name: 'name',
+    version: 'version',
+    copyright: [],
+    externalReferences: [],
+    licenses: [
+      {
+        "license": {
+          "id": "MIT",
+          "url": "https://opensource.org/licenses/MIT"
+        }
+      }
+    ],
+    licenseTexts: []
+  };
+  it('should return whether license information are available for the given package', function () {
+    assert.isTrue(hasLicense(packageInfo));
+    packageInfo.licenses = [];
+    assert.isFalse(hasLicense(packageInfo));
+  });
+});
 
-// describe('hasExternalReferences', function () {
-//     let packageInfo = {
-//         'externalReferences': [
-//             {
-//                 'type': 'website',
-//                 'url': 'https://github.com/readme'
-//             },
-//             {
-//                 'type': 'vcs',
-//                 'url': 'git+https://github.com/plugins.git'
-//             }
-//         ],
-//     };
-//     it('should return whether external references are available for the given package', function () {
-//         assert.isTrue(hasExternalRefs(packageInfo));
-//         packageInfo['externalReferences'] = [];
-//         assert.isFalse(hasExternalRefs(packageInfo));
-//     });
-// });
+describe('hasExternalReferences', function () {
+  let packageInfo: PackageInfo = {
+    group: 'group',
+    name: 'name',
+    version: 'version',
+    copyright: [],
+    externalReferences: [
+      'https://github.com/readme',
+      'git+https://github.com/plugins.git'
+    ],
+    licenses: [],
+    licenseTexts: []
+  };
+
+  it('should return whether external references are available for the given package', function () {
+    assert.isTrue(hasExternalRefs(packageInfo));
+    packageInfo['externalReferences'] = [];
+    assert.isFalse(hasExternalRefs(packageInfo));
+  });
+});

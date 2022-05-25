@@ -1,6 +1,5 @@
 import { readFileSync } from "fs";
 import { Octokit, } from "octokit";
-import { Logform, loggers } from "winston";
 import { Logger } from "./logging";
 import * as util from './util';
 
