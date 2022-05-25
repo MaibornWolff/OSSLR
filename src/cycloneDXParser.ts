@@ -46,7 +46,9 @@ export class CycloneDXParser extends InputParser {
                 name: pkg['name'],
                 version: pkg['version'],
                 licenses: licenses,
-                externalReferences: extRefs
+                externalReferences: extRefs,
+                licenseTexts: [],
+                copyright: []
             };
             packageInfos.push(packageInfo);
         }

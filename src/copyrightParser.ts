@@ -1,11 +1,12 @@
 import { Logger } from "./logging";
 
-/**
+export class CopyrightParser {
+    /**
  * Extracts copyright notice from license file or website.
  * @param {string} license Content of a license file or website potentially containing copyright notice.
  * @returns {string} Extracted copyright notice. Empty string if no matches found.
  */
- export function extractCopyright(license: string, logger: Logger): string {
+ extractCopyright(license: string, logger: Logger): string {
     const regExps = [
         new RegExp('(©|\\(c\\))? ?copyright (©|\\(c\\))? ?[0-9]+.*', 'i'),
         new RegExp('(©|\\(c\\)) copyright.*', 'i'),
@@ -29,7 +30,7 @@ import { Logger } from "./logging";
  * @param {string} copyright The original extracted copyright notice.
  * @returns {string} The updated copyright notice.
  */
- export function removeOverheadFromCopyright(copyright: string): string {
+removeOverheadFromCopyright(copyright: string): string {
     // remove everything in brackets except the (c)
     let re = /\([^)]*\)|<[^>]*>/g;
 
@@ -42,3 +43,7 @@ import { Logger } from "./logging";
     // remove unnecessary whitespace
     return copyright.replace(/\s\s+/g, ' ').trim();
 }
+}
+
+
+
