@@ -4,6 +4,9 @@ import { Logform, loggers } from "winston";
 import { Logger } from "./logging";
 import * as util from './util';
 
+/**
+ * Wrapper for the octokit github client implementation. Used to download repos from github.
+ */
 export class GithubClient {
     private octokit: Octokit;
 
@@ -18,16 +21,18 @@ export class GithubClient {
         }
     }
 
-    private initializeClient(tokenUrl: string, logger: Logger) {
-
-    }
-
-    downloadRepo(url: string, logger: Logger): object {
+    /**
+     * Downloads the github repo with the given url.
+     * @param url The repo url.
+     * @param logger The logger instance.
+     * @returns The content of the repo.
+     */
+    async downloadRepo(url: string, logger: Logger): Promise<Object> {
         let repoInfo = util.filterRepoInfoFromURL(url);
         let repoOwner = repoInfo[0];
         let repoName = repoInfo[1];
         try {
-            let repoContent = this.octokit.rest.repos.getContent({
+            let repoContent = await this.octokit.rest.repos.getContent({
                 owner: repoOwner,
                 repo: repoName,
                 path: ''
@@ -39,7 +44,7 @@ export class GithubClient {
             } else {
                 logger.addToLog(err, 'Error');
             }
-            return null;
+            throw err;
         }
     }
 }

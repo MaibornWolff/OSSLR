@@ -66,7 +66,6 @@ export class CopyrightInserter {
                 }
                 for (let j in packageInfo.externalReferences) {
                     let url = packageInfo.externalReferences[j];
-                    console.log(url)
                     let license = await licenseDownloader.downloadLicense(url, this.logger);
                     if (license != '') {
                         if (!packageInfo.licenseTexts) {
@@ -101,6 +100,4 @@ export class CopyrightInserter {
     private hasExternalRefs(packageInfo: object): boolean {
         return Array.isArray(packageInfo['externalReferences']) && packageInfo['externalReferences'].length > 0;
     }
-
-
 }

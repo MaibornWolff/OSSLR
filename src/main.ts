@@ -8,9 +8,6 @@ async function main() {
     try {
         let copyrightInserter = new CopyrightInserter(bomPath, 'cycloneDX');
         copyrightInserter.retrievePackageInfos();
-        // for (let i in copyrightInserter.packageInfos) {
-        //     console.log(copyrightInserter.packageInfos[i]);
-        // }
         await copyrightInserter.downloadLicenses('access-token');
     } catch (err) {
         console.log(err);

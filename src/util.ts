@@ -51,7 +51,7 @@ export function generateLogMessage(packageInfo: PackageInfo, level: string): str
  * @param {string} url URL to the github repository.
  * @returns {string[]} A string array containing the extracted username and repository name
  */
- export function filterRepoInfoFromURL(url: string): string[] {
+export function filterRepoInfoFromURL(url: string): string[] {
     let re = new RegExp('github.com\/([\\w\-]+)\/([\\w\-\.]+)');
     let filtered = re.exec(url);
     let user = filtered[1];
@@ -59,8 +59,12 @@ export function generateLogMessage(packageInfo: PackageInfo, level: string): str
     return [user, repo];
 }
 
-
-export function writeLicenseToDisk(license: string, packageInfo: PackageInfo) {
+/**
+ * Saves the given license file to the disk.
+ * @param license The license to be saved.
+ * @param packageInfo The information about the corresponding package.
+ */
+export function writeLicenseToDisk(license: string, packageInfo: PackageInfo): void {
     try {
         let fileName = generatePackageName(packageInfo);
         if (!existsSync(path.join('out', 'licenses'))) {
