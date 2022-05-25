@@ -43,40 +43,40 @@ describe('insertCopyrightIntoBom', function () {
     });
 });
 
-describe('hasLicense', function () {
-    let packageInfo = {
-        'licenses': [
-            {
-                'license': {
-                    'id': 'MIT',
-                    'url': 'https://opensource.org/licenses/MIT'
-                }
-            }
-        ]
-    };
-    it('should return whether license information are available for the given package', function () {
-        assert.isTrue(hasLicense(packageInfo));
-        packageInfo['licenses'] = [];
-        assert.isFalse(hasLicense(packageInfo));
-    });
-});
+// describe('hasLicense', function () {
+//     let packageInfo = {
+//         'licenses': [
+//             {
+//                 'license': {
+//                     'id': 'MIT',
+//                     'url': 'https://opensource.org/licenses/MIT'
+//                 }
+//             }
+//         ]
+//     };
+//     it('should return whether license information are available for the given package', function () {
+//         assert.isTrue(hasLicense(packageInfo));
+//         packageInfo['licenses'] = [];
+//         assert.isFalse(hasLicense(packageInfo));
+//     });
+// });
 
-describe('hasExternalReferences', function () {
-    let packageInfo = {
-        'externalReferences': [
-            {
-                'type': 'website',
-                'url': 'https://github.com/readme'
-            },
-            {
-                'type': 'vcs',
-                'url': 'git+https://github.com/plugins.git'
-            }
-        ],
-    };
-    it('should return whether external references are available for the given package', function () {
-        assert.isTrue(hasExternalRefs(packageInfo));
-        packageInfo['externalReferences'] = [];
-        assert.isFalse(hasExternalRefs(packageInfo));
-    });
-});
+// describe('hasExternalReferences', function () {
+//     let packageInfo = {
+//         'externalReferences': [
+//             {
+//                 'type': 'website',
+//                 'url': 'https://github.com/readme'
+//             },
+//             {
+//                 'type': 'vcs',
+//                 'url': 'git+https://github.com/plugins.git'
+//             }
+//         ],
+//     };
+//     it('should return whether external references are available for the given package', function () {
+//         assert.isTrue(hasExternalRefs(packageInfo));
+//         packageInfo['externalReferences'] = [];
+//         assert.isFalse(hasExternalRefs(packageInfo));
+//     });
+// });

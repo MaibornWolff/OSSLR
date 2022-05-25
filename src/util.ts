@@ -1,22 +1,27 @@
 /* eslint-disable indent */
+
+import { existsSync, mkdirSync, writeFileSync } from "fs";
+import path = require("path");
+import { PackageInfo } from "./packageInfo";
+
 /**
  * Generates a name for the given package in the form: "group-name-version".
  * @param {object} packageInfo Entry from bom.json containing information for one package.
  * @returns {string} The generated name for the package.
  */
-export function generatePackageName(packageInfo: object): string {
+export function generatePackageName(packageInfo: PackageInfo): string {
     let fileName = '';
-    if (packageInfo['group'].trim() != '') {
-        fileName += packageInfo['group'] + '-';
+    if (packageInfo.group.trim() != '') {
+        fileName += packageInfo.group + '-';
     }
-    if (packageInfo['name'].trim() != '') {
-        fileName += packageInfo['name'] + '-';
+    if (packageInfo.name.trim() != '') {
+        fileName += packageInfo.name + '-';
     }
     if (fileName === '') {
         fileName = 'unnamed-';
     }
-    if (packageInfo['version'].trim() != '') {
-        fileName += packageInfo['version'];
+    if (packageInfo.version.trim() != '') {
+        fileName += packageInfo.version;
     }
     return fileName.charAt(fileName.length - 1) == '-' ? fileName.substring(0, fileName.length - 1) : fileName;
 }
@@ -27,7 +32,7 @@ export function generatePackageName(packageInfo: object): string {
  * @param {string} level The level of the log message.
  * @returns {string} The message to be added to the log.
  */
-export function generateLogMessage(packageInfo: object, level: string): string {
+export function generateLogMessage(packageInfo: PackageInfo, level: string): string {
     switch (level) {
         case 'License':
             return `No License found for: ${generatePackageName(packageInfo)}`;
@@ -52,4 +57,17 @@ export function generateLogMessage(packageInfo: object, level: string): string {
     let user = filtered[1];
     let repo = filtered[2].replace(new RegExp('.git$'), '');
     return [user, repo];
+}
+
+
+export function writeLicenseToDisk(license: string, packageInfo: PackageInfo) {
+    try {
+        let fileName = generatePackageName(packageInfo);
+        if (!existsSync(path.join('out', 'licenses'))) {
+            mkdirSync(path.join('out', 'licenses'));
+        }
+        writeFileSync(path.join('out', 'licenses', `${fileName}.txt`), license);
+    } catch (err) {
+        console.error(err);
+    }
 }

@@ -6,6 +6,8 @@ import Axios from 'axios';
 import * as util from './util';
 import { Octokit } from 'octokit';
 import { Logger } from './logging';
+import { PackageId } from 'typescript';
+import { PackageInfo } from './packageInfo';
 /**
  * Main loop of the script, coordinating the download of license information, the extraction of
  * the copyright notice and the insertion of the information into the existing bom.
@@ -125,7 +127,7 @@ export function hasExternalRefs(packageInfo: object): boolean {
  * @param {object} githubClient Instance of the githubClient used to communicate with github.com.
  * @returns {string} The extracted copyright notice. Empty string if none was found.
  */
-async function retrieveCopyrightInformation(packageInfo: object, githubClient: Octokit, logger: Logger): Promise<string> {
+async function retrieveCopyrightInformation(packageInfo: PackageInfo, githubClient: Octokit, logger: Logger): Promise<string> {
     const extRefs = packageInfo['externalReferences'];
     let license = '';
     let copyright = '';

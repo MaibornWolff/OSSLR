@@ -1,24 +1,25 @@
 import { readFileSync } from "fs";
-import { Octokit,  } from "octokit";
-import { Logform } from "winston";
+import { Octokit, } from "octokit";
+import { Logform, loggers } from "winston";
 import { Logger } from "./logging";
 import * as util from './util';
 
 export class GithubClient {
-    octokit: Octokit;
+    private octokit: Octokit;
 
-    constructor(tokenUrl: string) {
-        this.initializeClient(tokenUrl);
-    }
-
-    private initializeClient(tokenUrl: string) {
+    constructor(tokenUrl: string, logger: Logger) {
         try {
             const accessToken = readFileSync(tokenUrl, 'utf8');
             this.octokit = new Octokit({ auth: accessToken });
         } catch (err) {
+            logger.addToLog(err, 'Error')
             console.error('Authentication with access-token failed.');
-            console.error(err);
+            throw err;
         }
+    }
+
+    private initializeClient(tokenUrl: string, logger: Logger) {
+
     }
 
     downloadRepo(url: string, logger: Logger): object {

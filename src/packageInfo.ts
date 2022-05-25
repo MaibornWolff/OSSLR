@@ -3,5 +3,6 @@ export interface PackageInfo {
   name: string;
   version: string;
   licenses: object[];
-  externalReferences: object[];
+  externalReferences: string[];
+  licenseTexts: string[];
 }

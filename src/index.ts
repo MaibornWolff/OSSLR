@@ -22,6 +22,7 @@ function main(): void {
         console.error(`Couldn't load bom.json from ${bomPath}.`);
     }
 }
+
 function createGithubClient(): Octokit {
     try {
         const accessToken = readFileSync('access-token', 'utf8');

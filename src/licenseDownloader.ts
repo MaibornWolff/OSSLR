@@ -2,11 +2,15 @@ import Axios from 'axios'
 import { GithubClient } from "./githubClient";
 import { Logger } from "./logging";
 
-class LicenseDownloader {
+export class LicenseDownloader {
     githubClient: GithubClient;
 
-    constructor(tokenUrl: string) {
-        this.githubClient = new GithubClient(tokenUrl);
+    constructor(tokenUrl: string, logger: Logger) {
+        try {
+            this.githubClient = new GithubClient(tokenUrl, logger);
+        } catch (err) {
+            throw err;
+        }
     }
 
     async downloadLicense(url: string, logger: Logger): Promise<string> {
@@ -26,12 +30,17 @@ class LicenseDownloader {
      */
     private async downloadLicenseFromGithub(url: string, logger: Logger): Promise<string> {
         let license = '';
-        let repoContent = this.githubClient.downloadRepo(url, logger);
-        for (let i in repoContent['data']) {
-            let fileName = repoContent['data'][i]['name'];
-            if (fileName.toLowerCase() === 'license' || fileName.match(new RegExp('license\.[\w]*'), 'i')) {
-                license = await this.makeGetRequest(repoContent['data'][i]['download_url']);
+        try {
+            let repoContent = this.githubClient.downloadRepo(url, logger);
+            for (let i in repoContent['data']) {
+                let fileName = repoContent['data'][i]['name'];
+                if (fileName.toLowerCase() === 'license' || fileName.match(new RegExp('license\.[\w]*'), 'i')) {
+                    license = await this.makeGetRequest(repoContent['data'][i]['download_url']);
+                }
             }
+        } catch (err) {
+            console.log(err);
+            return license;
         }
         return license;
     }

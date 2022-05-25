@@ -1,5 +1,5 @@
 {
-  "main": "dist/index.js",
+  "main": "dist/main.js",
   "dependencies": {
     "@types/cli-progress": "^3.11.0",
     "axios": "^0.27.2",
@@ -22,6 +22,6 @@
   },
   "scripts": {
     "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'test/**/*.ts'",
-    "start": "tsc && node build/src/index.js"
+    "start": "tsc && node build/src/main.js"
   }
 }
