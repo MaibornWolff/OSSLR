@@ -1,6 +1,6 @@
 import Axios from 'axios'
 import { GithubClient } from './githubClient';
-import { Logger } from './logging';
+import { Logger } from '../logging';
 
 /**
  * Downloads license files from github and the content of other external websites.

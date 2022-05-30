@@ -1,11 +1,12 @@
 import { SingleBar, Presets } from 'cli-progress';
-import { CopyrightParser } from './copyrightParser';
-import { CycloneDXParser } from './cycloneDXParser';
-import { InputParser } from './inputParser';
+import { CopyrightParser } from '../parser/copyrightParser';
+import { CycloneDXParser } from '../parser/cycloneDXParser';
+import { InputParser } from '../parser/inputParser';
 import { LicenseDownloader } from './licenseDownloader';
-import { Logger } from './logging';
+import { Logger } from '../logging';
 import { PackageInfo } from './packageInfo';
 import * as util from './util';
+import { CycloneDXExporter } from '../export/cyclonDXExporter';
 
 export class CopyrightInserter {
   logger: Logger;
@@ -87,9 +88,14 @@ export class CopyrightInserter {
           continue;
         }
         copyright = copyrightParser.removeOverheadFromCopyright(copyright);
-        this.packageInfos[i].copyright.push(copyright);
+        this.packageInfos[i].copyright = copyright;
       }
     }
+  }
+
+  exportBom(): void {
+    let cycloneDXExporter = new CycloneDXExporter();
+    cycloneDXExporter.exportbom(this.packageInfos, this.parser.format, this.bomData);
   }
 
   /**

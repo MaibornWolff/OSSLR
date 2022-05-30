@@ -1,6 +1,6 @@
 import 'mocha';
 import { expect } from 'chai';
-import { CycloneDXParser } from '../src/cycloneDXParser';
+import { CycloneDXParser } from '../src/parser/cycloneDXParser';
 
 // describe('parseInput', function () {
 //     it('should pass the file to the correct parser', function () {

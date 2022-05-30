@@ -1,4 +1,4 @@
-import { PackageInfo } from './packageInfo';
+import { PackageInfo } from '../model/packageInfo';
 import { readFileSync } from 'fs';
 
 /**

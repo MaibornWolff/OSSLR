@@ -3,8 +3,8 @@ import 'mocha';
 import { assert } from 'chai';
 import {
   CopyrightInserter
-} from '../src/copyrightInserter';
-import { PackageInfo } from '../src/packageInfo';
+} from '../src/model/copyrightInserter';
+import { PackageInfo } from '../src/model/packageInfo';
 
 
 // describe("insertCopyrightIntoBom", function () {
@@ -64,7 +64,7 @@ describe('hasLicense', function () {
       group: 'group',
       name: 'name',
       version: 'version',
-      copyright: [],
+      copyright: "",
       externalReferences: [],
       licenses: [
         {
@@ -93,7 +93,7 @@ describe('hasExternalReferences', function () {
       group: 'group',
       name: 'name',
       version: 'version',
-      copyright: [],
+      copyright: "",
       externalReferences: [
         'https://github.com/readme',
         'git+https://github.com/plugins.git'

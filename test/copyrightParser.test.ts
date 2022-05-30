@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import { CopyrightParser } from '../src/copyrightParser';
+import { CopyrightParser } from '../src/parser/copyrightParser';
 
 describe('removeOverheadFromCopyright', function () {
     let copyrightParser = new CopyrightParser();

@@ -8,5 +8,5 @@ export interface PackageInfo {
   licenses: object[];
   externalReferences: string[];
   licenseTexts: string[];
-  copyright: string[];
+  copyright: string;
 }

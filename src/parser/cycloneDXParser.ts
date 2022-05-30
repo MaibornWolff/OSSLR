@@ -1,5 +1,5 @@
 import { InputParser } from './inputParser';
-import { PackageInfo } from './packageInfo';
+import { PackageInfo } from '../model/packageInfo';
 
 /**
  * Input Parser implementation for the CycloneDX format. Extracts package information from the bom file and stores them in a PackageInfo object.
@@ -48,7 +48,7 @@ export class CycloneDXParser extends InputParser {
                 licenses: licenses,
                 externalReferences: extRefs,
                 licenseTexts: [],
-                copyright: []
+                copyright: ""
             };
             packageInfos.push(packageInfo);
         }

@@ -1,15 +1,15 @@
 /* eslint-disable no-undef */
 import 'mocha';
 import { assert } from 'chai';
-import { generatePackageName, generateLogMessage, filterRepoInfoFromURL } from '../src/util';
-import { PackageInfo } from '../src/packageInfo';
+import { generatePackageName, generateLogMessage, filterRepoInfoFromURL } from '../src/model/util';
+import { PackageInfo } from '../src/model/packageInfo';
 
 describe('generatePackageName', function () {
     let packageInfo: PackageInfo = {
         group: '',
         name: '',
         version: '',
-        copyright: [],
+        copyright: "",
         externalReferences: [],
         licenses: [],
         licenseTexts: []
@@ -38,7 +38,7 @@ describe('generateLogMessage', function () {
         group: '',
         name: '',
         version: '',
-        copyright: [],
+        copyright: "",
         externalReferences: [],
         licenses: [],
         licenseTexts: []

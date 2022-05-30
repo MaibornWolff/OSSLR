@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { CopyrightInserter } from './copyrightInserter';
+import { CopyrightInserter } from './model/copyrightInserter';
 
 main();
 
@@ -15,8 +15,11 @@ async function main() {
         copyrightInserter.retrievePackageInfos();
         await copyrightInserter.downloadLicenses('access-token');
         copyrightInserter.parseCopyright();
+        copyrightInserter.exportBom();
     } catch (err) {
         console.log(err);
         return;
     }
 }
+
+
