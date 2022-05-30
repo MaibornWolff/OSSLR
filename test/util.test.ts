@@ -9,7 +9,7 @@ describe('generatePackageName', function () {
         group: '',
         name: '',
         version: '',
-        copyright: "",
+        copyright: '',
         externalReferences: [],
         licenses: [],
         licenseTexts: []
@@ -38,7 +38,7 @@ describe('generateLogMessage', function () {
         group: '',
         name: '',
         version: '',
-        copyright: "",
+        copyright: '',
         externalReferences: [],
         licenses: [],
         licenseTexts: []

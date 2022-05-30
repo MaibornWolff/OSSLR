@@ -70,7 +70,7 @@ describe('parseJSON', function () {
             ],
             externalReferences: ['https://github.com/group/name', 'https://secondLink.com'],
             licenseTexts: [],
-            copyright: []
+            copyright: ''
         }]);
         rawJSON['components'][0]['licenses'] = [];
         rawJSON['components'][0]['externalReferences'] = [];
@@ -81,7 +81,7 @@ describe('parseJSON', function () {
             licenses: [],
             externalReferences: [],
             licenseTexts: [],
-            copyright: []
+            copyright: ''
         }]);
     });
 });

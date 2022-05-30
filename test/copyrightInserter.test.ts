@@ -64,7 +64,7 @@ describe('hasLicense', function () {
       group: 'group',
       name: 'name',
       version: 'version',
-      copyright: "",
+      copyright: '',
       externalReferences: [],
       licenses: [
         {
@@ -93,7 +93,7 @@ describe('hasExternalReferences', function () {
       group: 'group',
       name: 'name',
       version: 'version',
-      copyright: "",
+      copyright: '',
       externalReferences: [
         'https://github.com/readme',
         'git+https://github.com/plugins.git'
