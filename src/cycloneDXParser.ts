@@ -28,7 +28,7 @@ export class CycloneDXParser extends InputParser {
      * @param data The content of the bom file to be parsed.
      * @returns List of PackageInfo objects containing the extracted information.
      */
-    private parseJSON(data: string): PackageInfo[] {
+    parseJSON(data: string): PackageInfo[] {
         let rawData = JSON.parse(data);
         let packageInfos = [];
         for (let i in rawData['components']) {

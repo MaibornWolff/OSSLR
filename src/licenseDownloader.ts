@@ -31,7 +31,7 @@ export class LicenseDownloader {
      * @param {Logger} logger The logger instance.
      * @returns {string} The content of the license file. Empty string if none was found.
      */
-    private async downloadLicenseFromGithub(url: string, logger: Logger): Promise<string> {
+    async downloadLicenseFromGithub(url: string, logger: Logger): Promise<string> {
         let license = '';
         try {
             let repoContent = await this.githubClient.downloadRepo(url, logger);
@@ -54,7 +54,7 @@ export class LicenseDownloader {
      * @param {Logger} logger The logger instance.
      * @returns {Promise<string>} A string containing the content of the website as html.
      */
-    private async downloadLicenseFromExternalWebsite(url: string, logger: Logger): Promise<string> {
+    async downloadLicenseFromExternalWebsite(url: string, logger: Logger): Promise<string> {
         try {
             return await this.makeGetRequest(url);
         } catch (err) {

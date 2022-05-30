@@ -28,32 +28,32 @@ import { PackageInfo } from "../src/packageInfo";
 //   });
 // });
 
-describe('parseCopyright', function () {
-  let copyrightInserter: CopyrightInserter;
-  let packageInfo: PackageInfo;
-  this.beforeEach(function () {
-    copyrightInserter = new CopyrightInserter();
-    packageInfo = {
-      group: 'group',
-      name: 'name',
-      version: 'version',
-      copyright: [],
-      externalReferences: [],
-      licenses: [
-        {
-          "license": {
-            "id": "MIT",
-            "url": "https://opensource.org/licenses/MIT"
-          }
-        }
-      ],
-      licenseTexts: []
-    };
-  });
-  it('should', function () {
-    copyrightInserter.retrievePackageInfos
-  });
-});
+// describe('parseCopyright', function () {
+//   let copyrightInserter: CopyrightInserter;
+//   let packageInfo: PackageInfo;
+//   this.beforeEach(function () {
+//     copyrightInserter = new CopyrightInserter();
+//     packageInfo = {
+//       group: 'group',
+//       name: 'name',
+//       version: 'version',
+//       copyright: [],
+//       externalReferences: [],
+//       licenses: [
+//         {
+//           "license": {
+//             "id": "MIT",
+//             "url": "https://opensource.org/licenses/MIT"
+//           }
+//         }
+//       ],
+//       licenseTexts: []
+//     };
+//   });
+//   it('should', function () {
+//     copyrightInserter.retrievePackageInfos
+//   });
+// });
 
 describe('hasLicense', function () {
   let copyrightInserter: CopyrightInserter;
