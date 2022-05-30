@@ -1,5 +1,5 @@
-import { readFileSync } from "fs";
-import { Octokit, } from "octokit";
+import { readFileSync } from 'fs';
+import { Octokit, } from 'octokit';
 import * as util from './util';
 
 /**

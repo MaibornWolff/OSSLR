@@ -1,5 +1,5 @@
 import Axios from 'axios'
-import { GithubClient } from "./githubClient";
+import { GithubClient } from './githubClient';
 import { Logger } from './logging';
 
 /**
