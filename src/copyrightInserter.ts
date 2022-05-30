@@ -1,7 +1,4 @@
 import { SingleBar, Presets } from "cli-progress";
-import { existsSync, mkdirSync, writeFileSync } from "fs";
-import path = require("path");
-import { removeOverheadFromCopyright } from "./copyright";
 import { CopyrightParser } from "./copyrightParser";
 import { CycloneDXParser } from "./cycloneDXParser";
 import { InputParser } from "./inputParser";
@@ -17,17 +14,12 @@ export class CopyrightInserter {
   bomPath: string;
   bomData: string;
 
-  constructor(bomPath: string, bomFormat: string) {
+  constructor() {
     this.logger = new Logger();
-    try {
-      this.initParser(bomFormat, bomPath);
-    } catch (err) {
-      throw err;
-    }
-    this.bomPath = bomPath;
   }
 
-  private initParser(bomFormat: string, bomPath: string) {
+  initParser(bomFormat: string, bomPath: string): void {
+    this.bomPath = bomPath;
     let dataFormat = bomPath.split(".").pop();
     switch (bomFormat) {
       case "cycloneDX":
@@ -53,9 +45,8 @@ export class CopyrightInserter {
       console.log("Retrieving License Information...");
       const progBar = new SingleBar({}, Presets.shades_classic);
       progBar.start(this.packageInfos.length, 0);
-      for (let i in this.packageInfos) {
+      for (let packageInfo of this.packageInfos) {        
         progBar.increment();
-        let packageInfo = this.packageInfos[i];
         if (!this.hasLicense(packageInfo)) {
           let message = util.generateLogMessage(packageInfo, "License");
           this.logger.addToLog(message, "License");
@@ -66,8 +57,7 @@ export class CopyrightInserter {
           this.logger.addToLog(message, "ExtRefs");
           continue;
         }
-        for (let j in packageInfo.externalReferences) {
-          let url = packageInfo.externalReferences[j];
+        for (let url of packageInfo.externalReferences) {
           let license = await licenseDownloader.downloadLicense(
             url,
             this.logger
@@ -85,7 +75,7 @@ export class CopyrightInserter {
     }
   }
 
-  parseCopyright() {
+  parseCopyright(): void {
     let copyrightParser = new CopyrightParser();
     for (let i = 0; i < this.packageInfos.length; i++) {
       for (let j = 0; j < this.packageInfos[i].licenseTexts.length; j++) {
@@ -93,7 +83,11 @@ export class CopyrightInserter {
           this.packageInfos[i].licenseTexts[j],
           this.logger
         );
+<<<<<<< HEAD
         if (copyright === "") {
+=======
+        if (copyright === '') {
+>>>>>>> 66755b9d80e5ee8deb08c5f5b4aba9ffac6c1d31
           continue;
         }
         copyright = copyrightParser.removeOverheadFromCopyright(copyright);
@@ -107,7 +101,7 @@ export class CopyrightInserter {
    * @param {object} packageInfo Entry from bom.json containing information for one package.
    * @returns {boolean} Whether the packageInfo contains a license.
    */
-  private hasLicense(packageInfo: object): boolean {
+  hasLicense(packageInfo: object): boolean {
     return (
       Array.isArray(packageInfo["licenses"]) &&
       packageInfo["licenses"].length > 0
@@ -119,7 +113,7 @@ export class CopyrightInserter {
    * @param {object} packageInfo Entry from bom.json containing information for one package.
    * @returns {boolean} Whether the packageInfo contains external references.
    */
-  private hasExternalRefs(packageInfo: object): boolean {
+  hasExternalRefs(packageInfo: object): boolean {
     return (
       Array.isArray(packageInfo["externalReferences"]) &&
       packageInfo["externalReferences"].length > 0

@@ -42,7 +42,7 @@ export class LicenseDownloader {
                 }
             }
         } catch (err) {
-            console.log(err);
+            logger.addToLog(err, 'Error');
             return license;
         }
         return license;

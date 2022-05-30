@@ -6,6 +6,9 @@ import { readFileSync } from 'fs';
  * is implemented in subclasses for the specific data format.
  */
 export abstract class InputParser {
+    /**
+     * The file format of the bom file.
+     */
     format: string;
 
     constructor(format: string) {
