@@ -14,17 +14,12 @@ export class CopyrightInserter {
   bomPath: string;
   bomData: string;
 
-  constructor(bomPath: string, bomFormat: string) {
+  constructor() {
     this.logger = new Logger();
-    try {
-      this.initParser(bomFormat, bomPath);
-    } catch (err) {
-      throw err;
-    }
-    this.bomPath = bomPath;
   }
 
-  private initParser(bomFormat: string, bomPath: string) {
+  initParser(bomFormat: string, bomPath: string): void {
+    this.bomPath = bomPath;
     let dataFormat = bomPath.split(".").pop();
     switch (bomFormat) {
       case "cycloneDX":
@@ -82,7 +77,7 @@ export class CopyrightInserter {
     }
   }
 
-  parseCopyright() {
+  parseCopyright(): void {
     let copyrightParser = new CopyrightParser();
     for (let i = 0; i < this.packageInfos.length; i++) {
       for (let j = 0; j < this.packageInfos[i].licenseTexts.length; j++) {
@@ -99,14 +94,12 @@ export class CopyrightInserter {
     }
   }
 
-
-
   /**
    * Checks whether the bom contains license information for the given package.
    * @param {object} packageInfo Entry from bom.json containing information for one package.
    * @returns {boolean} Whether the packageInfo contains a license.
    */
-  private hasLicense(packageInfo: object): boolean {
+  hasLicense(packageInfo: object): boolean {
     return (
       Array.isArray(packageInfo["licenses"]) &&
       packageInfo["licenses"].length > 0
@@ -118,7 +111,7 @@ export class CopyrightInserter {
    * @param {object} packageInfo Entry from bom.json containing information for one package.
    * @returns {boolean} Whether the packageInfo contains external references.
    */
-  private hasExternalRefs(packageInfo: object): boolean {
+  hasExternalRefs(packageInfo: object): boolean {
     return (
       Array.isArray(packageInfo["externalReferences"]) &&
       packageInfo["externalReferences"].length > 0

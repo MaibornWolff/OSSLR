@@ -41,7 +41,6 @@ export function generateLogMessage(packageInfo: PackageInfo, level: string): str
         case 'Copyright':
             return `Unable to extract copyright notice for: ${generatePackageName(packageInfo)}`;
         default:
-            console.error(`Error: Unknown log level: ${level}. No log entry created for package: ${generatePackageName(packageInfo)}`);
             return '';
     }
 }
