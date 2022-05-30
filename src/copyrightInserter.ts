@@ -45,9 +45,8 @@ export class CopyrightInserter {
       console.log("Retrieving License Information...");
       const progBar = new SingleBar({}, Presets.shades_classic);
       progBar.start(this.packageInfos.length, 0);
-      for (let i in this.packageInfos) {
+      for (let packageInfo of this.packageInfos) {        
         progBar.increment();
-        let packageInfo = this.packageInfos[i];
         if (!this.hasLicense(packageInfo)) {
           let message = util.generateLogMessage(packageInfo, "License");
           this.logger.addToLog(message, "License");
@@ -58,8 +57,7 @@ export class CopyrightInserter {
           this.logger.addToLog(message, "ExtRefs");
           continue;
         }
-        for (let j in packageInfo.externalReferences) {
-          let url = packageInfo.externalReferences[j];
+        for (let url of packageInfo.externalReferences) {
           let license = await licenseDownloader.downloadLicense(
             url,
             this.logger

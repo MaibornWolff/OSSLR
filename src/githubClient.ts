@@ -14,7 +14,6 @@ export class GithubClient {
             const accessToken = readFileSync(tokenUrl, 'utf8');
             this.octokit = new Octokit({ auth: accessToken });
         } catch (err) {
-            logger.addToLog(err, 'Error')
             console.error('Authentication with access-token failed.');
             throw err;
         }
@@ -31,7 +30,7 @@ export class GithubClient {
         let repoOwner = repoInfo[0];
         let repoName = repoInfo[1];
         try {
-            let repoContent = await this.octokit.rest.repos.getContent({
+            let repoContent = this.octokit.rest.repos.getContent({
                 owner: repoOwner,
                 repo: repoName,
                 path: ''
@@ -39,11 +38,10 @@ export class GithubClient {
             return repoContent;
         } catch (err) {
             if (err.status == '404') {
-                logger.addToLog(`Repository with URL ${url} not found.`, 'Error');
+                throw `Repository with URL ${url} not found.`;
             } else {
-                logger.addToLog(err, 'Error');
+                throw err;
             }
-            throw err;
         }
     }
 }
