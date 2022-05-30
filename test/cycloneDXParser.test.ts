@@ -1,21 +1,25 @@
 import 'mocha';
-import { expect } from 'chai';
+import { stub, restore } from 'sinon';
+import { assert, expect } from 'chai';
 import { CycloneDXParser } from '../src/parser/cycloneDXParser';
 
-// describe('parseInput', function () {
-//     it('should pass the file to the correct parser', function () {
-//         stub(CycloneDXParser.prototype, 'parseJSON').returns([]);
+describe('parseInput', function () {
+    it('should pass the file to the correct parser', function () {
+        stub(CycloneDXParser.prototype, 'parseJSON').returns([]);
 
-//         let cycloneDXParser = new CycloneDXParser('json');
-//         assert.isEmpty(cycloneDXParser.parseInput(''));
-//     });
-//     it('should throw an error if the file format is not supported', function () {
-//         let cycloneDXParser = new CycloneDXParser('xml');
-//         expect(() => {
-//             cycloneDXParser.parseInput('');
-//         }).to.throw(Error, 'Unsupported file format xml');
-//     });
-// });
+        let cycloneDXParser = new CycloneDXParser('json');
+        assert.isEmpty(cycloneDXParser.parseInput(''));
+    });
+    it('should throw an error if the file format is not supported', function () {
+        let cycloneDXParser = new CycloneDXParser('xml');
+        expect(() => {
+            cycloneDXParser.parseInput('');
+        }).to.throw(Error, 'Unsupported file format xml');
+    });
+    this.afterEach(() => {
+        restore();
+    });
+});
 
 describe('parseJSON', function () {
     it('should correctly save the package information in a PackageInfo object', function () {
