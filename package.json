@@ -15,6 +15,7 @@
     "chai": "^4.3.6",
     "eslint": "^8.15.0",
     "mocha": "^10.0.0",
+    "sinon": "^14.0.0",
     "ts-node": "^10.8.0"
   },
   "optionalDependencies": {
