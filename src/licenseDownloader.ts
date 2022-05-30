@@ -1,6 +1,6 @@
 import Axios from 'axios'
 import { GithubClient } from "./githubClient";
-import { Logger } from "./logging";
+import { Logger } from './logging';
 
 /**
  * Downloads license files from github and the content of other external websites.
@@ -8,9 +8,9 @@ import { Logger } from "./logging";
 export class LicenseDownloader {
     githubClient: GithubClient;
 
-    constructor(tokenUrl: string, logger: Logger) {
+    constructor(tokenUrl: string) {
         try {
-            this.githubClient = new GithubClient(tokenUrl, logger);
+            this.githubClient = new GithubClient(tokenUrl);
         } catch (err) {
             throw err;
         }
@@ -34,7 +34,7 @@ export class LicenseDownloader {
     async downloadLicenseFromGithub(url: string, logger: Logger): Promise<string> {
         let license = '';
         try {
-            let repoContent = await this.githubClient.downloadRepo(url, logger);
+            let repoContent = await this.githubClient.downloadRepo(url);
             for (let i in repoContent['data']) {
                 let fileName = repoContent['data'][i]['name'];
                 if (fileName.toLowerCase() === 'license' || fileName.match(new RegExp('license\.[\w]*'), 'i')) {
@@ -78,7 +78,7 @@ export class LicenseDownloader {
         return new Promise<string>(function (resolve, reject) {
             Axios.get(url).then(
                 (response) => {
-                    var result = response.data;
+                    let result = response.data;
                     resolve(result);
                 },
                 (error) => {

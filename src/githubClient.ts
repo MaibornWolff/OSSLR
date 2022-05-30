@@ -1,6 +1,5 @@
 import { readFileSync } from "fs";
 import { Octokit, } from "octokit";
-import { Logger } from "./logging";
 import * as util from './util';
 
 /**
@@ -9,7 +8,7 @@ import * as util from './util';
 export class GithubClient {
     private octokit: Octokit;
 
-    constructor(tokenUrl: string, logger: Logger) {
+    constructor(tokenUrl: string) {
         try {
             const accessToken = readFileSync(tokenUrl, 'utf8');
             this.octokit = new Octokit({ auth: accessToken });
@@ -25,7 +24,7 @@ export class GithubClient {
      * @param logger The logger instance.
      * @returns The content of the repo.
      */
-    async downloadRepo(url: string, logger: Logger): Promise<Object> {
+    async downloadRepo(url: string): Promise<unknown> {
         let repoInfo = util.filterRepoInfoFromURL(url);
         let repoOwner = repoInfo[0];
         let repoName = repoInfo[1];

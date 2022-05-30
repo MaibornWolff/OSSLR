@@ -1,46 +1,46 @@
-import { assert } from "chai";
-import { CopyrightParser } from "../src/copyrightParser";
+import { assert } from 'chai';
+import { CopyrightParser } from '../src/copyrightParser';
 
-describe("removeOverheadFromCopyright", function () {
+describe('removeOverheadFromCopyright', function () {
     let copyrightParser = new CopyrightParser();
-    it("should remove html tags", function () {
+    it('should remove html tags', function () {
         assert.equal(
-            copyrightParser.removeOverheadFromCopyright("Copyright <div> 2019 </div> Max Mustermann"),
-            "Copyright 2019 Max Mustermann"
+            copyrightParser.removeOverheadFromCopyright('Copyright <div> 2019 </div> Max Mustermann'),
+            'Copyright 2019 Max Mustermann'
         );
         assert.equal(
-            copyrightParser.removeOverheadFromCopyright("<http://website.de> Hello <> World"),
-            "Hello World"
+            copyrightParser.removeOverheadFromCopyright('<http://website.de> Hello <> World'),
+            'Hello World'
         );
-        assert.equal(copyrightParser.removeOverheadFromCopyright("<This should be removed>"), "");
+        assert.equal(copyrightParser.removeOverheadFromCopyright('<This should be removed>'), '');
     });
 
-    it("should remove text enclosed by parenthesis", function () {
+    it('should remove text enclosed by parenthesis', function () {
         assert.equal(
             copyrightParser.removeOverheadFromCopyright(
-                "Copyright Test Owner (test-owner@domain.com)"
+                'Copyright Test Owner (test-owner@domain.com)'
             ),
-            "Copyright Test Owner"
+            'Copyright Test Owner'
         );
-        assert.equal(copyrightParser.removeOverheadFromCopyright("() Copyright"), "Copyright");
+        assert.equal(copyrightParser.removeOverheadFromCopyright('() Copyright'), 'Copyright');
     });
 
-    it("should preserve the (c) symbol", function () {
-        assert.equal(copyrightParser.removeOverheadFromCopyright("(c) Copyright"), "(c) Copyright");
+    it('should preserve the (c) symbol', function () {
+        assert.equal(copyrightParser.removeOverheadFromCopyright('(c) Copyright'), '(c) Copyright');
         assert.equal(
-            copyrightParser.removeOverheadFromCopyright("(ccc) Copyright (C)"),
-            "Copyright (C)"
+            copyrightParser.removeOverheadFromCopyright('(ccc) Copyright (C)'),
+            'Copyright (C)'
         );
     });
 
-    it("should remove all unnecessary whitespace", function () {
+    it('should remove all unnecessary whitespace', function () {
         assert.equal(
-            copyrightParser.removeOverheadFromCopyright("  first  (c)    second   "),
-            "first (c) second"
+            copyrightParser.removeOverheadFromCopyright('  first  (c)    second   '),
+            'first (c) second'
         );
         assert.equal(
-            copyrightParser.removeOverheadFromCopyright("<  >  () copyright "),
-            "copyright"
+            copyrightParser.removeOverheadFromCopyright('<  >  () copyright '),
+            'copyright'
         );
     });
 });

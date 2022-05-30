@@ -34,7 +34,7 @@ export class CycloneDXParser extends InputParser {
         for (let i in rawData['components']) {
             let pkg = rawData['components'][i];
             let licenses = [];
-            for (let j in pkg['licenses']) {
+            for (let j in pkg["licenses"]) {
                 licenses.push(pkg['licenses'][j]);
             }
             let extRefs = [];

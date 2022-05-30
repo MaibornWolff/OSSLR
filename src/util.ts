@@ -1,8 +1,8 @@
 /* eslint-disable indent */
 
-import { existsSync, mkdirSync, writeFileSync } from "fs";
-import path = require("path");
-import { PackageInfo } from "./packageInfo";
+import { existsSync, mkdirSync, writeFileSync } from 'fs';
+import path = require('path');
+import { PackageInfo } from './packageInfo';
 
 /**
  * Generates a name for the given package in the form: "group-name-version".

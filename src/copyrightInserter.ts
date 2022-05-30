@@ -1,11 +1,11 @@
-import { SingleBar, Presets } from "cli-progress";
-import { CopyrightParser } from "./copyrightParser";
-import { CycloneDXParser } from "./cycloneDXParser";
-import { InputParser } from "./inputParser";
-import { LicenseDownloader } from "./licenseDownloader";
-import { Logger } from "./logging";
-import { PackageInfo } from "./packageInfo";
-import * as util from "./util";
+import { SingleBar, Presets } from 'cli-progress';
+import { CopyrightParser } from './copyrightParser';
+import { CycloneDXParser } from './cycloneDXParser';
+import { InputParser } from './inputParser';
+import { LicenseDownloader } from './licenseDownloader';
+import { Logger } from './logging';
+import { PackageInfo } from './packageInfo';
+import * as util from './util';
 
 export class CopyrightInserter {
   logger: Logger;
@@ -20,9 +20,9 @@ export class CopyrightInserter {
 
   initParser(bomFormat: string, bomPath: string): void {
     this.bomPath = bomPath;
-    let dataFormat = bomPath.split(".").pop();
+    let dataFormat = bomPath.split('.').pop();
     switch (bomFormat) {
-      case "cycloneDX":
+      case 'cycloneDX':
         this.parser = new CycloneDXParser(dataFormat);
         break;
       default:
@@ -41,20 +41,20 @@ export class CopyrightInserter {
 
   async downloadLicenses(tokenUrl: string) {
     try {
-      let licenseDownloader = new LicenseDownloader(tokenUrl, this.logger);
-      console.log("Retrieving License Information...");
+      let licenseDownloader = new LicenseDownloader(tokenUrl);
+      console.log('Retrieving License Information...');
       const progBar = new SingleBar({}, Presets.shades_classic);
       progBar.start(this.packageInfos.length, 0);
       for (let packageInfo of this.packageInfos) {        
         progBar.increment();
         if (!this.hasLicense(packageInfo)) {
-          let message = util.generateLogMessage(packageInfo, "License");
-          this.logger.addToLog(message, "License");
+          let message = util.generateLogMessage(packageInfo, 'License');
+          this.logger.addToLog(message, 'License');
           continue;
         }
         if (!this.hasExternalRefs(packageInfo)) {
-          let message = util.generateLogMessage(packageInfo, "ExtRefs");
-          this.logger.addToLog(message, "ExtRefs");
+          let message = util.generateLogMessage(packageInfo, 'ExtRefs');
+          this.logger.addToLog(message, 'ExtRefs');
           continue;
         }
         for (let url of packageInfo.externalReferences) {
@@ -62,14 +62,14 @@ export class CopyrightInserter {
             url,
             this.logger
           );
-          if (license != "") {
+          if (license != '') {
             packageInfo.licenseTexts.push(license);
             util.writeLicenseToDisk(license, packageInfo);
           }
         }
       }
       progBar.stop();
-      console.log("Done!");
+      console.log('Done!');
     } catch (err) {
       throw err;
     }
@@ -99,8 +99,8 @@ export class CopyrightInserter {
    */
   hasLicense(packageInfo: object): boolean {
     return (
-      Array.isArray(packageInfo["licenses"]) &&
-      packageInfo["licenses"].length > 0
+      Array.isArray(packageInfo['licenses']) &&
+      packageInfo['licenses'].length > 0
     );
   }
 
@@ -111,8 +111,8 @@ export class CopyrightInserter {
    */
   hasExternalRefs(packageInfo: object): boolean {
     return (
-      Array.isArray(packageInfo["externalReferences"]) &&
-      packageInfo["externalReferences"].length > 0
+      Array.isArray(packageInfo['externalReferences']) &&
+      packageInfo['externalReferences'].length > 0
     );
   }
 }

@@ -1,10 +1,10 @@
 /* eslint-disable no-undef */
-import "mocha";
-import { assert } from "chai";
+import 'mocha';
+import { assert } from 'chai';
 import {
   CopyrightInserter
-} from "../src/copyrightInserter";
-import { PackageInfo } from "../src/packageInfo";
+} from '../src/copyrightInserter';
+import { PackageInfo } from '../src/packageInfo';
 
 
 // describe("insertCopyrightIntoBom", function () {
@@ -68,9 +68,9 @@ describe('hasLicense', function () {
       externalReferences: [],
       licenses: [
         {
-          "license": {
-            "id": "MIT",
-            "url": "https://opensource.org/licenses/MIT"
+          'license': {
+            'id': 'MIT',
+            'url': 'https://opensource.org/licenses/MIT'
           }
         }
       ],

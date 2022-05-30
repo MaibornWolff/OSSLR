@@ -1,7 +1,6 @@
-import "mocha";
-import { stub } from "sinon";
-import { assert, expect } from "chai";
-import { CycloneDXParser } from "../src/cycloneDXParser";
+import 'mocha';
+import { expect } from 'chai';
+import { CycloneDXParser } from '../src/cycloneDXParser';
 
 // describe('parseInput', function () {
 //     it('should pass the file to the correct parser', function () {
@@ -21,32 +20,32 @@ import { CycloneDXParser } from "../src/cycloneDXParser";
 describe('parseJSON', function () {
     it('should correctly save the package information in a PackageInfo object', function () {
         let rawJSON = {
-            "components": [{
-                "group": "group",
-                "name": "name",
-                "version": "version",
-                "scope": "optional",
-                "licenses": [
+            'components': [{
+                'group': 'group',
+                'name': 'name',
+                'version': 'version',
+                'scope': 'optional',
+                'licenses': [
                     {
-                        "license": {
-                            "id": "Apache-2.0",
-                            "url": "https://opensource.org/licenses/Apache-2.0"
+                        'license': {
+                            'id': 'Apache-2.0',
+                            'url': 'https://opensource.org/licenses/Apache-2.0'
                         },
                     }, {
-                        "license": {
-                            "id": "MIT",
-                            "url": "https://opensource.org/licenses/MIT"
+                        'license': {
+                            'id': 'MIT',
+                            'url': 'https://opensource.org/licenses/MIT'
                         }
                     }
                 ],
-                "externalReferences": [
+                'externalReferences': [
                     {
-                        "type": "website",
-                        "url": "https://github.com/group/name"
+                        'type': 'website',
+                        'url': 'https://github.com/group/name'
                     },
                     {
-                        "type": "vcs",
-                        "url": "https://secondLink.com"
+                        'type': 'vcs',
+                        'url': 'https://secondLink.com'
                     }
                 ],
             }]
@@ -58,18 +57,18 @@ describe('parseJSON', function () {
             version: 'version',
             licenses: [
                 {
-                    "license": {
-                        "id": "Apache-2.0",
-                        "url": "https://opensource.org/licenses/Apache-2.0"
+                    'license': {
+                        'id': 'Apache-2.0',
+                        'url': 'https://opensource.org/licenses/Apache-2.0'
                     },
                 }, {
-                    "license": {
-                        "id": "MIT",
-                        "url": "https://opensource.org/licenses/MIT"
+                    'license': {
+                        'id': 'MIT',
+                        'url': 'https://opensource.org/licenses/MIT'
                     }
                 }
             ],
-            externalReferences: ["https://github.com/group/name", "https://secondLink.com"],
+            externalReferences: ['https://github.com/group/name', 'https://secondLink.com'],
             licenseTexts: [],
             copyright: []
         }]);
