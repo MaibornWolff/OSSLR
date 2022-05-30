@@ -93,16 +93,14 @@ export class CopyrightInserter {
           this.packageInfos[i].licenseTexts[j],
           this.logger
         );
-        if (copyright === ''){
-            continue;
+        if (copyright === "") {
+          continue;
         }
         copyright = copyrightParser.removeOverheadFromCopyright(copyright);
         this.packageInfos[i].copyright.push(copyright);
       }
     }
   }
-
-
 
   /**
    * Checks whether the bom contains license information for the given package.
