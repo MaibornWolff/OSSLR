@@ -83,11 +83,7 @@ export class CopyrightInserter {
           this.packageInfos[i].licenseTexts[j],
           this.logger
         );
-<<<<<<< HEAD
-        if (copyright === "") {
-=======
         if (copyright === '') {
->>>>>>> 66755b9d80e5ee8deb08c5f5b4aba9ffac6c1d31
           continue;
         }
         copyright = copyrightParser.removeOverheadFromCopyright(copyright);
