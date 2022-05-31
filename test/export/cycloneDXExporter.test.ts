@@ -66,7 +66,7 @@ describe('insertCopyrightIntoBom', function () {
             }
         ]
     });
-    it('should', function () {
+    it('should insert the extracted copyright notices into the bom', function () {
         assert.deepEqual(cycloneDXExporter.insertCopyrightIntoBom(packageInfos, originalBom), {
             'components': [
                 {
