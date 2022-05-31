@@ -1,7 +1,7 @@
 import 'mocha';
 import { stub, restore } from 'sinon';
 import { assert, expect } from 'chai';
-import { CycloneDXParser } from '../src/parser/cycloneDXParser';
+import { CycloneDXParser } from '../../src/parser/cycloneDXParser';
 
 describe('parseInput', function () {
     this.beforeEach(function () {

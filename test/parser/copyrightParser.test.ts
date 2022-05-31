@@ -1,5 +1,25 @@
 import { assert } from 'chai';
-import { CopyrightParser } from '../src/parser/copyrightParser';
+import { Logger } from '../../src/logging';
+import { CopyrightParser } from '../../src/parser/copyrightParser';
+
+describe('extractCopyright', function () {
+    let copyrightParser: CopyrightParser;
+    let logger: Logger;
+    this.beforeEach(function () {
+        copyrightParser = new CopyrightParser();
+        logger = new Logger();
+    });
+    it('should extract Copyright notices including (c) annotation', function () {
+        assert.equal(copyrightParser.extractCopyright('Not this copyright (c) Owner Name', logger), 'copyright (c) Owner Name');
+        assert.equal(copyrightParser.extractCopyright('More Text \n(C) Copyright 2020', logger), '(C) Copyright 2020');
+        assert.equal(copyrightParser.extractCopyright('© Copyright', logger), '© Copyright');
+    });
+    it('should extract Copyright notices including a year specification', function () {
+        assert.equal(copyrightParser.extractCopyright('copyright 2019-2020', logger), 'copyright 2019-2020');
+        assert.equal(copyrightParser.extractCopyright('Text \nCopyright 2020 Owner', logger), 'Copyright 2020 Owner');
+        assert.equal(copyrightParser.extractCopyright('Copyright © 2020', logger), 'Copyright © 2020');
+    });
+});
 
 describe('removeOverheadFromCopyright', function () {
     let copyrightParser;

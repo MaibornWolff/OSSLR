@@ -1,8 +1,8 @@
 /* eslint-disable no-undef */
 import 'mocha';
 import { assert } from 'chai';
-import { generatePackageName, generateLogMessage } from '../src/model/util';
-import { PackageInfo } from '../src/model/packageInfo';
+import { generatePackageName, generateLogMessage } from '../../src/model/util';
+import { PackageInfo } from '../../src/model/packageInfo';
 
 describe('generatePackageName', function () {
     let packageInfo: PackageInfo;
