@@ -7,11 +7,7 @@ async function main() {
     let bomPath = path.join('out', 'bom.json');
     try {
         let copyrightInserter = new CopyrightInserter();
-        try {
-            copyrightInserter.initParser('cycloneDX', bomPath);
-        } catch (err) {
-            throw err;
-        }
+        copyrightInserter.initParser('cycloneDX', bomPath);
         copyrightInserter.retrievePackageInfos();
         await copyrightInserter.downloadLicenses('access-token');
         copyrightInserter.parseCopyright();

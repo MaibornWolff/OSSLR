@@ -95,15 +95,15 @@ export class CopyrightInserter {
 
   exportBom(): void {
     let cycloneDXExporter = new CycloneDXExporter();
-    cycloneDXExporter.exportbom(this.packageInfos, this.parser.format, this.bomData);
+    cycloneDXExporter.exportBom(this.packageInfos, this.parser.format, this.bomData);
   }
 
   /**
    * Checks whether the bom contains license information for the given package.
-   * @param {object} packageInfo Entry from bom.json containing information for one package.
+   * @param {PackageInfo} packageInfo Entry from bom.json containing information for one package.
    * @returns {boolean} Whether the packageInfo contains a license.
    */
-  hasLicense(packageInfo: object): boolean {
+  hasLicense(packageInfo: PackageInfo): boolean {
     return (
       Array.isArray(packageInfo['licenses']) &&
       packageInfo['licenses'].length > 0

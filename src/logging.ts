@@ -23,7 +23,7 @@ export class Logger {
 
     /**
      * Adds an entry to the log file.
-     * @param {object} packageInfo Entry from bom.json containing information for one package.
+     * @param {string} message The message to be logged. .
      * @param {string} level The level of the log message.
      */
     addToLog(message: string, level: Level): void {

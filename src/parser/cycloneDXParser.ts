@@ -11,8 +11,8 @@ export class CycloneDXParser extends InputParser {
 
     /**
      * Hands the given bom file to the parser for the corresponding data format. Throws an error if the format is not supported.
-     * @param data The content of the bom file to be parsed.
-     * @returns List of PackageInfo objects containing the extracted information.
+     * @param {string} data The content of the bom file to be parsed.
+     * @returns {PackageInfo[]} List of PackageInfo objects containing the extracted information.
      */
     parseInput(data: string): PackageInfo[] {
         switch (this.format) {
@@ -48,7 +48,7 @@ export class CycloneDXParser extends InputParser {
                 licenses: licenses,
                 externalReferences: extRefs,
                 licenseTexts: [],
-                copyright: ""
+                copyright: ''
             };
             packageInfos.push(packageInfo);
         }

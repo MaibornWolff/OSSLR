@@ -2,7 +2,10 @@ import { assert } from 'chai';
 import { CopyrightParser } from '../src/parser/copyrightParser';
 
 describe('removeOverheadFromCopyright', function () {
-    let copyrightParser = new CopyrightParser();
+    let copyrightParser;
+    this.beforeEach(function () {
+        copyrightParser = new CopyrightParser();
+    });
     it('should remove html tags', function () {
         assert.equal(
             copyrightParser.removeOverheadFromCopyright('Copyright <div> 2019 </div> Max Mustermann'),

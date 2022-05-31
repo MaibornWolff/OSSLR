@@ -4,9 +4,10 @@ import { assert, expect } from 'chai';
 import { CycloneDXParser } from '../src/parser/cycloneDXParser';
 
 describe('parseInput', function () {
-    it('should pass the file to the correct parser', function () {
+    this.beforeEach(function () {
         stub(CycloneDXParser.prototype, 'parseJSON').returns([]);
-
+    });
+    it('should pass the file to the correct parser', function () {
         let cycloneDXParser = new CycloneDXParser('json');
         assert.isEmpty(cycloneDXParser.parseInput(''));
     });
@@ -22,8 +23,9 @@ describe('parseInput', function () {
 });
 
 describe('parseJSON', function () {
-    it('should correctly save the package information in a PackageInfo object', function () {
-        let rawJSON = {
+    let rawJSON;
+    this.beforeEach(function () {
+        rawJSON = {
             'components': [{
                 'group': 'group',
                 'name': 'name',
@@ -54,6 +56,8 @@ describe('parseJSON', function () {
                 ],
             }]
         };
+    });
+    it('should correctly save the package information in a PackageInfo object', function () {
         let cycloneDXParser = new CycloneDXParser('json');
         expect(cycloneDXParser.parseJSON(JSON.stringify(rawJSON))).to.eql([{
             group: 'group',

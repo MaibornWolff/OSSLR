@@ -10,7 +10,8 @@ export class LicenseDownloader {
 
     constructor(tokenUrl: string) {
         try {
-            this.githubClient = new GithubClient(tokenUrl);
+            this.githubClient = new GithubClient();
+            this.githubClient.authenticate(tokenUrl);
         } catch (err) {
             throw err;
         }
@@ -72,7 +73,7 @@ export class LicenseDownloader {
     /**
      * Performs a GET request for the given URL.
      * @param {string} url  The URL for the request.
-     * @returns {promise} Of the result of the GET request.
+     * @returns {Promise<string>} Of the result of the GET request.
      */
     private makeGetRequest(url: string): Promise<string> {
         return new Promise<string>(function (resolve, reject) {
