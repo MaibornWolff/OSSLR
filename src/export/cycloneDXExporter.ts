@@ -28,7 +28,6 @@ export class CycloneDXExporter implements Exporter {
         for (let i = 0; i < packageInfos.length; i++) {
             let copyright = packageInfos[i].copyright;
             if (copyright !== '') {
-                console.log(bomJson['components']);
                 bomJson['components'][i]['copyright'] = copyright;
             }
         }
