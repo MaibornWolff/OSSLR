@@ -6,7 +6,7 @@ import {
   CopyrightInserter
 } from '../../src/model/copyrightInserter';
 import { PackageInfo } from '../../src/model/packageInfo';
-import { CopyrightParser } from '../../src/parser/copyrightParser';
+import { CopyrightParser } from '../../src/model/copyrightParser';
 
 
 // describe("insertCopyrightIntoBom", function () {

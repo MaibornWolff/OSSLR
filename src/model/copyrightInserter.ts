@@ -1,7 +1,7 @@
 import { SingleBar, Presets } from 'cli-progress';
-import { CopyrightParser } from '../parser/copyrightParser';
-import { CycloneDXParser } from '../parser/cycloneDXParser';
-import { InputParser } from '../parser/inputParser';
+import { CopyrightParser } from './copyrightParser';
+import { CycloneDXParser } from '../inputParser/cycloneDXParser';
+import { InputParser } from '../inputParser/inputParser';
 import { LicenseDownloader } from './licenseDownloader';
 import { Logger } from '../logging';
 import { PackageInfo } from './packageInfo';

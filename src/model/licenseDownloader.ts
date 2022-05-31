@@ -1,8 +1,6 @@
 import Axios from 'axios';
 import { GithubClient } from './githubClient';
 import { Logger } from '../logging';
-import * as util from './util';
-
 
 /**
  * Downloads license files from github and the content of other external websites.
@@ -48,7 +46,7 @@ export class LicenseDownloader {
         let license = '';
         try {
             let repoContent = await this.githubClient.downloadRepo(url);
-            util.writeLicenseToDisk(JSON.stringify(repoContent, null, 4), 'repocontent');
+            // util.writeLicenseToDisk(JSON.stringify(repoContent, null, 4), 'repocontent');
             for (let i in repoContent['data']) {
                 let fileName = repoContent['data'][i]['name'];
                 //check if filename = license or license.*
