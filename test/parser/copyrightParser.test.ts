@@ -66,4 +66,13 @@ describe('removeOverheadFromCopyright', function () {
             'copyright'
         );
     });
+    it('should remove all URLs', function () {
+        assert.equal(
+            copyrightParser.removeOverheadFromCopyright('copyright (C) http://www.google.com/?search=531'),
+            'copyright (C)'
+        );
+        assert.equal(
+            copyrightParser.removeOverheadFromCopyright('copyright www.github.com/user/repo#readme.md Owner'),
+            'copyright Owner');
+    });
 });

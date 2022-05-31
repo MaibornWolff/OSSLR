@@ -22,6 +22,13 @@ export class LicenseDownloader {
         }
     }
 
+    /**
+     * Passes the download task to the github downloader for github URLs
+     * and the external website downloader for everything else.
+     * @param url The URL to be downloaded.
+     * @param logger The logger instance.
+     * @returns {Promise<string>} The content of the downloaded license or website.
+     */
     async downloadLicense(url: string, logger: Logger): Promise<string> {
         if (url.includes('github.com')) {
             return await this.downloadLicenseFromGithub(url, logger);
