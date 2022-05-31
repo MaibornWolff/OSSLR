@@ -4,6 +4,7 @@ export class CopyrightParser {
     /**
  * Extracts copyright notice from license file or website.
  * @param {string} license Content of a license file or website potentially containing copyright notice.
+ * @param {Logger} logger The logger instance.  
  * @returns {string} Extracted copyright notice. Empty string if no matches found.
  */
     extractCopyright(license: string, logger: Logger): string {

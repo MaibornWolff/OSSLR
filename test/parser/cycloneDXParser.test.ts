@@ -1,25 +1,31 @@
 import 'mocha';
-import { expect } from 'chai';
-import { CycloneDXParser } from '../src/parser/cycloneDXParser';
+import { stub, restore } from 'sinon';
+import { assert, expect } from 'chai';
+import { CycloneDXParser } from '../../src/parser/cycloneDXParser';
 
-// describe('parseInput', function () {
-//     it('should pass the file to the correct parser', function () {
-//         stub(CycloneDXParser.prototype, 'parseJSON').returns([]);
-
-//         let cycloneDXParser = new CycloneDXParser('json');
-//         assert.isEmpty(cycloneDXParser.parseInput(''));
-//     });
-//     it('should throw an error if the file format is not supported', function () {
-//         let cycloneDXParser = new CycloneDXParser('xml');
-//         expect(() => {
-//             cycloneDXParser.parseInput('');
-//         }).to.throw(Error, 'Unsupported file format xml');
-//     });
-// });
+describe('parseInput', function () {
+    this.beforeEach(function () {
+        stub(CycloneDXParser.prototype, 'parseJSON').returns([]);
+    });
+    it('should pass the file to the correct parser', function () {
+        let cycloneDXParser = new CycloneDXParser('json');
+        assert.isEmpty(cycloneDXParser.parseInput(''));
+    });
+    it('should throw an error if the file format is not supported', function () {
+        let cycloneDXParser = new CycloneDXParser('xml');
+        expect(() => {
+            cycloneDXParser.parseInput('');
+        }).to.throw(Error, 'Unsupported file format xml');
+    });
+    this.afterEach(() => {
+        restore();
+    });
+});
 
 describe('parseJSON', function () {
-    it('should correctly save the package information in a PackageInfo object', function () {
-        let rawJSON = {
+    let rawJSON;
+    this.beforeEach(function () {
+        rawJSON = {
             'components': [{
                 'group': 'group',
                 'name': 'name',
@@ -50,6 +56,8 @@ describe('parseJSON', function () {
                 ],
             }]
         };
+    });
+    it('should correctly save the package information in a PackageInfo object', function () {
         let cycloneDXParser = new CycloneDXParser('json');
         expect(cycloneDXParser.parseJSON(JSON.stringify(rawJSON))).to.eql([{
             group: 'group',
@@ -70,7 +78,7 @@ describe('parseJSON', function () {
             ],
             externalReferences: ['https://github.com/group/name', 'https://secondLink.com'],
             licenseTexts: [],
-            copyright: []
+            copyright: ''
         }]);
         rawJSON['components'][0]['licenses'] = [];
         rawJSON['components'][0]['externalReferences'] = [];
@@ -81,7 +89,7 @@ describe('parseJSON', function () {
             licenses: [],
             externalReferences: [],
             licenseTexts: [],
-            copyright: []
+            copyright: ''
         }]);
     });
 });
