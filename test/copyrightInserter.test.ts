@@ -1,10 +1,12 @@
 /* eslint-disable no-undef */
 import 'mocha';
-import { assert } from 'chai';
+import { assert, expect } from 'chai';
+import { stub, restore } from 'sinon';
 import {
   CopyrightInserter
 } from '../src/model/copyrightInserter';
 import { PackageInfo } from '../src/model/packageInfo';
+import { CopyrightParser } from '../src/parser/copyrightParser';
 
 
 // describe("insertCopyrightIntoBom", function () {
@@ -28,32 +30,42 @@ import { PackageInfo } from '../src/model/packageInfo';
 //   });
 // });
 
-// describe('parseCopyright', function () {
-//   let copyrightInserter: CopyrightInserter;
-//   let packageInfo: PackageInfo;
-//   this.beforeEach(function () {
-//     copyrightInserter = new CopyrightInserter();
-//     packageInfo = {
-//       group: 'group',
-//       name: 'name',
-//       version: 'version',
-//       copyright: [],
-//       externalReferences: [],
-//       licenses: [
-//         {
-//           "license": {
-//             "id": "MIT",
-//             "url": "https://opensource.org/licenses/MIT"
-//           }
-//         }
-//       ],
-//       licenseTexts: []
-//     };
-//   });
-//   it('should', function () {
-//     copyrightInserter.retrievePackageInfos
-//   });
-// });
+describe('parseCopyright', function () {
+  let copyrightInserter: CopyrightInserter;
+  this.beforeEach(function () {
+    copyrightInserter = new CopyrightInserter();
+    copyrightInserter.packageInfos = [{
+      copyright: '',
+      group: '',
+      name: '',
+      version: '',
+      externalReferences: [],
+      licenses: [],
+      licenseTexts: ['Copyright (C) 2019']
+    }];
+    stub(CopyrightParser.prototype, 'extractCopyright').returns('Copyright (C) 2019');
+    stub(CopyrightParser.prototype, 'removeOverheadFromCopyright').returns('Copyright (C) 2019');
+  });
+  this.afterEach(() => {
+    restore();
+  });
+  it('should insert the extracted copyright in the PackageInfo object', function () {
+    copyrightInserter.parseCopyright();
+    expect(copyrightInserter.packageInfos).to.eql(
+      [
+      {
+        copyright: 'Copyright (C) 2019',
+        group: '',
+        name: '',
+        version: '',
+        externalReferences: [],
+        licenses: [],
+        licenseTexts: ['Copyright (C) 2019']
+      }
+      ]
+    );
+  });
+});
 
 describe('hasLicense', function () {
   let copyrightInserter: CopyrightInserter;
