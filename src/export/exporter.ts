@@ -1,4 +1,4 @@
-import { PackageInfo } from '../model/packageInfo'
+import { PackageInfo } from '../model/packageInfo';
 
 export interface Exporter {
 
