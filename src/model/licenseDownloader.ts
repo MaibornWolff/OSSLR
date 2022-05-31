@@ -1,4 +1,4 @@
-import Axios from 'axios'
+import Axios from 'axios';
 import { GithubClient } from './githubClient';
 import { Logger } from '../logging';
 import * as util from './util';
