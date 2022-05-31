@@ -42,7 +42,8 @@ export class CopyrightInserter {
 
   async downloadLicenses(tokenUrl: string) {
     try {
-      let licenseDownloader = new LicenseDownloader(tokenUrl);
+      let licenseDownloader = new LicenseDownloader();
+      licenseDownloader.authenticateGithubClient(tokenUrl);
       console.log('Retrieving License Information...');
       const progBar = new SingleBar({}, Presets.shades_classic);
       progBar.start(this.packageInfos.length, 0);
@@ -65,7 +66,8 @@ export class CopyrightInserter {
           );
           if (license != '') {
             packageInfo.licenseTexts.push(license);
-            util.writeLicenseToDisk(license, packageInfo);
+            let fileName = util.generatePackageName(packageInfo);
+            util.writeLicenseToDisk(license, fileName);
           }
         }
       }

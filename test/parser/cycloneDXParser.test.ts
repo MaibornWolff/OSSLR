@@ -23,7 +23,7 @@ describe('parseInput', function () {
 });
 
 describe('parseJSON', function () {
-    let rawJSON;
+    let rawJSON: object;
     this.beforeEach(function () {
         rawJSON = {
             'components': [{
