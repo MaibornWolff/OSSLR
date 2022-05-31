@@ -22,7 +22,7 @@ describe('extractCopyright', function () {
 });
 
 describe('removeOverheadFromCopyright', function () {
-    let copyrightParser;
+    let copyrightParser: CopyrightParser;
     this.beforeEach(function () {
         copyrightParser = new CopyrightParser();
     });

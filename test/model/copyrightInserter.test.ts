@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import 'mocha';
-import { assert, expect } from 'chai';
+import { assert } from 'chai';
 import { stub, restore } from 'sinon';
 import {
   CopyrightInserter
@@ -51,17 +51,17 @@ describe('parseCopyright', function () {
   });
   it('should insert the extracted copyright in the PackageInfo object', function () {
     copyrightInserter.parseCopyright();
-    expect(copyrightInserter.packageInfos).to.eql(
+    assert.deepEqual(copyrightInserter.packageInfos,
       [
-      {
-        copyright: 'Copyright (C) 2019',
-        group: '',
-        name: '',
-        version: '',
-        externalReferences: [],
-        licenses: [],
-        licenseTexts: ['Copyright (C) 2019']
-      }
+        {
+          copyright: 'Copyright (C) 2019',
+          group: '',
+          name: '',
+          version: '',
+          externalReferences: [],
+          licenses: [],
+          licenseTexts: ['Copyright (C) 2019']
+        }
       ]
     );
   });

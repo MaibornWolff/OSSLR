@@ -6,7 +6,7 @@ import { LicenseDownloader } from './licenseDownloader';
 import { Logger } from '../logging';
 import { PackageInfo } from './packageInfo';
 import * as util from './util';
-import { CycloneDXExporter } from '../export/cyclonDXExporter';
+import { CycloneDXExporter } from '../export/cycloneDXExporter';
 
 export class CopyrightInserter {
   logger: Logger;
@@ -97,7 +97,11 @@ export class CopyrightInserter {
 
   exportBom(): void {
     let cycloneDXExporter = new CycloneDXExporter();
-    cycloneDXExporter.exportBom(this.packageInfos, this.parser.format, this.bomData);
+    try {
+      cycloneDXExporter.exportBom(this.packageInfos, this.parser.format, this.bomData);
+    } catch(err) {
+      throw err;
+    }
   }
 
   /**
