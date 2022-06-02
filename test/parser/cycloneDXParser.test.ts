@@ -1,7 +1,7 @@
 import 'mocha';
 import { stub, restore } from 'sinon';
 import { assert, expect } from 'chai';
-import { CycloneDXParser } from '../../src/parser/cycloneDXParser';
+import { CycloneDXParser } from '../../src/inputParser/cycloneDXParser';
 
 describe('parseInput', function () {
     this.beforeEach(function () {
@@ -23,7 +23,7 @@ describe('parseInput', function () {
 });
 
 describe('parseJSON', function () {
-    let rawJSON;
+    let rawJSON: object;
     this.beforeEach(function () {
         rawJSON = {
             'components': [{
@@ -59,7 +59,7 @@ describe('parseJSON', function () {
     });
     it('should correctly save the package information in a PackageInfo object', function () {
         let cycloneDXParser = new CycloneDXParser('json');
-        expect(cycloneDXParser.parseJSON(JSON.stringify(rawJSON))).to.eql([{
+        assert.deepEqual(cycloneDXParser.parseJSON(JSON.stringify(rawJSON)), [{
             group: 'group',
             name: 'name',
             version: 'version',
@@ -82,7 +82,7 @@ describe('parseJSON', function () {
         }]);
         rawJSON['components'][0]['licenses'] = [];
         rawJSON['components'][0]['externalReferences'] = [];
-        expect(cycloneDXParser.parseJSON(JSON.stringify(rawJSON))).to.eql([{
+        assert.deepEqual(cycloneDXParser.parseJSON(JSON.stringify(rawJSON)), [{
             group: 'group',
             name: 'name',
             version: 'version',

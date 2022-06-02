@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 import { Logger } from '../../src/logging';
-import { CopyrightParser } from '../../src/parser/copyrightParser';
+import { CopyrightParser } from '../../src/model/copyrightParser';
 
 describe('extractCopyright', function () {
     let copyrightParser: CopyrightParser;
@@ -22,7 +22,7 @@ describe('extractCopyright', function () {
 });
 
 describe('removeOverheadFromCopyright', function () {
-    let copyrightParser;
+    let copyrightParser: CopyrightParser;
     this.beforeEach(function () {
         copyrightParser = new CopyrightParser();
     });
@@ -65,5 +65,14 @@ describe('removeOverheadFromCopyright', function () {
             copyrightParser.removeOverheadFromCopyright('<  >  () copyright '),
             'copyright'
         );
+    });
+    it('should remove all URLs', function () {
+        assert.equal(
+            copyrightParser.removeOverheadFromCopyright('copyright (C) http://www.google.com/?search=531'),
+            'copyright (C)'
+        );
+        assert.equal(
+            copyrightParser.removeOverheadFromCopyright('copyright www.github.com/user/repo#readme.md Owner'),
+            'copyright Owner');
     });
 });

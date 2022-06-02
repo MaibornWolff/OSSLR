@@ -50,9 +50,8 @@ export function generateLogMessage(packageInfo: PackageInfo, level: string): str
  * @param {string} license The license to be saved.
  * @param {PackageInfo} packageInfo The information about the corresponding package.
  */
-export function writeLicenseToDisk(license: string, packageInfo: PackageInfo): void {
+export function writeLicenseToDisk(license, fileName: string): void {
     try {
-        let fileName = generatePackageName(packageInfo);
         if (!existsSync(path.join('out', 'licenses'))) {
             mkdirSync(path.join('out', 'licenses'));
         }

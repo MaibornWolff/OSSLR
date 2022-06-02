@@ -1,13 +1,16 @@
 import { SingleBar, Presets } from 'cli-progress';
-import { CopyrightParser } from '../parser/copyrightParser';
-import { CycloneDXParser } from '../parser/cycloneDXParser';
-import { InputParser } from '../parser/inputParser';
+import { CopyrightParser } from './copyrightParser';
+import { CycloneDXParser } from '../inputParser/cycloneDXParser';
+import { InputParser } from '../inputParser/inputParser';
 import { LicenseDownloader } from './licenseDownloader';
 import { Logger } from '../logging';
 import { PackageInfo } from './packageInfo';
 import * as util from './util';
-import { CycloneDXExporter } from '../export/cyclonDXExporter';
+import { CycloneDXExporter } from '../export/cycloneDXExporter';
 
+/**
+ * This class is responsible for distributing the different tasks to the responsible classes.
+ */
 export class CopyrightInserter {
   logger: Logger;
   parser: InputParser;
@@ -18,7 +21,11 @@ export class CopyrightInserter {
   constructor() {
     this.logger = new Logger();
   }
-
+  /**
+   * Initializes the correct parser for the given BOM format.
+   * @param bomFormat Format of the BOM.
+   * @param bomPath Path to the BOM file.
+   */
   initParser(bomFormat: string, bomPath: string): void {
     this.bomPath = bomPath;
     let dataFormat = bomPath.split('.').pop();
@@ -31,6 +38,9 @@ export class CopyrightInserter {
     }
   }
 
+  /**
+   * Extracts the package information from the BOM file and saves them in a list of PackageInfo objects.
+   */
   retrievePackageInfos(): void {
     try {
       this.bomData = this.parser.readInput(this.bomPath);
@@ -40,13 +50,18 @@ export class CopyrightInserter {
     }
   }
 
+  /**
+   * Coordinates the download of license files for all packages.
+   * @param tokenUrl Token used to authenticate the github client.
+   */
   async downloadLicenses(tokenUrl: string) {
     try {
-      let licenseDownloader = new LicenseDownloader(tokenUrl);
+      let licenseDownloader = new LicenseDownloader();
+      licenseDownloader.authenticateGithubClient(tokenUrl);
       console.log('Retrieving License Information...');
       const progBar = new SingleBar({}, Presets.shades_classic);
       progBar.start(this.packageInfos.length, 0);
-      for (let packageInfo of this.packageInfos) {        
+      for (let packageInfo of this.packageInfos) {
         progBar.increment();
         if (!this.hasLicense(packageInfo)) {
           let message = util.generateLogMessage(packageInfo, 'License');
@@ -65,7 +80,8 @@ export class CopyrightInserter {
           );
           if (license != '') {
             packageInfo.licenseTexts.push(license);
-            util.writeLicenseToDisk(license, packageInfo);
+            let fileName = util.generatePackageName(packageInfo);
+            util.writeLicenseToDisk(license, fileName);
           }
         }
       }
@@ -76,6 +92,9 @@ export class CopyrightInserter {
     }
   }
 
+  /**
+   * Coordinates the parsing of the downloaded license files.
+   */
   parseCopyright(): void {
     let copyrightParser = new CopyrightParser();
     for (let i = 0; i < this.packageInfos.length; i++) {
@@ -93,9 +112,16 @@ export class CopyrightInserter {
     }
   }
 
+  /**
+   * Exports the BOM information.
+   */
   exportBom(): void {
     let cycloneDXExporter = new CycloneDXExporter();
-    cycloneDXExporter.exportBom(this.packageInfos, this.parser.format, this.bomData);
+    try {
+      cycloneDXExporter.exportBom(this.packageInfos, this.parser.format, this.bomData);
+    } catch (err) {
+      throw err;
+    }
   }
 
   /**
