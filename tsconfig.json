@@ -3,6 +3,7 @@
         "target": "ESNext",
         "module": "CommonJS",
         "moduleResolution": "node",
-        "outDir": "build"
+        "outDir": "build",
+        "resolveJsonModule": true
     }
 }

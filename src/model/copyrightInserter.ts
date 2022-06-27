@@ -7,6 +7,7 @@ import { Logger } from '../logging';
 import { PackageInfo } from './packageInfo';
 import * as util from './util';
 import { CycloneDXExporter } from '../export/cycloneDXExporter';
+import { PDFExporter } from '../export/pdfExporter';
 
 /**
  * This class is responsible for distributing the different tasks to the responsible classes.
@@ -117,8 +118,10 @@ export class CopyrightInserter {
    */
   exportBom(): void {
     let cycloneDXExporter = new CycloneDXExporter();
+    let pdfExporter = new PDFExporter(); 
     try {
       cycloneDXExporter.exportBom(this.packageInfos, this.parser.format, this.bomData);
+      pdfExporter.exportBom(this.packageInfos);
     } catch (err) {
       throw err;
     }
