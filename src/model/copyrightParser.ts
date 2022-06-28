@@ -44,6 +44,8 @@ export class CopyrightParser {
         for (let i in matches) {
             copyright = copyright.replace(matches[i], '');
         }
+        // remove everything after special characters
+        copyright = copyright.replace(/[^A-za-z0-9\-\. ()©].*/, '');
         // remove unnecessary whitespace
         return copyright.replace(/\s\s+/g, ' ').trim();
     }
