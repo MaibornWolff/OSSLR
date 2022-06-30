@@ -49,9 +49,9 @@ export class PDFExporter implements Exporter {
             }
 
             if (license.length > 0) {
-                if (license[0]['license']['id'] !== '') {
+                if (license[0]['license']['id']) {
                     licensePdf = license[0]['license']['id'];
-                } else if (license[0]['license']['name'] !== '') {
+                } else if (license[0]['license']['name']) {
                     licensePdf = license[0]['license']['name'];
                 } else {
                     licensePdf = "no license";
