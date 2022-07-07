@@ -116,12 +116,12 @@ export class CopyrightInserter {
   /**
    * Exports the BOM information.
    */
-  exportBom(): void {
+  export(): void {
     let cycloneDXExporter = new CycloneDXExporter();
     let pdfExporter = new PDFExporter(); 
     try {
-      cycloneDXExporter.exportBom(this.packageInfos, this.parser.format, this.bomData);
-      pdfExporter.exportBom(this.packageInfos);
+      cycloneDXExporter.export(this.packageInfos, this.parser.format, this.bomData);
+      pdfExporter.export(this.packageInfos);
     } catch (err) {
       throw err;
     }

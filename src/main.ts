@@ -12,7 +12,7 @@ async function main() {
         copyrightInserter.retrievePackageInfos();
         await copyrightInserter.downloadLicenses('access-token');
         copyrightInserter.parseCopyright();
-        copyrightInserter.exportBom();
+        copyrightInserter.export();
     } catch (err) {
         console.log(err);
         return;
