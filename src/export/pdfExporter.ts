@@ -11,11 +11,11 @@ export class PDFExporter implements Exporter {
         var col = ["Group", "Name", "Version", "License", "Copyright"];
         var rows = [];
 
-        var groupPdf: String;
-        var namePdf: String;
-        var versionPdf: String;
-        var licensePdf: String;
-        var copyrightPdf: String;
+        var groupPdf: string;
+        var namePdf: string;
+        var versionPdf: string;
+        var licensePdf: string;
+        var copyrightPdf: string;
 
         packageInfos.forEach(packageInfo => {
             if (packageInfo.group !== '') {
