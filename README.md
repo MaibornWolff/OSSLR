@@ -29,3 +29,6 @@ npm start
 After the program terminates, you should see two new files in the ```out``` folder:
 ```updatedBom.json``` and ```updatedBom.pdf```. 
 
+## License
+
+[BSD-3-Clause license](https://github.com/MaibornWolff/OSSLR/blob/develop/LICENSE)
