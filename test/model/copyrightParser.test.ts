@@ -37,7 +37,6 @@ describe('removeOverheadFromCopyright', function () {
         );
         assert.equal(copyrightParser.removeOverheadFromCopyright('<This should be removed>'), '');
     });
-
     it('should remove text enclosed by parenthesis', function () {
         assert.equal(
             copyrightParser.removeOverheadFromCopyright(
@@ -47,7 +46,6 @@ describe('removeOverheadFromCopyright', function () {
         );
         assert.equal(copyrightParser.removeOverheadFromCopyright('() Copyright'), 'Copyright');
     });
-
     it('should preserve the (c) symbol', function () {
         assert.equal(copyrightParser.removeOverheadFromCopyright('(c) Copyright'), '(c) Copyright');
         assert.equal(
@@ -55,7 +53,6 @@ describe('removeOverheadFromCopyright', function () {
             'Copyright (C)'
         );
     });
-
     it('should remove all unnecessary whitespace', function () {
         assert.equal(
             copyrightParser.removeOverheadFromCopyright('  first  (c)    second   '),
@@ -74,5 +71,19 @@ describe('removeOverheadFromCopyright', function () {
         assert.equal(
             copyrightParser.removeOverheadFromCopyright('copyright www.github.com/user/repo#readme.md Owner'),
             'copyright Owner');
+    });
+    it('should remove everything after special characters', function () {
+        assert.equal(
+            copyrightParser.removeOverheadFromCopyright('Copyright (c) 2022 * this should be removed'),
+            'Copyright (c) 2022' 
+        );
+        assert.equal(
+            copyrightParser.removeOverheadFromCopyright('Copyright (c) 2022/ this should be removed'),
+            'Copyright (c) 2022' 
+        );
+        assert.equal(
+            copyrightParser.removeOverheadFromCopyright('Copyright (c) 2022  $this should be removed'),
+            'Copyright (c) 2022' 
+        );
     });
 });
