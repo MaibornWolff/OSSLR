@@ -6,68 +6,46 @@ import { PackageInfo } from '../model/packageInfo';
 import { Exporter } from './exporter';
 
 export class PDFExporter implements Exporter {
-    exportBom(packageInfos: PackageInfo[]): void {
-        this.exportToPDF(packageInfos);
-    }
-
-
-    exportToPDF(packageInfos: PackageInfo[]) {
+    export(packageInfos: PackageInfo[]): void {
         var doc = new jsPDF();
         var col = ["Group", "Name", "Version", "License", "Copyright"];
         var rows = [];
 
-        var groupPdf: String;
-        var namePdf: String;
-        var versionPdf: String;
-        var licensePdf: String;
-        var copyrightPdf: String;
+        var groupPdf: string;
+        var namePdf: string;
+        var versionPdf: string;
+        var licensePdf: string;
+        var copyrightPdf: string;
 
-        for (let i = 0; i < packageInfos.length; i++) {
-            let group = packageInfos[i].group;
-            let name = packageInfos[i].name;
-            let version = packageInfos[i].version;
-            let license = packageInfos[i].licenses;
-            let copyright = packageInfos[i].copyright;
-
-
-            if (group !== '') {
-                groupPdf = group;
+        packageInfos.forEach(packageInfo => {
+            if (packageInfo.group !== '') {
+                groupPdf = packageInfo.group;
             } else {
                 groupPdf = "no group";
             }
 
-            if (name !== '') {
-                namePdf = name;
+            if (packageInfo.name !== '') {
+                namePdf = packageInfo.name;
             } else {
                 namePdf = "no name";
             }
 
-            if (version !== '') {
-                versionPdf = version;
+            if (packageInfo.version !== '') {
+                versionPdf = packageInfo.version;
             } else {
                 versionPdf = "no version";
             }
 
-            if (license.length > 0) {
-                if (license[0]['license']['id'] !== '') {
-                    licensePdf = license[0]['license']['id'];
-                } else if (license[0]['license']['name'] !== '') {
-                    licensePdf = license[0]['license']['name'];
-                } else {
-                    licensePdf = "no license";
-                }
-            } else {
-                licensePdf = "no license";
-            }
+            licensePdf = this.extractLicense(packageInfo);
 
-            if (copyright !== '') {
-                copyrightPdf = copyright;
+            if (packageInfo.copyright !== '') {
+                copyrightPdf = packageInfo.copyright;
             } else {
                 copyrightPdf = "no copyright";
             }
 
             rows.push([groupPdf, namePdf, versionPdf, licensePdf, copyrightPdf]);
-        }
+        })
 
         autoTable(doc, {
             theme: "grid",
@@ -77,5 +55,19 @@ export class PDFExporter implements Exporter {
 
         const rawOutput = doc.output("arraybuffer");
         appendFileSync(path.join('out', 'updatedBom.pdf'), Buffer.from(rawOutput));
+    }
+
+    extractLicense(packageInfo: PackageInfo) {
+        if (packageInfo.licenses.length > 0) {
+            if (packageInfo.licenses[0]['license']['id']) {
+                return packageInfo.licenses[0]['license']['id'];
+            } else if (packageInfo.licenses[0]['license']['name']) {
+                return packageInfo.licenses[0]['license']['name'];
+            } else {
+                return "no license";
+            }
+        } else {
+            return "no license";
+        }
     }
 }

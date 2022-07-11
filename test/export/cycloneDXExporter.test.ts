@@ -13,12 +13,12 @@ describe('exportBom', function () {
         exportJsonStub.returns();
     });
     it('should pass bom to the correct exporter', function () {
-        cycloneDXExporter.exportBom(null, 'json', null);
+        cycloneDXExporter.export(null, 'json', null);
         exportJsonStub.calledOnceWith(null, null);
     });
     it('should throw an error if the file given format is not supported', function () {
         expect(() => {
-            cycloneDXExporter.exportBom(null, 'xml', null);
+            cycloneDXExporter.export(null, 'xml', null);
         }).to.throw(Error, 'Unsupported export file format: xml');
     });
     this.afterEach(() => {
