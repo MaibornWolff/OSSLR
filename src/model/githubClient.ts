@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs';
-import { Octokit, } from 'octokit';
+import { Octokit } from 'octokit';
 
 /**
  * Wrapper for the octokit github client implementation. Used to download repos from github.

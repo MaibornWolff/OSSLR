@@ -4,7 +4,7 @@ import { PackageInfo } from '../model/packageInfo';
 import { Exporter } from './exporter';
 
 export class CycloneDXExporter implements Exporter {
-    exportBom(packageInfos: PackageInfo[], format: string, originalBom: string): void {
+    export(packageInfos: PackageInfo[], format: string, originalBom: string): void {
         switch (format) {
             case 'json':
                 this.exportJson(packageInfos, originalBom);
