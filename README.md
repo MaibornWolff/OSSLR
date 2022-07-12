@@ -1,5 +1,13 @@
 # OSSLR
 
+OSSLR is a script that adds copyright notices to your existing CycloneDX Software Bill-of-Materials.
+
+## Features
+
+- OSSLR adds copyright notice to your SBOM
+- It currently only supports SBOMs in JSON format
+- The result can be exported as a PDF or JSON
+
 ## Setup
 
 Download script for generating SBOM (Software Bill-of-Materials) that will contain the compilation of all project dependencies in JSON and XML format.
