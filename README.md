@@ -4,8 +4,8 @@ OSSLR is a script that adds copyright notices to your existing CycloneDX Softwar
 
 ## Features
 
-- OSSLR adds copyright notice to your SBOM
-- It currently only supports SBOMs in JSON format
+- OSSLR adds copyright notices to your SBOM
+- It currently only supports SBOMs provided in JSON format
 - The result can be exported as a PDF or JSON
 
 ## Setup
