@@ -1,9 +1,9 @@
 import 'mocha';
 import { stub, restore } from 'sinon';
 import { assert } from 'chai';
-import { LicenseDownloader } from '../../src/Adapter/licenseDownloader';
-import { GithubClient } from '../../src/Adapter/githubClient';
-import { Logger } from '../../src/logging';
+import { LicenseDownloader } from './licenseDownloader';
+import { GithubClient } from './githubClient';
+import { Logger } from '../../logging';
 
 describe('downloadLicense', function () {
     let licenseDownloader: LicenseDownloader;
