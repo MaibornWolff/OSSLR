@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import path = require('path');
-import { PackageInfo } from '../model/packageInfo';
+import { PackageInfo } from '../../Domain/model/packageInfo';
 import { Exporter } from './exporter';
 
 export class CycloneDXExporter implements Exporter {

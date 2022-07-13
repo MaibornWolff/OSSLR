@@ -1,8 +1,8 @@
 import { expect, assert } from 'chai';
 import 'mocha';
 import { stub, restore } from 'sinon';
-import { CycloneDXExporter } from '../../src/export/cycloneDXExporter';
-import { PackageInfo } from '../../src/model/packageInfo';
+import { CycloneDXExporter } from '../../src/Adapter/export/cycloneDXExporter';
+import { PackageInfo } from '../../src/Domain/model/packageInfo';
 
 describe('exportBom', function () {
     let cycloneDXExporter: CycloneDXExporter;

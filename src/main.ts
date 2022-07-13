@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { CopyrightInserter } from './model/copyrightInserter';
+import { CopyrightInserter } from './Adapter/import/copyrightInserter';
 
 main();
 

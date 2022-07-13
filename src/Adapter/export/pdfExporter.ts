@@ -2,7 +2,7 @@ import { appendFileSync } from "fs";
 import path = require('path');
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import { PackageInfo } from '../model/packageInfo';
+import { PackageInfo } from '../../Domain/model/packageInfo';
 import { Exporter } from './exporter';
 
 export class PDFExporter implements Exporter {

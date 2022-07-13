@@ -1,8 +1,8 @@
 import 'mocha';
 import { stub, restore } from 'sinon';
 import { assert } from 'chai';
-import { LicenseDownloader } from '../../src/model/licenseDownloader';
-import { GithubClient } from '../../src/model/githubClient';
+import { LicenseDownloader } from '../../src/Adapter/licenseDownloader';
+import { GithubClient } from '../../src/Adapter/githubClient';
 import { Logger } from '../../src/logging';
 
 describe('downloadLicense', function () {

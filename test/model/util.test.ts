@@ -2,7 +2,7 @@
 import 'mocha';
 import { assert } from 'chai';
 import { generatePackageName, generateLogMessage } from '../../src/model/util';
-import { PackageInfo } from '../../src/model/packageInfo';
+import { PackageInfo } from '../../src/Domain/model/packageInfo';
 
 describe('generatePackageName', function () {
     let packageInfo: PackageInfo;

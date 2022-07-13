@@ -1,6 +1,6 @@
 import 'mocha';
 import { assert } from 'chai';
-import { GithubClient } from '../../src/model/githubClient';
+import { GithubClient } from '../../src/Adapter/githubClient';
 
 describe('filterRepoInfoFromURL', function () {
     let githubClient: GithubClient;

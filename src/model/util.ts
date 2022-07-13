@@ -2,7 +2,7 @@
 
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import path = require('path');
-import { PackageInfo } from './packageInfo';
+import { PackageInfo } from '../Domain/model/packageInfo';
 
 /**
  * Generates a name for the given package in the form: "group-name-version".

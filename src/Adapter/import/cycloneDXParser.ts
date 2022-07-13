@@ -1,5 +1,5 @@
 import { InputParser } from './inputParser';
-import { PackageInfo } from '../model/packageInfo';
+import { PackageInfo } from '../../Domain/model/packageInfo';
 
 /**
  * Input Parser implementation for the CycloneDX format. Extracts package information from the bom file and stores them in a PackageInfo object.

@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 import { Logger } from '../../src/logging';
-import { CopyrightParser } from '../../src/model/copyrightParser';
+import { CopyrightParser } from '../../src/Adapter/copyrightParser';
 
 describe('extractCopyright', function () {
     let copyrightParser: CopyrightParser;
