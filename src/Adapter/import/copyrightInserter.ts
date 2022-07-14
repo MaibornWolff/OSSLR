@@ -5,7 +5,6 @@ import { InputParser } from './inputParser';
 import { LicenseDownloader } from './licenseDownloader';
 import { Logger } from '../../logging';
 import { PackageInfo } from '../../Domain/model/packageInfo';
-import * as util from '../../model/util';
 import { CycloneDXExporter } from '../export/cycloneDXExporter';
 import { PDFExporter } from '../export/pdfExporter';
 
@@ -65,12 +64,12 @@ export class CopyrightInserter {
       for (let packageInfo of this.packageInfos) {
         progBar.increment();
         if (!this.hasLicense(packageInfo)) {
-          let message = util.generateLogMessage(packageInfo, 'License');
+          let message = packageInfo.generateLogMessage('License');
           this.logger.addToLog(message, 'License');
           continue;
         }
         if (!this.hasExternalRefs(packageInfo)) {
-          let message = util.generateLogMessage(packageInfo, 'ExtRefs');
+          let message = packageInfo.generateLogMessage('ExtRefs');
           this.logger.addToLog(message, 'ExtRefs');
           continue;
         }
@@ -81,8 +80,8 @@ export class CopyrightInserter {
           );
           if (license != '') {
             packageInfo.licenseTexts.push(license);
-            let fileName = util.generatePackageName(packageInfo);
-            util.writeLicenseToDisk(license, fileName);
+            let fileName = packageInfo.generatePackageName();
+            packageInfo.writeLicenseToDisk(license, fileName);
           }
         }
       }

@@ -41,15 +41,7 @@ export class CycloneDXParser extends InputParser {
             for (let j in pkg['externalReferences']) {
                 extRefs.push(pkg['externalReferences'][j]['url']);
             }
-            let packageInfo: PackageInfo = {
-                group: pkg['group'],
-                name: pkg['name'],
-                version: pkg['version'],
-                licenses: licenses,
-                externalReferences: extRefs,
-                licenseTexts: [],
-                copyright: ''
-            };
+            let packageInfo = new PackageInfo(pkg['group'], pkg['name'], pkg['version'], licenses, extRefs, [], '');
             packageInfos.push(packageInfo);
         }
         return packageInfos;
