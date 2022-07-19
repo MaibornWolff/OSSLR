@@ -64,10 +64,8 @@ describe('hasLicense', function () {
     packageInfo.version = 'version';
     packageInfo.licenses = [
       {
-        'license': {
-          'id': 'MIT',
-          'url': 'https://opensource.org/licenses/MIT'
-        }
+        'id': 'MIT',
+        'url': 'https://opensource.org/licenses/MIT'
       }
     ];
     packageInfo.externalReferences = [];

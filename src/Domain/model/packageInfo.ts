@@ -1,3 +1,4 @@
+import { License } from './license';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import path = require('path');
 
@@ -5,12 +6,12 @@ export class PackageInfo {
   group: string;
   name: string;
   version: string;
-  licenses: object[];
+  licenses: License[];
   externalReferences: string[];
   licenseTexts: string[];
   copyright: string;
 
-  constructor(group: string, name: string, version: string, licenses: object[], externalReferences: string[], licenseTexts: string[], copyright: string) {
+  constructor(group: string, name: string, version: string, licenses: License[], externalReferences: string[], licenseTexts: string[], copyright: string) {
     this.group = group;
     this.name = name;
     this.version = version;

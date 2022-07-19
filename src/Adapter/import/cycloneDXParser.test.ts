@@ -65,16 +65,14 @@ describe('parseJSON', function () {
             'name',
             'version',
             [{
-                'license': {
-                    'id': 'Apache-2.0',
-                    'url': 'https://opensource.org/licenses/Apache-2.0'
-                },
-            }, {
-                'license': {
-                    'id': 'MIT',
-                    'url': 'https://opensource.org/licenses/MIT'
-                }
-            }],
+                'id': 'Apache-2.0',
+                'url': 'https://opensource.org/licenses/Apache-2.0'
+            },
+            {
+                'id': 'MIT',
+                'url': 'https://opensource.org/licenses/MIT'
+            }
+            ],
             ['https://github.com/group/name', 'https://secondLink.com'],
             [],
             '')]);
