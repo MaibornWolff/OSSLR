@@ -1,7 +1,8 @@
 /* eslint-disable no-undef */
 import 'mocha';
 import { assert } from 'chai';
-import { generatePackageName, generateLogMessage } from '../../src/model/util';
+import { generatePackageName } from '../../src/model/util';
+import { Logger } from '../../src/logging'
 import { PackageInfo } from '../../src/model/packageInfo';
 
 describe('generatePackageName', function () {
@@ -50,18 +51,18 @@ describe('generateLogMessage', function () {
         };
     });
     it('should generate appropriate log message for the license level', function () {
-        assert.equal(generateLogMessage(packageInfo, 'License'), 'No License found for: unnamed');
+        assert.equal(Logger.generateLogMessage(packageInfo, 'License'), 'No License found for: unnamed');
     });
 
     it('should generate appropriate log message for the extRefs level', function () {
-        assert.equal(generateLogMessage(packageInfo, 'ExtRefs'), 'No external references found for: unnamed');
+        assert.equal(Logger.generateLogMessage(packageInfo, 'ExtRefs'), 'No external references found for: unnamed');
     });
 
     it('should generate appropriate log message for the copyright level', function () {
-        assert.equal(generateLogMessage(packageInfo, 'Copyright'), 'Unable to extract copyright notice for: unnamed');
+        assert.equal(Logger.generateLogMessage(packageInfo, 'Copyright'), 'Unable to extract copyright notice for: unnamed');
     });
 
     it('should return empty string if a different level is passed', function () {
-        assert.equal(generateLogMessage(packageInfo, 'Error'), '');
+        assert.equal(Logger.generateLogMessage(packageInfo, 'Error'), '');
     });
 });

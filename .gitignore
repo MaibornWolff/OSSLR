@@ -4,6 +4,7 @@ out
 build
 .nyc_output
 coverage
+bom.xml
 
 # Logs
 logs

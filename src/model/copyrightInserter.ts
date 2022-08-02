@@ -65,12 +65,12 @@ export class CopyrightInserter {
       for (let packageInfo of this.packageInfos) {
         progBar.increment();
         if (!this.hasLicense(packageInfo)) {
-          let message = util.generateLogMessage(packageInfo, 'License');
+          let message = Logger.generateLogMessage(packageInfo, 'License');
           this.logger.addToLog(message, 'License');
           continue;
         }
         if (!this.hasExternalRefs(packageInfo)) {
-          let message = util.generateLogMessage(packageInfo, 'ExtRefs');
+          let message = Logger.generateLogMessage(packageInfo, 'ExtRefs');
           this.logger.addToLog(message, 'ExtRefs');
           continue;
         }

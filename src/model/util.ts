@@ -27,25 +27,6 @@ export function generatePackageName(packageInfo: PackageInfo): string {
 }
 
 /**
- * Generates a log message from the info of the given package depending on the given level.
- * @param {PackageInfo} packageInfo Entry from bom.json containing information for one package.
- * @param {string} level The level of the log message.
- * @returns {string} The message to be added to the log.
- */
-export function generateLogMessage(packageInfo: PackageInfo, level: string): string {
-    switch (level) {
-        case 'License':
-            return `No License found for: ${generatePackageName(packageInfo)}`;
-        case 'ExtRefs':
-            return `No external references found for: ${generatePackageName(packageInfo)}`;
-        case 'Copyright':
-            return `Unable to extract copyright notice for: ${generatePackageName(packageInfo)}`;
-        default:
-            return '';
-    }
-}
-
-/**
  * Saves the given license file to the disk.
  * @param {string} license The license to be saved.
  * @param {PackageInfo} packageInfo The information about the corresponding package.
