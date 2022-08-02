@@ -5,9 +5,10 @@ import { InputParser } from '../inputParser/inputParser';
 import { LicenseDownloader } from './licenseDownloader';
 import { Logger } from '../logging';
 import { PackageInfo } from './packageInfo';
-import * as util from './util';
 import { CycloneDXExporter } from '../export/cycloneDXExporter';
 import { PDFExporter } from '../export/pdfExporter';
+import { existsSync, mkdirSync, writeFileSync } from 'fs';
+import path = require('path');
 
 /**
  * This class is responsible for distributing the different tasks to the responsible classes.
@@ -81,8 +82,7 @@ export class CopyrightInserter {
           );
           if (license != '') {
             packageInfo.licenseTexts.push(license);
-            let fileName = util.generatePackageName(packageInfo);
-            util.writeLicenseToDisk(license, fileName);
+            this.writeLicenseToDisk(license, packageInfo.toString());
           }
         }
       }
@@ -90,6 +90,22 @@ export class CopyrightInserter {
       console.log('Done!');
     } catch (err) {
       throw err;
+    }
+  }
+
+  /**
+ * Saves the given license file to the disk.
+ * @param {string} license The license to be saved.
+ * @param {string} fileName The information about the corresponding package in string form.
+ */
+  writeLicenseToDisk(license: string, fileName: string): void {
+    try {
+        if (!existsSync(path.join('out', 'licenses'))) {
+            mkdirSync(path.join('out', 'licenses'));
+        }
+        writeFileSync(path.join('out', 'licenses', `${fileName}.txt`), license);
+    } catch (err) {
+        console.error(err);
     }
   }
 

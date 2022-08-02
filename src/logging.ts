@@ -1,6 +1,5 @@
 import * as winston from 'winston';
 import { PackageInfo } from './model/packageInfo';
-import { generatePackageName } from './model/util';
 
 /**
  * Custom logging levels:
@@ -88,11 +87,11 @@ export class Logger {
     public static generateLogMessage(packageInfo: PackageInfo, level: string): string {
         switch (level) {
             case 'License':
-                return `No License found for: ${generatePackageName(packageInfo)}`;
+                return "No License found for: " + packageInfo.toString();
             case 'ExtRefs':
-                return `No external references found for: ${generatePackageName(packageInfo)}`;
+                return "No external references found for: " + packageInfo.toString();
             case 'Copyright':
-                return `Unable to extract copyright notice for: ${generatePackageName(packageInfo)}`;
+                return "Unable to extract copyright notice for: " + packageInfo.toString();
             default:
                 return '';
         }
