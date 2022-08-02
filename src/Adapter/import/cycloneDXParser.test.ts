@@ -1,7 +1,8 @@
 import 'mocha';
 import { stub, restore } from 'sinon';
 import { assert, expect } from 'chai';
-import { CycloneDXParser } from '../../src/inputParser/cycloneDXParser';
+import { CycloneDXParser } from './cycloneDXParser';
+import { PackageInfo } from '../../Domain/model/packageInfo';
 
 describe('parseInput', function () {
     this.beforeEach(function () {
@@ -59,37 +60,24 @@ describe('parseJSON', function () {
     });
     it('should correctly save the package information in a PackageInfo object', function () {
         let cycloneDXParser = new CycloneDXParser('json');
-        assert.deepEqual(cycloneDXParser.parseJSON(JSON.stringify(rawJSON)), [{
-            group: 'group',
-            name: 'name',
-            version: 'version',
-            licenses: [
-                {
-                    'license': {
-                        'id': 'Apache-2.0',
-                        'url': 'https://opensource.org/licenses/Apache-2.0'
-                    },
-                }, {
-                    'license': {
-                        'id': 'MIT',
-                        'url': 'https://opensource.org/licenses/MIT'
-                    }
-                }
+        assert.deepEqual(cycloneDXParser.parseJSON(JSON.stringify(rawJSON)), [new PackageInfo(
+            'group',
+            'name',
+            'version',
+            [{
+                'id': 'Apache-2.0',
+                'url': 'https://opensource.org/licenses/Apache-2.0'
+            },
+            {
+                'id': 'MIT',
+                'url': 'https://opensource.org/licenses/MIT'
+            }
             ],
-            externalReferences: ['https://github.com/group/name', 'https://secondLink.com'],
-            licenseTexts: [],
-            copyright: ''
-        }]);
+            ['https://github.com/group/name', 'https://secondLink.com'],
+            [],
+            '')]);
         rawJSON['components'][0]['licenses'] = [];
         rawJSON['components'][0]['externalReferences'] = [];
-        assert.deepEqual(cycloneDXParser.parseJSON(JSON.stringify(rawJSON)), [{
-            group: 'group',
-            name: 'name',
-            version: 'version',
-            licenses: [],
-            externalReferences: [],
-            licenseTexts: [],
-            copyright: ''
-        }]);
+        assert.deepEqual(cycloneDXParser.parseJSON(JSON.stringify(rawJSON)), [new PackageInfo('group', 'name', 'version', [], [], [], '')]);
     });
 });

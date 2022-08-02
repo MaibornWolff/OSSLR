@@ -1,8 +1,8 @@
 import { expect, assert } from 'chai';
 import 'mocha';
 import { stub, restore } from 'sinon';
-import { CycloneDXExporter } from '../../src/export/cycloneDXExporter';
-import { PackageInfo } from '../../src/model/packageInfo';
+import { CycloneDXExporter } from './cycloneDXExporter';
+import { PackageInfo } from '../../Domain/model/packageInfo';
 
 describe('exportBom', function () {
     let cycloneDXExporter: CycloneDXExporter;
@@ -46,24 +46,8 @@ describe('insertCopyrightIntoBom', function () {
             ]
         };
         packageInfos = [
-            {
-                name: 'packageA',
-                group: 'groupA',
-                version: '2.2.0',
-                copyright: '',
-                externalReferences: [],
-                licenseTexts: [],
-                licenses: []
-            },
-            {
-                name: 'packageB',
-                group: 'groupB',
-                version: '',
-                copyright: 'copyright',
-                externalReferences: [],
-                licenseTexts: [],
-                licenses: []
-            }
+            new PackageInfo('packageA', 'groupA', '2.2.0', [], [], [], ''),
+            new PackageInfo('packageB', 'groupB', '', [], [], [], 'copyright')
         ];
     });
     it('should insert the extracted copyright notices into the bom', function () {

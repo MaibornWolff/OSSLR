@@ -1,5 +1,6 @@
 import { InputParser } from './inputParser';
-import { PackageInfo } from '../model/packageInfo';
+import { PackageInfo } from '../../Domain/model/packageInfo';
+import { License } from '../../Domain/model/license';
 
 /**
  * Input Parser implementation for the CycloneDX format. Extracts package information from the bom file and stores them in a PackageInfo object.
@@ -34,24 +35,43 @@ export class CycloneDXParser extends InputParser {
         for (let i in rawData['components']) {
             let pkg = rawData['components'][i];
             let licenses = [];
-            for (let j in pkg['licenses']) {
-                licenses.push(pkg['licenses'][j]);
+            let licensesProPkg = this.extractLicensesFromPkg(pkg['licenses']);
+            for (let j in licensesProPkg) {
+                licenses.push(licensesProPkg[j]);
             }
             let extRefs = [];
             for (let j in pkg['externalReferences']) {
                 extRefs.push(pkg['externalReferences'][j]['url']);
             }
-            let packageInfo: PackageInfo = {
-                group: pkg['group'],
-                name: pkg['name'],
-                version: pkg['version'],
-                licenses: licenses,
-                externalReferences: extRefs,
-                licenseTexts: [],
-                copyright: ''
-            };
+            let packageInfo = new PackageInfo(pkg['group'], pkg['name'], pkg['version'], licenses, extRefs, [], '');
             packageInfos.push(packageInfo);
         }
         return packageInfos;
+    }
+
+    extractLicensesFromPkg(parsedLicense: []): License[] {
+        let licenses = [];
+        for (let j in parsedLicense) {
+            let licenseId: string;
+            let licenseUrl: string;
+            let license = JSON.parse(JSON.stringify(parsedLicense[j]));
+            if (license['license']['id']) {
+                licenseId = license['license']['id'];
+            } else if (license['license']['name']) {
+                licenseId = license['license']['name'];
+            } else {
+                licenseId = 'no id';
+            }
+            if (license['license']['url']) {
+                licenseUrl = license['license']['url'];
+            } else {
+                licenseUrl = 'no url';
+            }
+            licenses.push({
+                id: licenseId,
+                url: licenseUrl
+            })
+        }
+        return licenses;
     }
 }

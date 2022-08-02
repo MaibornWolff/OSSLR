@@ -4,14 +4,17 @@ import { assert } from 'chai';
 import { stub, restore } from 'sinon';
 import {
   CopyrightInserter
-} from '../../src/model/copyrightInserter';
-import { PackageInfo } from '../../src/model/packageInfo';
-import { CopyrightParser } from '../../src/model/copyrightParser';
+} from './copyrightInserter';
+import { PackageInfo } from '../../Domain/model/packageInfo';
+import { CopyrightParser } from './copyrightParser';
 
 
 // describe("insertCopyrightIntoBom", function () {
-//   let packageInfo = {
-//     licenses: [
+//   let packageInfo = new PackageInfo(
+//      '',
+//      '',
+//      '',
+//      [
 //       {
 //         license: {
 //           id: "MIT",
@@ -19,10 +22,12 @@ import { CopyrightParser } from '../../src/model/copyrightParser';
 //         },
 //       },
 //     ],
-//   };
+//      [],
+//      [],
+//      '')
 //   it("should add an entry containing the copyright notice into the bom", function () {
 //     assert.equal(
-//       insertCopyrightIntoBom(packageInfo, "Copyright notice")["licenses"][0][
+//       packageInfo.insertCopyrightIntoBom("Copyright notice")["licenses"][0][
 //       "license"
 //       ]["copyright"],
 //       "Copyright notice"
@@ -34,15 +39,7 @@ describe('parseCopyright', function () {
   let copyrightInserter: CopyrightInserter;
   this.beforeEach(function () {
     copyrightInserter = new CopyrightInserter();
-    copyrightInserter.packageInfos = [{
-      copyright: '',
-      group: '',
-      name: '',
-      version: '',
-      externalReferences: [],
-      licenses: [],
-      licenseTexts: ['Copyright (C) 2019']
-    }];
+    copyrightInserter.packageInfos = [new PackageInfo('', '', '', [], [], ['Copyright (C) 2019'], '')];
     stub(CopyrightParser.prototype, 'extractCopyright').returns('Copyright (C) 2019');
     stub(CopyrightParser.prototype, 'removeOverheadFromCopyright').returns('Copyright (C) 2019');
   });
@@ -52,42 +49,28 @@ describe('parseCopyright', function () {
   it('should insert the extracted copyright in the PackageInfo object', function () {
     copyrightInserter.parseCopyright();
     assert.deepEqual(copyrightInserter.packageInfos,
-      [
-        {
-          copyright: 'Copyright (C) 2019',
-          group: '',
-          name: '',
-          version: '',
-          externalReferences: [],
-          licenses: [],
-          licenseTexts: ['Copyright (C) 2019']
-        }
-      ]
+      [new PackageInfo('', '', '', [], [], ['Copyright (C) 2019'], 'Copyright (C) 2019')]
     );
   });
 });
 
 describe('hasLicense', function () {
   let copyrightInserter: CopyrightInserter;
-  let packageInfo: PackageInfo;
+  let packageInfo = new PackageInfo('', '', '', [], [], [], '');
   beforeEach(function () {
     copyrightInserter = new CopyrightInserter();
-    packageInfo = {
-      group: 'group',
-      name: 'name',
-      version: 'version',
-      copyright: '',
-      externalReferences: [],
-      licenses: [
-        {
-          'license': {
-            'id': 'MIT',
-            'url': 'https://opensource.org/licenses/MIT'
-          }
-        }
-      ],
-      licenseTexts: []
-    };
+    packageInfo.group = 'group';
+    packageInfo.name = 'name';
+    packageInfo.version = 'version';
+    packageInfo.licenses = [
+      {
+        'id': 'MIT',
+        'url': 'https://opensource.org/licenses/MIT'
+      }
+    ];
+    packageInfo.externalReferences = [];
+    packageInfo.licenseTexts = [];
+    packageInfo.copyright = '';
   });
   it('should return whether license information are available for the given package', function () {
     assert.isTrue(copyrightInserter.hasLicense(packageInfo));
@@ -98,21 +81,19 @@ describe('hasLicense', function () {
 
 describe('hasExternalReferences', function () {
   let copyrightInserter;
-  let packageInfo: PackageInfo;
+  let packageInfo = new PackageInfo('', '', '', [], [], [], '');
   beforeEach(function () {
     copyrightInserter = new CopyrightInserter();
-    packageInfo = {
-      group: 'group',
-      name: 'name',
-      version: 'version',
-      copyright: '',
-      externalReferences: [
-        'https://github.com/readme',
-        'git+https://github.com/plugins.git'
-      ],
-      licenses: [],
-      licenseTexts: []
-    };
+    packageInfo.group = 'group';
+    packageInfo.name = 'name';
+    packageInfo.version = 'version';
+    packageInfo.licenses = [];
+    packageInfo.externalReferences = [
+      'https://github.com/readme',
+      'git+https://github.com/plugins.git'
+    ];
+    packageInfo.licenseTexts = [];
+    packageInfo.copyright = '';
   });
 
   it('should return whether external references are available for the given package', function () {
