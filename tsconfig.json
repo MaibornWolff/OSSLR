@@ -5,5 +5,7 @@
         "moduleResolution": "node",
         "outDir": "build",
         "resolveJsonModule": true
-    }
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules"]
 }

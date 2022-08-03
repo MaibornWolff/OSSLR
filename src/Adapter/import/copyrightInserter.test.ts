@@ -65,6 +65,8 @@ describe('hasLicense', function () {
     packageInfo.licenses = [
       {
         'id': 'MIT',
+        'name': '',
+        'text': '',
         'url': 'https://opensource.org/licenses/MIT'
       }
     ];
