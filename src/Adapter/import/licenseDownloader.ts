@@ -11,10 +11,10 @@ export class LicenseDownloader {
     constructor() {
         this.githubClient = new GithubClient();
     }
-
-    authenticateGithubClient(tokenUrl) {
+    
+    authenticateGithubClient() {
         try {
-            this.githubClient.authenticate(tokenUrl);
+            this.githubClient.authenticateEnv();
         } catch (err) {
             throw err;
         }

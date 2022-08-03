@@ -1,4 +1,5 @@
 import { readFileSync } from 'fs';
+import { access } from 'fs/promises';
 import { Octokit } from 'octokit';
 
 /**
@@ -7,11 +8,25 @@ import { Octokit } from 'octokit';
 export class GithubClient {
     private octokit: Octokit;
 
-    authenticate(tokenUrl: string) {
+    authenticateURL(tokenUrl: string) {
         try {
             const accessToken = readFileSync(tokenUrl, 'utf8');
             this.octokit = new Octokit({ auth: accessToken });
         } catch (err) {
+            console.error('Authentication with access-token failed.');
+            throw err;
+        }
+    }
+
+    authenticateEnv(){
+        try{
+            const access_token = process.env.ACCESS_TOKEN;
+            if(access_token == undefined){
+                console.log("Please set your access token as an environment variable: ACCESS_TOKEN=\"your-token\".");
+                return;
+            }
+            this.octokit = new Octokit({ auth: process.env.ACCESS_TOKEN}) // nochmal anschauen, vielleicht alternative
+        } catch(err){
             console.error('Authentication with access-token failed.');
             throw err;
         }

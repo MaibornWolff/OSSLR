@@ -54,12 +54,12 @@ export class CopyrightInserter {
 
   /**
    * Coordinates the download of license files for all packages.
-   * @param tokenUrl Token used to authenticate the github client.
+   * @param access_token Token used to authenticate the github client.
    */
-  async downloadLicenses(tokenUrl: string) {
+  async downloadLicenses() {
     try {
       let licenseDownloader = new LicenseDownloader();
-      licenseDownloader.authenticateGithubClient(tokenUrl);
+      licenseDownloader.authenticateGithubClient();
       console.log('Retrieving License Information...');
       const progBar = new SingleBar({}, Presets.shades_classic);
       progBar.start(this.packageInfos.length, 0);
