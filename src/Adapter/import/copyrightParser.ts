@@ -1,4 +1,4 @@
-import { Logger } from '../../logging';
+import { Logger } from '../../Logger/logging';
 
 export class CopyrightParser {
     /**

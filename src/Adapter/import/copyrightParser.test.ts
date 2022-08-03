@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import { Logger } from '../../logging';
+import { Logger } from '../../Logger/logging';
 import { CopyrightParser } from './copyrightParser';
 
 describe('extractCopyright', function () {
@@ -7,7 +7,7 @@ describe('extractCopyright', function () {
     let logger: Logger;
     this.beforeEach(function () {
         copyrightParser = new CopyrightParser();
-        logger = new Logger();
+        logger = Logger.getInstance();
     });
     it('should extract Copyright notices including (c) annotation', function () {
         assert.equal(copyrightParser.extractCopyright('Not this copyright (c) Owner Name', logger), 'copyright (c) Owner Name');

@@ -3,7 +3,7 @@ import { CopyrightParser } from './copyrightParser';
 import { CycloneDXParser } from './cycloneDXParser';
 import { InputParser } from './inputParser';
 import { LicenseDownloader } from './licenseDownloader';
-import { Logger } from '../../logging';
+import { Logger } from '../../Logger/logging';
 import { PackageInfo } from '../../Domain/model/packageInfo';
 import { CycloneDXExporter } from '../export/cycloneDXExporter';
 import { PDFExporter } from '../export/pdfExporter';
@@ -21,7 +21,7 @@ export class CopyrightInserter {
   bomData: string;
 
   constructor() {
-    this.logger = new Logger();
+    this.logger = Logger.getInstance();
   }
   /**
    * Initializes the correct parser for the given BOM format.
@@ -92,6 +92,7 @@ export class CopyrightInserter {
       throw err;
     }
   }
+  
 
   /**
  * Saves the given license file to the disk.

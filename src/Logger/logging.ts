@@ -1,5 +1,5 @@
 import * as winston from 'winston';
-import { PackageInfo } from './model/packageInfo';
+import { PackageInfo } from '../Domain/model/packageInfo';
 
 /**
  * Custom logging levels:
@@ -15,12 +15,18 @@ export type Level = 'License' | 'ExtRefs' | 'Copyright' | 'Error' | 'Debug';
  * Wrapper class for winston logger instances. Passes messages to the corresponding logger unit based on the level.
  */
 export class Logger {
+    private static instance: Logger;
     licenseLogger: winston.Logger;
     errorLogger: winston.Logger;
     debugLogger: winston.Logger;
 
-    constructor() {
+    private constructor() {
         this.initializeLogger();
+        Logger.instance = this;
+    }
+
+    public static getInstance(){
+        return this.instance ?? new Logger();
     }
 
     /**

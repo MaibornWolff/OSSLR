@@ -3,7 +3,7 @@ import { stub, restore } from 'sinon';
 import { assert } from 'chai';
 import { LicenseDownloader } from './licenseDownloader';
 import { GithubClient } from './githubClient';
-import { Logger } from '../../logging';
+import { Logger } from '../../Logger/logging';
 
 describe('downloadLicense', function () {
     let licenseDownloader: LicenseDownloader;
@@ -61,9 +61,9 @@ describe('downloadLicenseFromGithub', function () {
         restore();
     });
     it('should download the license files if it exists in the given repo', async function () {
-        let res = await licenseDownloader.downloadLicenseFromGithub('github.com/test/repo', new Logger());
+        let res = await licenseDownloader.downloadLicenseFromGithub('github.com/test/repo', Logger.getInstance());
         assert.equal(res, 'license url');
-        res = await licenseDownloader.downloadLicenseFromGithub('github.com/test/repo', new Logger());
+        res = await licenseDownloader.downloadLicenseFromGithub('github.com/test/repo', Logger.getInstance());
         assert.equal(res, 'license.md url');
     });
 });
