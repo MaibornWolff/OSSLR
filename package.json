@@ -36,9 +36,6 @@
     "include": [
       "src/**/!(*.test.*).[tj]s?(x)"
     ],
-    "exclude": [
-      "test/**/*.*"
-    ],
     "reporter": [
       "html",
       "lcov",
@@ -51,6 +48,6 @@
     "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'test/**/*.ts'",
     "test_windows": "mocha -r ts-node/register 'test/**/*.ts'",
     "test:coverage": "nyc npm run test",
-    "start": "tsc && node build/src/main.js"
+    "start": "tsc && node build/main.js"
   }
 }

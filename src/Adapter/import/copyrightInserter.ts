@@ -1,10 +1,10 @@
 import { SingleBar, Presets } from 'cli-progress';
 import { CopyrightParser } from './copyrightParser';
-import { CycloneDXParser } from '../inputParser/cycloneDXParser';
-import { InputParser } from '../inputParser/inputParser';
+import { CycloneDXParser } from './cycloneDXParser';
+import { InputParser } from './inputParser';
 import { LicenseDownloader } from './licenseDownloader';
-import { Logger } from '../logging';
-import { PackageInfo } from './packageInfo';
+import { Logger } from '../../logging';
+import { PackageInfo } from '../../Domain/model/packageInfo';
 import { CycloneDXExporter } from '../export/cycloneDXExporter';
 import { PDFExporter } from '../export/pdfExporter';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';

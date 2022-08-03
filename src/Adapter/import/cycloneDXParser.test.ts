@@ -1,7 +1,8 @@
 import 'mocha';
 import { stub, restore } from 'sinon';
 import { assert, expect } from 'chai';
-import { CycloneDXParser } from '../../src/inputParser/cycloneDXParser';
+import { CycloneDXParser } from './cycloneDXParser';
+import { PackageInfo } from '../../Domain/model/packageInfo';
 
 describe('parseInput', function () {
     this.beforeEach(function () {
@@ -82,10 +83,9 @@ describe('parseJSON', function () {
                     }
                 }
             ],
-            externalReferences: ['https://github.com/group/name', 'https://secondLink.com'],
-            licenseTexts: [],
-            copyright: ''
-        }]);
+            ['https://github.com/group/name', 'https://secondLink.com'],
+            [],
+            '')]);
         rawJSON['components'][0]['licenses'] = [];
         rawJSON['components'][0]['externalReferences'] = [];
         assert.deepEqual(cycloneDXParser.parseJSON(JSON.stringify(rawJSON)), [{
