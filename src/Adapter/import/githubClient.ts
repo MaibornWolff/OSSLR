@@ -1,6 +1,7 @@
 import { readFileSync } from 'fs';
 import { access } from 'fs/promises';
 import { Octokit } from 'octokit';
+import * as dotenv from "dotenv";
 
 /**
  * Wrapper for the octokit github client implementation. Used to download repos from github.
@@ -20,12 +21,13 @@ export class GithubClient {
 
     authenticateEnv(){
         try{
+            dotenv.config();
             const access_token = process.env.ACCESS_TOKEN;
             if(access_token == undefined){
                 console.log("Please set your access token as an environment variable: ACCESS_TOKEN=\"your-token\".");
                 return;
             }
-            this.octokit = new Octokit({ auth: process.env.ACCESS_TOKEN}) // nochmal anschauen, vielleicht alternative
+            this.octokit = new Octokit({ auth: access_token})
         } catch(err){
             console.error('Authentication with access-token failed.');
             throw err;

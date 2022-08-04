@@ -5,6 +5,7 @@ build
 .nyc_output
 coverage
 bom.xml
+.env
 
 # Logs
 logs
