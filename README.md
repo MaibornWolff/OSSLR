@@ -16,13 +16,10 @@ Download script for generating SBOM (Software Bill-of-Materials) that will conta
 npm install -g @appthreat/cdxgen
 ```
 
-Also create an access token on GitHub by going to: Settings >> Developer Settings >> Personal Access Tokens >> Generate New Token. Paste your access token into a text file named ```access-token``` in the project folder.
+Also create an access token on GitHub by going to: Settings >> Developer Settings >> Personal Access Tokens >> Generate New Token. Paste your access token into a .env file in the project folder exactly like this: ```ACCES_TOKEN="your-github-acces-token"```.
 
-## Usage
+Secondly, make sure you set the ```FETCH_LICENSE```  environment variable.
 
-First, make sure you have set your ```ACCES_TOKEN="your-github-acces-token" ```environment variable in a .env file inside the root directory of this repository.
-
-Secondly, make sure you have set a second environment variable:
 For Unix systems:
 ```
 export FETCH_LICENSE=true
@@ -32,7 +29,10 @@ For Windows systems:
 set FETCH_LICENSE=true
 ```
 
-Then proceed to generating a BOM file.
+
+## Usage
+
+To generate a BOM file of your project, run this command inside the project folder.
 
 ```
 cdxgen -o bom.json
