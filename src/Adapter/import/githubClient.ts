@@ -1,5 +1,3 @@
-import { readFileSync } from 'fs';
-import { access } from 'fs/promises';
 import { Octokit } from 'octokit';
 import * as dotenv from "dotenv";
 
@@ -9,17 +7,11 @@ import * as dotenv from "dotenv";
 export class GithubClient {
     private octokit: Octokit;
 
-    authenticateURL(tokenUrl: string) {
-        try {
-            const accessToken = readFileSync(tokenUrl, 'utf8');
-            this.octokit = new Octokit({ auth: accessToken });
-        } catch (err) {
-            console.error('Authentication with access-token failed.');
-            throw err;
-        }
-    }
-
-    authenticateEnv(){
+    /**
+     * Authenticates client via an access-token to github.
+     * @returns {void}
+     */
+    authenticateClient(): void{
         try{
             dotenv.config();
             const access_token = process.env.ACCESS_TOKEN;

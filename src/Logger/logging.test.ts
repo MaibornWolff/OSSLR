@@ -6,7 +6,7 @@ import { Logger } from './logging';
 
 
 describe('generateLogMessage', function () {
-    let packageInfo = new PackageInfo('', '', '', [], [], [], '');
+    let packageInfo = new PackageInfo('', '', '', [], [], [],'', '');
     this.beforeEach(function () {
         packageInfo.group = '';
         packageInfo.name = '';

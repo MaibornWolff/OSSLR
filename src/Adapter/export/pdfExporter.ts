@@ -18,6 +18,7 @@ export class PDFExporter implements Exporter {
         var copyrightPdf: string;
 
         packageInfos.forEach(packageInfo => {
+            console.log(packageInfo.copyright);
             if (packageInfo.group !== '') {
                 groupPdf = packageInfo.group;
             } else {
@@ -56,13 +57,15 @@ export class PDFExporter implements Exporter {
         const rawOutput = doc.output("arraybuffer");
         appendFileSync(path.join('out', 'updatedBom.pdf'), Buffer.from(rawOutput));
     }
-
+   
+    // no license.name field in the bom file the bom file
     extractLicense(packageInfo: PackageInfo) {
         if (packageInfo.licenses.length > 0) {
-            if (packageInfo.licenses[0]['license']['id']) {
-                return packageInfo.licenses[0]['license']['id'];
-            } else if (packageInfo.licenses[0]['license']['name']) {
-                return packageInfo.licenses[0]['license']['name'];
+            console.log(packageInfo)
+            if (packageInfo.licenses[0]['id']) {
+                return packageInfo.licenses[0]['id'];
+            //} else if (packageInfo.licenses[0]['name']) {
+            //    return packageInfo.licenses[0]['name'];
             } else {
                 return "no license";
             }

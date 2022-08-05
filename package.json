@@ -49,6 +49,7 @@
     "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'test/**/*.ts'",
     "test_windows": "mocha -r ts-node/register 'src/**/*.ts'",
     "test:coverage": "nyc npm run test",
-    "start": "tsc && node build/main.js out\\bom.json"
+    "start": "tsc && node build/main.js out\\bom_short.json",
+    "license_checker": "tsc && node build/main.js"
   }
 }

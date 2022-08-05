@@ -46,8 +46,8 @@ describe('insertCopyrightIntoBom', function () {
             ]
         };
         packageInfos = [
-            new PackageInfo('packageA', 'groupA', '2.2.0', [], [], [], ''),
-            new PackageInfo('packageB', 'groupB', '', [], [], [], 'copyright')
+            new PackageInfo('packageA', 'groupA', '2.2.0', [], [], [], '', ''),
+            new PackageInfo('packageB', 'groupB', '', [], [], [],'' , 'copyright')
         ];
     });
     it('should insert the extracted copyright notices into the bom', function () {

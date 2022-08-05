@@ -4,7 +4,7 @@ import { assert } from 'chai';
 import { PackageInfo } from './packageInfo';
 
 describe('toString', function () {
-    let packageInfo = new PackageInfo('', '', '', [], [], [], '');
+    let packageInfo = new PackageInfo('', '', '', [], [], [],'', '');
     this.beforeEach(function () {
         packageInfo.group = '';
         packageInfo.name = '';

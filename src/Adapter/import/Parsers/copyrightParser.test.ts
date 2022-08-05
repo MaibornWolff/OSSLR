@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import { Logger } from '../../Logger/logging';
+import { Logger } from '../../../Logger/logging';
 import { CopyrightParser } from './copyrightParser';
 
 describe('extractCopyright', function () {

@@ -1,4 +1,4 @@
-import { PackageInfo } from '../../Domain/model/packageInfo';
+import { PackageInfo } from '../../../Domain/model/packageInfo';
 import { readFileSync } from 'fs';
 
 /**

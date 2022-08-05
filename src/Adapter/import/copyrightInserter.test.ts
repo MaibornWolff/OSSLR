@@ -6,7 +6,7 @@ import {
   CopyrightInserter
 } from './copyrightInserter';
 import { PackageInfo } from '../../Domain/model/packageInfo';
-import { CopyrightParser } from './copyrightParser';
+import { CopyrightParser } from './Parsers/copyrightParser';
 
 
 // describe("insertCopyrightIntoBom", function () {
@@ -39,7 +39,7 @@ describe('parseCopyright', function () {
   let copyrightInserter: CopyrightInserter;
   this.beforeEach(function () {
     copyrightInserter = new CopyrightInserter();
-    copyrightInserter.packageInfos = [new PackageInfo('', '', '', [], [], ['Copyright (C) 2019'], '')];
+    copyrightInserter.packageInfos = [new PackageInfo('', '', '', [], [], ['Copyright (C) 2019'],'', '')];
     stub(CopyrightParser.prototype, 'extractCopyright').returns('Copyright (C) 2019');
     stub(CopyrightParser.prototype, 'removeOverheadFromCopyright').returns('Copyright (C) 2019');
   });
@@ -49,14 +49,14 @@ describe('parseCopyright', function () {
   it('should insert the extracted copyright in the PackageInfo object', function () {
     copyrightInserter.parseCopyright();
     assert.deepEqual(copyrightInserter.packageInfos,
-      [new PackageInfo('', '', '', [], [], ['Copyright (C) 2019'], 'Copyright (C) 2019')]
+      [new PackageInfo('', '', '', [], [], ['Copyright (C) 2019'],'', 'Copyright (C) 2019')]
     );
   });
 });
 
 describe('hasLicense', function () {
   let copyrightInserter: CopyrightInserter;
-  let packageInfo = new PackageInfo('', '', '', [], [], [], '');
+  let packageInfo = new PackageInfo('', '', '', [], [], [], '', '');
   beforeEach(function () {
     copyrightInserter = new CopyrightInserter();
     packageInfo.group = 'group';
@@ -83,7 +83,7 @@ describe('hasLicense', function () {
 
 describe('hasExternalReferences', function () {
   let copyrightInserter;
-  let packageInfo = new PackageInfo('', '', '', [], [], [], '');
+  let packageInfo = new PackageInfo('', '', '', [], [], [],'', '');
   beforeEach(function () {
     copyrightInserter = new CopyrightInserter();
     packageInfo.group = 'group';

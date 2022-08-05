@@ -3,9 +3,9 @@ import { GithubClient } from './githubClient';
 import { Logger } from '../../Logger/logging';
 
 /**
- * Downloads license files from github and the content of other external websites.
+ * Downloads license and README files from github and the content of other external websites.
  */
-export class LicenseDownloader {
+export class Downloader{
     githubClient: GithubClient;
 
     constructor() {
@@ -14,7 +14,7 @@ export class LicenseDownloader {
     
     authenticateGithubClient() {
         try {
-            this.githubClient.authenticateEnv();
+            this.githubClient.authenticateClient();
         } catch (err) {
             throw err;
         }
@@ -25,11 +25,11 @@ export class LicenseDownloader {
      * and the external website downloader for everything else.
      * @param url The URL to be downloaded.
      * @param logger The logger instance.
-     * @returns {Promise<string>} The content of the downloaded license or website.
+     * @returns {Promise<[string, string]>} The content of the downloaded license or website.
      */
-    async downloadLicense(url: string, logger: Logger): Promise<string> {
+    async downloadLicenseAndREADME(url: string, logger: Logger): Promise<[string, string]> {
         if (url.includes('github.com')) {
-            return await this.downloadLicenseFromGithub(url, logger);
+            return await this.downloadDataFromGithub(url, logger);
         } else {
             return await this.downloadLicenseFromExternalWebsite(url, logger);
         }
@@ -37,39 +37,49 @@ export class LicenseDownloader {
 
     /**
      * Downloads the content of the github repository with the given URL and
-     * returns the license file if it exists.
+     * returns the license and README file if it exists as a tuple.
      * @param {string} url The API-URL of the github repository.
      * @param {Logger} logger The logger instance.
-     * @returns {string} The content of the license file. Empty string if none was found.
+     * @returns {[string, string]} The content of the license file. Empty string if none was found.
      */
-    async downloadLicenseFromGithub(url: string, logger: Logger): Promise<string> {
-        let license = '';
+    async downloadDataFromGithub(url: string, logger: Logger): Promise<[string, string]> {
+        let readme, license = '';
         try {
             let repoContent = await this.githubClient.downloadRepo(url);
-            // util.writeLicenseToDisk(JSON.stringify(repoContent, null, 4), 'repocontent');
             for (let i in repoContent['data']) {
                 let fileName = repoContent['data'][i]['name'];
                 //check if filename = license or license.*
                 if (fileName.toLowerCase() === 'license' || fileName.match(new RegExp('license\.[\w]*'), 'i')) {
                     license = await this.makeGetRequest(repoContent['data'][i]['download_url']);
+                } else if (fileName === 'README.md'){
+                    readme = await this.makeGetRequest(repoContent['data'][i]['download_url']);
                 }
             }
         } catch (err) {
             logger.addToLog(err, 'Error');
-            return license;
+            return [license, readme];
         }
-        return license;
+        return [license, readme];
     }
 
+    /* license : {
+        name : license name??
+        id : given 
+        text: the downloaded text
+        url: the link it was downloaded from (given)
+        }
+    */
+
     /**
-     * Downloads the website with the given URL.
+     * Downloads the website with the given URL with the assumption that it cannot contain a README file.
+     * Therefore it always return an empty string for the README part. 
      * @param {string} url The URL of the website to be downloaded.
      * @param {Logger} logger The logger instance.
-     * @returns {Promise<string>} A string containing the content of the website as html.
+     * @returns {Promise<[string,string]>} A string containing the content of the website as html.
      */
-    async downloadLicenseFromExternalWebsite(url: string, logger: Logger): Promise<string> {
+    async downloadLicenseFromExternalWebsite(url: string, logger: Logger): Promise<[string,string]> {
         try {
-            return await this.makeGetRequest(url);
+            return [await this.makeGetRequest(url),''];
         } catch (err) {
             let errorMessage = `AxiosError: ${err.code}.`;
             if (err.response) {
@@ -78,7 +88,7 @@ export class LicenseDownloader {
                 errorMessage = `No response for the request ${url}.`;
             }
             logger.addToLog(errorMessage, 'Error');
-            return '';
+            return ['',''];
         }
     }
 

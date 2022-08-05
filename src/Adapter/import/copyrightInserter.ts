@@ -1,8 +1,8 @@
 import { SingleBar, Presets } from 'cli-progress';
-import { CopyrightParser } from './copyrightParser';
-import { CycloneDXParser } from './cycloneDXParser';
-import { InputParser } from './inputParser';
-import { LicenseDownloader } from './licenseDownloader';
+import { CopyrightParser } from './Parsers/copyrightParser';
+import { CycloneDXParser } from './Parsers/cycloneDXParser';
+import { InputParser } from './Parsers/inputParser';
+import { Downloader } from './downloader';
 import { Logger } from '../../Logger/logging';
 import { PackageInfo } from '../../Domain/model/packageInfo';
 import { CycloneDXExporter } from '../export/cycloneDXExporter';
@@ -53,18 +53,21 @@ export class CopyrightInserter {
   }
 
   /**
-   * Coordinates the download of license files for all packages.
-   * @param access_token Token used to authenticate the github client.
+   * Coordinates the download of license and README.md files for all packages.
    */
-  async downloadLicenses() {
+  // change name
+  async downloadPackageData() {
     try {
-      let licenseDownloader = new LicenseDownloader();
-      licenseDownloader.authenticateGithubClient();
+      let downloader = new Downloader();
+      downloader.authenticateGithubClient();
       console.log('Retrieving License Information...');
       const progBar = new SingleBar({}, Presets.shades_classic);
       progBar.start(this.packageInfos.length, 0);
       for (let packageInfo of this.packageInfos) {
         progBar.increment();
+
+        /*
+        // LOGGING FOR DEBUGGING:
         if (!this.hasLicense(packageInfo)) {
           let message = Logger.generateLogMessage(packageInfo, 'License');
           this.logger.addToLog(message, 'License');
@@ -75,15 +78,17 @@ export class CopyrightInserter {
           this.logger.addToLog(message, 'ExtRefs');
           continue;
         }
+        */
         for (let url of packageInfo.externalReferences) {
-          let license = await licenseDownloader.downloadLicense(
+          let [license, readme] = await downloader.downloadLicenseAndREADME(
             url,
             this.logger
           );
           if (license != '') {
             packageInfo.licenseTexts.push(license);
-            this.writeLicenseToDisk(license, packageInfo.toString());
+            //this.writeLicenseToDisk(license, packageInfo.toString());
           }
+          packageInfo.readme = readme;
         }
       }
       progBar.stop();
@@ -95,16 +100,16 @@ export class CopyrightInserter {
   
 
   /**
- * Saves the given license file to the disk.
- * @param {string} license The license to be saved.
+ * Saves the given file to the disk.
+ * @param {string} fileContent The license to be saved.
  * @param {string} fileName The information about the corresponding package in string form.
  */
-  writeLicenseToDisk(license: string, fileName: string): void {
+  writeFileToDisk(fileContent: string, fileName: string): void {
     try {
         if (!existsSync(path.join('out', 'licenses'))) {
             mkdirSync(path.join('out', 'licenses'));
         }
-        writeFileSync(path.join('out', 'licenses', `${fileName}.txt`), license);
+        writeFileSync(path.join('out', 'licenses', `${fileName}.txt`), fileContent);
     } catch (err) {
         console.error(err);
     }
@@ -121,6 +126,14 @@ export class CopyrightInserter {
           this.packageInfos[i].licenseTexts[j],
           this.logger
         );
+        // if the last license does not contain the copyright check the README
+        if(j == this.packageInfos[i].licenseTexts.length - 1 && copyright === ''){
+          console.log("No copyright found, checking README...")
+          copyright = copyrightParser.extractCopyright(
+            this.packageInfos[i].readme,
+            this.logger
+          )
+        }
         if (copyright === '') {
           continue;
         }

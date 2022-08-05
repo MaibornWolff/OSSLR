@@ -20,7 +20,19 @@ Also create an access token on GitHub by going to: Settings >> Developer Setting
 
 ## Usage
 
-Generate BOM file.
+First make sure you have set your ACCES_TOKEN="your-github-acces-token" environment variable in a .env file inside the root directory.
+
+Secondly make sure you set a second environemnt variable:
+For Unix systems:
+```
+export FETCH_LICENSE=true
+```
+For Windows systems:
+```
+set FETCH_LICENSE=true
+```
+
+Then proceed to generating a BOM file.
 
 ```
 cdxgen -o bom.json
@@ -28,10 +40,10 @@ cdxgen -o bom.json
 
 Drag generated file into the ```out``` folder.
 
-Run the program.
+To Run the license checker program:
 
 ```
-npm start
+npm run license_checker -- "path to your input bom.json"
 ```
 
 After the program terminates, you should see two new files in the ```out``` folder:

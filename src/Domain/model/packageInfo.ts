@@ -9,15 +9,17 @@ export class PackageInfo {
   licenses: License[];
   externalReferences: string[];
   licenseTexts: string[];
+  readme: string;
   copyright: string;
 
-  constructor(group: string, name: string, version: string, licenses: License[], externalReferences: string[], licenseTexts: string[], copyright: string) {
+  constructor(group: string, name: string, version: string, licenses: License[], externalReferences: string[], licenseTexts: string[], readme:string, copyright: string) {
     this.group = group;
     this.name = name;
     this.version = version;
     this.licenses = licenses;
     this.externalReferences = externalReferences;
     this.licenseTexts = licenseTexts;
+    this.readme = readme;
     this.copyright = copyright;
   }
 
