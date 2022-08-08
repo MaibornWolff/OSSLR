@@ -1,6 +1,7 @@
 import Axios from 'axios';
 import { GithubClient } from './githubClient';
 import { Logger } from '../../Logger/logging';
+import { ExceptionHandler } from 'winston';
 
 /**
  * Downloads license and README files from github and the content of other external websites.
@@ -43,19 +44,25 @@ export class Downloader{
      * @returns {[string, string]} The content of the license file. Empty string if none was found.
      */
     async downloadDataFromGithub(url: string, logger: Logger): Promise<[string, string]> {
-        let readme, license = '';
+        let readme = '';
+        let license = '';
         try {
-            let repoContent = await this.githubClient.downloadRepo(url);
-            for (let i in repoContent['data']) {
-                let fileName = repoContent['data'][i]['name'];
+            const repoData =  this.githubClient.downloadRepo(url);
+            if (!Array.isArray(repoData)) {
+                throw new Error('Could not find repository.')
+              }
+            
+            for (let i in repoData) {
+                let fileName = repoData[i]['name'];
                 //check if filename = license or license.*
                 if (fileName.toLowerCase() === 'license' || fileName.match(new RegExp('license\.[\w]*'), 'i')) {
-                    license = await this.makeGetRequest(repoContent['data'][i]['download_url']);
+                    license = await this.makeGetRequest(repoData[i]['download_url']);
                 } else if (fileName === 'README.md'){
-                    readme = await this.makeGetRequest(repoContent['data'][i]['download_url']);
+                    console.log("README LOL");
+                    readme = await this.makeGetRequest(repoData[i]['download_url']);
                 }
             }
-        } catch (err) {
+        } catch (err: any) {
             logger.addToLog(err, 'Error');
             return [license, readme];
         }
@@ -80,7 +87,7 @@ export class Downloader{
     async downloadLicenseFromExternalWebsite(url: string, logger: Logger): Promise<[string,string]> {
         try {
             return [await this.makeGetRequest(url),''];
-        } catch (err) {
+        } catch (err: any) {
             let errorMessage = `AxiosError: ${err.code}.`;
             if (err.response) {
                 errorMessage = `Request ${url} failed with status ${err['response']['status']}. ${err['response']['statusText']}.`;

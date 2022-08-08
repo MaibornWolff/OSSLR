@@ -4,7 +4,8 @@
         "module": "CommonJS",
         "moduleResolution": "node",
         "outDir": "build",
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
+        "strict": true
     },
     "include": ["src/**/*"],
     "exclude": ["node_modules"]

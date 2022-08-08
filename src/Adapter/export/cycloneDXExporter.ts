@@ -2,6 +2,7 @@ import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import path = require('path');
 import { PackageInfo } from '../../Domain/model/packageInfo';
 import { Exporter } from './exporter';
+import { BOMFile } from './../../Domain/model/updatedBOM'
 
 export class CycloneDXExporter implements Exporter {
     export(packageInfos: PackageInfo[], format: string, originalBom: string): void {
@@ -27,7 +28,7 @@ export class CycloneDXExporter implements Exporter {
         }
     }
 
-    insertCopyrightIntoBom(packageInfos: PackageInfo[], bomJson: object) {
+    insertCopyrightIntoBom(packageInfos: PackageInfo[], bomJson: BOMFile ) {
         for (let i = 0; i < packageInfos.length; i++) {
             let copyright = packageInfos[i].copyright;
             if (copyright !== '') {

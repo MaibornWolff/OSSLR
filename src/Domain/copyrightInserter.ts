@@ -1,24 +1,25 @@
 import { SingleBar, Presets } from 'cli-progress';
-import { CopyrightParser } from './Parsers/copyrightParser';
-import { CycloneDXParser } from './Parsers/cycloneDXParser';
-import { InputParser } from './Parsers/inputParser';
-import { Downloader } from './downloader';
-import { Logger } from '../../Logger/logging';
-import { PackageInfo } from '../../Domain/model/packageInfo';
-import { CycloneDXExporter } from '../export/cycloneDXExporter';
-import { PDFExporter } from '../export/pdfExporter';
+import { CopyrightParser } from '../Adapter/import/Parsers/copyrightParser';
+import { CycloneDXParser } from '../Adapter/import/Parsers/cycloneDXParser';
+import { InputParser } from '../Adapter/import/Parsers/inputParser';
+import { Downloader } from '../Adapter/import/downloader';
+import { Logger } from '../Logger/logging';
+import { PackageInfo } from './model/packageInfo';
+import { CycloneDXExporter } from '../Adapter/export/cycloneDXExporter';
+import { PDFExporter } from '../Adapter/export/pdfExporter';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import path = require('path');
 
 /**
  * This class is responsible for distributing the different tasks to the responsible classes.
+ * Name proposals: CopyrightInserter, Runner, OSSLR, LicenseChecker, CopyrightChecker, CopyrightExtractor, 
  */
 export class CopyrightInserter {
   logger: Logger;
-  parser: InputParser;
-  packageInfos: PackageInfo[];
-  bomPath: string;
-  bomData: string;
+  parser!: InputParser;
+  packageInfos!: PackageInfo[];
+  bomPath!: string;
+  bomData!: string;
 
   constructor() {
     this.logger = Logger.getInstance();
@@ -30,7 +31,7 @@ export class CopyrightInserter {
    */
   initParser(bomFormat: string, bomPath: string): void {
     this.bomPath = bomPath;
-    let dataFormat = bomPath.split('.').pop();
+    let dataFormat = bomPath.split('.').pop()!;
     switch (bomFormat) {
       case 'cycloneDX':
         this.parser = new CycloneDXParser(dataFormat);
@@ -128,13 +129,14 @@ export class CopyrightInserter {
         );
         // if the last license does not contain the copyright check the README
         if(j == this.packageInfos[i].licenseTexts.length - 1 && copyright === ''){
-          console.log("No copyright found, checking README...")
+          console.log(`No copyright found inside License for ${this.packageInfos[i].name} checking README...`)
           copyright = copyrightParser.extractCopyright(
             this.packageInfos[i].readme,
             this.logger
           )
         }
         if (copyright === '') {
+          console.log(`No success, no copyright found for ${this.packageInfos[i].name}!`) // Add some prompt to enter manually...
           continue;
         }
         copyright = copyrightParser.removeOverheadFromCopyright(copyright);
@@ -174,7 +176,7 @@ export class CopyrightInserter {
    * @param {object} packageInfo Entry from bom.json containing information for one package.
    * @returns {boolean} Whether the packageInfo contains external references.
    */
-  hasExternalRefs(packageInfo: object): boolean {
+  hasExternalRefs(packageInfo: PackageInfo): boolean {
     return (
       Array.isArray(packageInfo['externalReferences']) &&
       packageInfo['externalReferences'].length > 0

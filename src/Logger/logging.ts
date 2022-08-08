@@ -16,9 +16,9 @@ export type Level = 'License' | 'ExtRefs' | 'Copyright' | 'Error' | 'Debug';
  */
 export class Logger {
     private static instance: Logger;
-    licenseLogger: winston.Logger;
-    errorLogger: winston.Logger;
-    debugLogger: winston.Logger;
+    licenseLogger!: winston.Logger;
+    errorLogger!: winston.Logger;
+    debugLogger!: winston.Logger;
 
     private constructor() {
         this.initializeLogger();

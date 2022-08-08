@@ -5,8 +5,8 @@ import { stub, restore } from 'sinon';
 import {
   CopyrightInserter
 } from './copyrightInserter';
-import { PackageInfo } from '../../Domain/model/packageInfo';
-import { CopyrightParser } from './Parsers/copyrightParser';
+import { PackageInfo } from './model/packageInfo';
+import { CopyrightParser } from '../Adapter/import/Parsers/copyrightParser';
 
 
 // describe("insertCopyrightIntoBom", function () {
@@ -82,7 +82,7 @@ describe('hasLicense', function () {
 });
 
 describe('hasExternalReferences', function () {
-  let copyrightInserter;
+  let copyrightInserter: CopyrightInserter;
   let packageInfo = new PackageInfo('', '', '', [], [], [],'', '');
   beforeEach(function () {
     copyrightInserter = new CopyrightInserter();

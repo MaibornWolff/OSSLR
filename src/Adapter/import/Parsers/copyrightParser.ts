@@ -1,3 +1,4 @@
+import { debug } from 'console';
 import { Logger } from '../../../Logger/logging';
 
 export class CopyrightParser {
@@ -16,11 +17,15 @@ export class CopyrightParser {
         ];
         for (let i in regExps) {
             if (license.match(regExps[i])) {
-                return regExps[i].exec(license)[0];
+                let copyrightMatch = regExps[i].exec(license);
+                if(copyrightMatch != null)
+                    return copyrightMatch[0];
             }
         }
         if (license.match(new RegExp('copyright.*', 'i'))) {
-            logger.addToLog(new RegExp('copyright.*', 'i').exec(license)[0], 'Debug');
+            let debugMatch = new RegExp('copyright.*', 'i').exec(license)
+            if (debugMatch != null)
+                logger.addToLog(debugMatch[0], 'Debug');
         }
         return '';
     }
@@ -34,15 +39,22 @@ export class CopyrightParser {
     removeOverheadFromCopyright(copyright: string): string {
         // remove everything in brackets except the (c)
         let matches = copyright.match(/\([^)]*\)|<[^>]*>/g);
-        for (let i in matches) {
-            if (matches[i].toLowerCase() != '(c)') {
-                copyright = copyright.replace(matches[i], '');
+        if (matches != null){
+            for (let i = 0; i < matches?.length; i++) {
+                if (matches[i].toLowerCase() != '(c)') {
+                    copyright = copyright.replace(matches[i], '');
+                }
             }
+        } else {
+            console.log("No match found");
         }
         // remove URLs. Inspired by: https://urlregex.com/
         matches = copyright.match(/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/);
-        for (let i in matches) {
-            copyright = copyright.replace(matches[i], '');
+        if (matches != null){
+            for (let i = 0; i < matches?.length; i++){
+                copyright = copyright.replace(matches[i], '');
+            }
+               
         }
         // remove everything after special characters
         copyright = copyright.replace(/[^A-za-z0-9\-\. ()©].*/, '');

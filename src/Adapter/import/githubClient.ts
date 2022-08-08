@@ -1,11 +1,14 @@
 import { Octokit } from 'octokit';
+import { components  } from "@octokit/openapi-types";
 import * as dotenv from "dotenv";
 
+
+type DirectoryItem = components["schemas"]["content-directory"][number];
 /**
  * Wrapper for the octokit github client implementation. Used to download repos from github.
  */
 export class GithubClient {
-    private octokit: Octokit;
+    private octokit!: Octokit; // ! indicates that the initilization happens, but not in the constructor.
 
     /**
      * Authenticates client via an access-token to github.
@@ -32,17 +35,24 @@ export class GithubClient {
      * @returns {Promise<unknown>} The content of the repo.
      */
     async downloadRepo(url: string): Promise<unknown> {
-        let repoInfo = this.filterRepoInfoFromURL(url);
-        let repoOwner = repoInfo[0];
-        let repoName = repoInfo[1];
+        let repoOwner = '';
+        let repoName = '';
         try {
-            let repoContent = this.octokit.rest.repos.getContent({
+            let repoInfo = this.filterRepoInfoFromURL(url);
+            if(repoInfo != null){
+                repoOwner = repoInfo[0];
+                repoName = repoInfo[1];
+            } else {
+                console.log(url)
+                throw new Error('Could not find repository');
+            }
+            const {data}   = await this.octokit.rest.repos.getContent({
                 owner: repoOwner,
                 repo: repoName,
                 path: ''
             });
-            return repoContent;
-        } catch (err) {
+            return data;
+        } catch (err: any) {
             if (err.status == '404') {
                 throw `Repository with URL ${url} not found.`;
             } else {
@@ -56,11 +66,21 @@ export class GithubClient {
      * @param {string} url URL to the github repository.
      * @returns {string[]} A string array containing the extracted username and repository name
      */
-    filterRepoInfoFromURL(url: string): string[] {
-        let re = new RegExp('github.com\/([\\w\-]+)\/([\\w\-\.]+)');
-        let filtered = re.exec(url);
-        let user = filtered[1];
-        let repo = filtered[2].replace(new RegExp('.git$'), '');
-        return [user, repo];
+    filterRepoInfoFromURL(url: string): string[] | undefined {
+        try {
+            let re = new RegExp('github.com\/([\\w\-]+)\/([\\w\-\.]+)');
+            let filtered = re.exec(url);
+            let user = '';
+            let repo = '';
+            if(filtered != null){
+                user = filtered[1];
+                repo = filtered[2].replace(new RegExp('.git$'), '');
+                return [user, repo];
+            }else{
+                throw new Error('Invalid GitHub link.');  
+            }
+        } catch (err) {
+            console.log(err);
+        }
     }
 }

@@ -24,7 +24,7 @@ export class PackageInfo {
   }
 
   /**
-   * Generates a name for the given package in the form: "group-name-version".
+   * Generates a name/string representation for the given package in the form: "group-name-version".
    * @returns {string} The generated name for the package.
    */
   toString(): string {

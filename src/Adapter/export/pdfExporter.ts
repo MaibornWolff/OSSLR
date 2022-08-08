@@ -7,18 +7,17 @@ import { Exporter } from './exporter';
 
 export class PDFExporter implements Exporter {
     export(packageInfos: PackageInfo[]): void {
-        var doc = new jsPDF();
-        var col = ["Group", "Name", "Version", "License", "Copyright"];
-        var rows = [];
+        let doc = new jsPDF();
+        let col = ["Group", "Name", "Version", "License", "Copyright"];
+        let rows : string[][] = []
 
-        var groupPdf: string;
-        var namePdf: string;
-        var versionPdf: string;
-        var licensePdf: string;
-        var copyrightPdf: string;
+        let groupPdf: string;
+        let namePdf: string;
+        let versionPdf: string;
+        let licensePdf: string;
+        let copyrightPdf: string;
 
         packageInfos.forEach(packageInfo => {
-            console.log(packageInfo.copyright);
             if (packageInfo.group !== '') {
                 groupPdf = packageInfo.group;
             } else {
@@ -44,7 +43,6 @@ export class PDFExporter implements Exporter {
             } else {
                 copyrightPdf = "no copyright";
             }
-
             rows.push([groupPdf, namePdf, versionPdf, licensePdf, copyrightPdf]);
         })
 
@@ -58,10 +56,9 @@ export class PDFExporter implements Exporter {
         appendFileSync(path.join('out', 'updatedBom.pdf'), Buffer.from(rawOutput));
     }
    
-    // no license.name field in the bom file the bom file
+    // no license.name field in the bom file
     extractLicense(packageInfo: PackageInfo) {
         if (packageInfo.licenses.length > 0) {
-            console.log(packageInfo)
             if (packageInfo.licenses[0]['id']) {
                 return packageInfo.licenses[0]['id'];
             //} else if (packageInfo.licenses[0]['name']) {

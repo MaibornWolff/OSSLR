@@ -1,5 +1,4 @@
-import * as path from 'path';
-import { CopyrightInserter } from './Adapter/import/copyrightInserter';
+import { CopyrightInserter } from './Domain/copyrightInserter';
 
 
 main();
