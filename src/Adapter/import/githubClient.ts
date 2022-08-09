@@ -43,7 +43,8 @@ export class GithubClient {
                 repoOwner = repoInfo[0];
                 repoName = repoInfo[1];
             } else {
-                console.log(url)
+                console.log(url);
+                console.log(repoInfo);
                 throw new Error('Could not find repository');
             }
             const {data}   = await this.octokit.rest.repos.getContent({
@@ -68,13 +69,13 @@ export class GithubClient {
      */
     filterRepoInfoFromURL(url: string): string[] | undefined {
         try {
-            let re = new RegExp('github.com\/([\\w\-]+)\/([\\w\-\.]+)');
+            let re = new RegExp('github.com\(/|:)([\\w\-]+)\/([\\w\-\.]+)');
             let filtered = re.exec(url);
             let user = '';
             let repo = '';
-            if(filtered != null){
-                user = filtered[1];
-                repo = filtered[2].replace(new RegExp('.git$'), '');
+            if(filtered != null && filtered[2] != undefined && filtered[3] != undefined){
+                user = filtered[2];
+                repo = filtered[3].replace(new RegExp('.git$'), '').replace(new RegExp('#readme'),'');
                 return [user, repo];
             }else{
                 throw new Error('Invalid GitHub link.');  

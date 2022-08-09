@@ -12,9 +12,8 @@ import path = require('path');
 
 /**
  * This class is responsible for distributing the different tasks to the responsible classes.
- * Name proposals: CopyrightInserter, Runner, OSSLR, LicenseChecker, CopyrightChecker, CopyrightExtractor, 
  */
-export class CopyrightInserter {
+export class LicenseChecker {
   logger: Logger;
   parser!: InputParser;
   packageInfos!: PackageInfo[];

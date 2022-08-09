@@ -5,6 +5,8 @@ import { ExceptionHandler } from 'winston';
 
 /**
  * Downloads license and README files from github and the content of other external websites.
+ * Name proposals: Web scraper, downloader, data retriever, golden rtriever, data collector, data import, 
+ *                 data loader,
  */
 export class Downloader{
     githubClient: GithubClient;

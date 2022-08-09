@@ -3,8 +3,8 @@ import 'mocha';
 import { assert } from 'chai';
 import { stub, restore } from 'sinon';
 import {
-  CopyrightInserter
-} from './copyrightInserter';
+  LicenseChecker
+} from './licenseChecker';
 import { PackageInfo } from './model/packageInfo';
 import { CopyrightParser } from '../Adapter/import/Parsers/copyrightParser';
 
@@ -36,10 +36,10 @@ import { CopyrightParser } from '../Adapter/import/Parsers/copyrightParser';
 // });
 
 describe('parseCopyright', function () {
-  let copyrightInserter: CopyrightInserter;
+  let licenseChecker: LicenseChecker;
   this.beforeEach(function () {
-    copyrightInserter = new CopyrightInserter();
-    copyrightInserter.packageInfos = [new PackageInfo('', '', '', [], [], ['Copyright (C) 2019'],'', '')];
+    licenseChecker = new LicenseChecker();
+    licenseChecker.packageInfos = [new PackageInfo('', '', '', [], [], ['Copyright (C) 2019'],'', '')];
     stub(CopyrightParser.prototype, 'extractCopyright').returns('Copyright (C) 2019');
     stub(CopyrightParser.prototype, 'removeOverheadFromCopyright').returns('Copyright (C) 2019');
   });
@@ -47,18 +47,18 @@ describe('parseCopyright', function () {
     restore();
   });
   it('should insert the extracted copyright in the PackageInfo object', function () {
-    copyrightInserter.parseCopyright();
-    assert.deepEqual(copyrightInserter.packageInfos,
+    licenseChecker.parseCopyright();
+    assert.deepEqual(licenseChecker.packageInfos,
       [new PackageInfo('', '', '', [], [], ['Copyright (C) 2019'],'', 'Copyright (C) 2019')]
     );
   });
 });
 
 describe('hasLicense', function () {
-  let copyrightInserter: CopyrightInserter;
+  let licenseChecker: LicenseChecker;
   let packageInfo = new PackageInfo('', '', '', [], [], [], '', '');
   beforeEach(function () {
-    copyrightInserter = new CopyrightInserter();
+    licenseChecker = new LicenseChecker();
     packageInfo.group = 'group';
     packageInfo.name = 'name';
     packageInfo.version = 'version';
@@ -75,17 +75,17 @@ describe('hasLicense', function () {
     packageInfo.copyright = '';
   });
   it('should return whether license information are available for the given package', function () {
-    assert.isTrue(copyrightInserter.hasLicense(packageInfo));
+    assert.isTrue(licenseChecker.hasLicense(packageInfo));
     packageInfo.licenses = [];
-    assert.isFalse(copyrightInserter.hasLicense(packageInfo));
+    assert.isFalse(licenseChecker.hasLicense(packageInfo));
   });
 });
 
 describe('hasExternalReferences', function () {
-  let copyrightInserter: CopyrightInserter;
+  let licenseChecker: LicenseChecker;
   let packageInfo = new PackageInfo('', '', '', [], [], [],'', '');
   beforeEach(function () {
-    copyrightInserter = new CopyrightInserter();
+    licenseChecker = new LicenseChecker();
     packageInfo.group = 'group';
     packageInfo.name = 'name';
     packageInfo.version = 'version';
@@ -99,8 +99,8 @@ describe('hasExternalReferences', function () {
   });
 
   it('should return whether external references are available for the given package', function () {
-    assert.isTrue(copyrightInserter.hasExternalRefs(packageInfo));
+    assert.isTrue(licenseChecker.hasExternalRefs(packageInfo));
     packageInfo['externalReferences'] = [];
-    assert.isFalse(copyrightInserter.hasExternalRefs(packageInfo));
+    assert.isFalse(licenseChecker.hasExternalRefs(packageInfo));
   });
 });

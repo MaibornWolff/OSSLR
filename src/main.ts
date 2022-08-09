@@ -1,4 +1,4 @@
-import { CopyrightInserter } from './Domain/copyrightInserter';
+import { LicenseChecker } from './Domain/licenseChecker';
 
 
 main();
@@ -11,17 +11,17 @@ async function main() {
             return;
         }
         let bomPath = args[0];
-        let copyrightInserter = new CopyrightInserter();
+        let licenseChecker = new LicenseChecker();
         // Sets parser mode and passes input file
-        copyrightInserter.initParser('cycloneDX', bomPath);
+        licenseChecker.initParser('cycloneDX', bomPath);
         // Extracts relevant Package data from the given JSON file  
-        copyrightInserter.retrievePackageInfos();
+        licenseChecker.retrievePackageInfos();
         // Downloads data (currently lincenses and README files) from given source link
-        await copyrightInserter.downloadPackageData();
+        await licenseChecker.downloadPackageData();
         // Parses that data for copyright (searches for copyright with RegEx)
-        copyrightInserter.parseCopyright();
+        licenseChecker.parseCopyright();
         // Exports said copyright data into a pdf
-        copyrightInserter.export();
+        licenseChecker.export();
     } catch (err) {
         console.log(err);
         return;
