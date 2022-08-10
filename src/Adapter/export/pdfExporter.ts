@@ -1,5 +1,5 @@
 import { appendFileSync } from "fs";
-import path = require('path');
+import * as path from 'path';
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { PackageInfo } from '../../Domain/model/packageInfo';

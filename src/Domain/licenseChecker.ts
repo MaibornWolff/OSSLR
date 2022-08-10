@@ -8,7 +8,7 @@ import { PackageInfo } from './model/packageInfo';
 import { CycloneDXExporter } from '../Adapter/export/cycloneDXExporter';
 import { PDFExporter } from '../Adapter/export/pdfExporter';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
-import path = require('path');
+import * as path from 'path';
 
 /**
  * This class is responsible for distributing the different tasks to the responsible classes.
