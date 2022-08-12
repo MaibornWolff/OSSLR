@@ -6,11 +6,20 @@ main();
 async function main() {
     try {
         let args = process.argv.slice(2);
-        if (args.length != 1){
-            console.log("One argument is required: the path to the input JSON file.");
-            return;
-        }
-        let bomPath = args[0];
+        let bomPath;
+        let bomManualPath; // Path to the manually created file.
+        switch(args.length) {
+            case 1:
+                bomPath = args[0];
+              break;
+            case 2:
+                bomPath = args[0];
+                bomManualPath = args[1];
+              break;
+            default:
+                console.log("At least one argument is required, namely the path to the input JSON file.");
+                return;
+          }
         let licenseChecker = new LicenseChecker();
         // Sets parser mode and passes input file
         licenseChecker.initParser('cycloneDX', bomPath);
@@ -22,6 +31,8 @@ async function main() {
         licenseChecker.parseCopyright();
         // Exports said copyright data into a pdf
         licenseChecker.export();
+        // Creates a file with all packagesInfos which are missing important values
+        licenseChecker.exportMissingObjects()
     } catch (err) {
         console.log(err);
         return;

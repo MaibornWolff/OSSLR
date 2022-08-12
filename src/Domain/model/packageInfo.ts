@@ -8,8 +8,8 @@ export class PackageInfo {
   version: string;
   licenses: License[];
   externalReferences: string[];
-  licenseTexts: string[];
-  readme: string;
+  licenseTexts?: string[];
+  readme?: string;
   copyright: string;
 
   constructor(group: string, name: string, version: string, licenses: License[], externalReferences: string[], licenseTexts: string[], readme:string, copyright: string) {

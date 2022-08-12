@@ -1,10 +1,10 @@
 {
   "bomFormat": "CycloneDX",
   "specVersion": "1.4",
-  "serialNumber": "urn:uuid:be5cdfec-ac96-45f3-91fe-6265c52ece72",
+  "serialNumber": "urn:uuid:d9117c59-3253-4376-aead-e9a1e246b84d",
   "version": 1,
   "metadata": {
-    "timestamp": "2022-08-05T11:06:56.368Z",
+    "timestamp": "2022-08-11T08:40:09.998Z",
     "tools": [
       {
         "vendor": "AppThreat",
@@ -2375,13 +2375,13 @@
     {
       "group": "octokit",
       "name": "openapi-types",
-      "version": "11.2.0",
+      "version": "12.11.0",
       "description": "Generated TypeScript definitions based on GitHub's OpenAPI spec for api.github.com",
       "scope": "required",
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "3c1b153bed792929469a223c400cdaaafb0d95996b0e5c8025872b5c10af554c42a7b5675e39303e81478231095f1dd617d040c2403a9df09403b8bdb0e0f328"
+          "content": "56c5f28bca5ec91abd3ea233feda6a88bdb0df0f343a054cc011e5b539a5dcb995bd78a98607aa998f66bc1c3d5aeeded105a4fdfa83dfbbb1f323f9b957a4c9"
         }
       ],
       "licenses": [
@@ -2392,7 +2392,7 @@
           }
         }
       ],
-      "purl": "pkg:npm/octokit/openapi-types@11.2.0",
+      "purl": "pkg:npm/octokit/openapi-types@12.11.0",
       "externalReferences": [
         {
           "type": "website",
@@ -2404,18 +2404,18 @@
         }
       ],
       "type": "library",
-      "bom-ref": "pkg:npm/octokit/openapi-types@11.2.0"
+      "bom-ref": "pkg:npm/octokit/openapi-types@12.11.0"
     },
     {
       "group": "octokit",
       "name": "plugin-paginate-rest",
-      "version": "2.17.0",
+      "version": "2.21.3",
       "description": "Octokit plugin to paginate REST API endpoint responses",
       "scope": "required",
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "b7331badb9da9b632de0086ec821efa51912d2867932fc307103d81ad32fe2d51ae649331b9f12541d1f72c2ee94e6507919ce81d9195a44548b2065874064cb"
+          "content": "68265311fd32da1dce2dbae02a4adf15d8d12fa7923a8f24a269de55026761e700c487a3ec169fa2bdb186e0c938815abb8a64d22fcfdbcfd782d6f23c5d191f"
         }
       ],
       "licenses": [
@@ -2426,7 +2426,7 @@
           }
         }
       ],
-      "purl": "pkg:npm/octokit/plugin-paginate-rest@2.17.0",
+      "purl": "pkg:npm/octokit/plugin-paginate-rest@2.21.3",
       "externalReferences": [
         {
           "type": "website",
@@ -2438,18 +2438,18 @@
         }
       ],
       "type": "library",
-      "bom-ref": "pkg:npm/octokit/plugin-paginate-rest@2.17.0"
+      "bom-ref": "pkg:npm/octokit/plugin-paginate-rest@2.21.3"
     },
     {
       "group": "octokit",
       "name": "plugin-rest-endpoint-methods",
-      "version": "5.13.0",
+      "version": "5.16.2",
       "description": "Octokit plugin adding one method for all of api.github.com REST API endpoints",
       "scope": "required",
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "b898cc4e437529a38880db543ccb485c33a3c7a746632b1d205860039db1e3149a7500b3ddbff325ec6f2130d5a403677ca3d6ffe134c643af2e7b6a318a6f88"
+          "content": "f10173dbd160e630ee4cf5d5b5ecb4e412e6ece07e33c7e7bc4eb844d7a0cd7ed4fb93545dc39c9e94c82b461f487060f2061dd28c48ab72194def527cf66247"
         }
       ],
       "licenses": [
@@ -2460,7 +2460,7 @@
           }
         }
       ],
-      "purl": "pkg:npm/octokit/plugin-rest-endpoint-methods@5.13.0",
+      "purl": "pkg:npm/octokit/plugin-rest-endpoint-methods@5.16.2",
       "externalReferences": [
         {
           "type": "website",
@@ -2472,7 +2472,7 @@
         }
       ],
       "type": "library",
-      "bom-ref": "pkg:npm/octokit/plugin-rest-endpoint-methods@5.13.0"
+      "bom-ref": "pkg:npm/octokit/plugin-rest-endpoint-methods@5.16.2"
     },
     {
       "group": "octokit",
@@ -2613,13 +2613,13 @@
     {
       "group": "octokit",
       "name": "types",
-      "version": "6.34.0",
+      "version": "6.41.0",
       "description": "Shared TypeScript definitions for Octokit projects",
       "scope": "required",
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "b35ccb0635a1744236cf06a84a0c8e168292975d3d09471504273b6e23c9dda01fe8b18b53ab330ef8b7d493d4edbc5f95ada5a9f8636db83fe437453713b01f"
+          "content": "789da36f38dd8a388bdc1e0fad241a4a3b85dac3c440f5423f306f4c7243f4dcfef5dc364861f82b8c5e409efb61f4eae5b450f9b0fcc13d7525b7833e6c661a"
         }
       ],
       "licenses": [
@@ -2630,7 +2630,7 @@
           }
         }
       ],
-      "purl": "pkg:npm/octokit/types@6.34.0",
+      "purl": "pkg:npm/octokit/types@6.41.0",
       "externalReferences": [
         {
           "type": "website",
@@ -2642,7 +2642,7 @@
         }
       ],
       "type": "library",
-      "bom-ref": "pkg:npm/octokit/types@6.34.0"
+      "bom-ref": "pkg:npm/octokit/types@6.41.0"
     },
     {
       "group": "octokit",
@@ -3152,6 +3152,176 @@
       ],
       "type": "library",
       "bom-ref": "pkg:npm/semver@7.3.7"
+    },
+    {
+      "group": "typescript-eslint",
+      "name": "parser",
+      "version": "5.32.0",
+      "description": "An ESLint custom parser which leverages TypeScript ESTree",
+      "scope": "optional",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "23146db1e85d195f46150df92069b9a0a291d8e19c6b352888d071851575eb4885f45a32b97c6363eac8aacd607e777ee1e2fdf0e8de1a732913b445fcd05bdc"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-2-Clause",
+            "url": "https://opensource.org/licenses/BSD-2-Clause"
+          }
+        }
+      ],
+      "purl": "pkg:npm/typescript-eslint/parser@5.32.0",
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://github.com/typescript-eslint/typescript-eslint#readme"
+        },
+        {
+          "type": "vcs",
+          "url": "git+https://github.com/typescript-eslint/typescript-eslint.git"
+        }
+      ],
+      "type": "library",
+      "bom-ref": "pkg:npm/typescript-eslint/parser@5.32.0"
+    },
+    {
+      "group": "typescript-eslint",
+      "name": "scope-manager",
+      "version": "5.32.0",
+      "description": "TypeScript scope analyser for ESLint",
+      "scope": "optional",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "2b2004fad50e3740fbb4dcfdda9d6e7ad46a5498a20247a5bafc2f64ea81996f73d970299a4e5648c57d16bcceae801c57125907719f53054aafdf03aff3a33a"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+          }
+        }
+      ],
+      "purl": "pkg:npm/typescript-eslint/scope-manager@5.32.0",
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://github.com/typescript-eslint/typescript-eslint#readme"
+        },
+        {
+          "type": "vcs",
+          "url": "git+https://github.com/typescript-eslint/typescript-eslint.git"
+        }
+      ],
+      "type": "library",
+      "bom-ref": "pkg:npm/typescript-eslint/scope-manager@5.32.0"
+    },
+    {
+      "group": "typescript-eslint",
+      "name": "types",
+      "version": "5.32.0",
+      "description": "Types for the TypeScript-ESTree AST spec",
+      "scope": "optional",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "10150ab3af0339c4ff12319fcf2c29f9ff301bd670ea08fa0635aeeca57f218965a8a2453e56652d2630fcf4ef572891c39d2deb055b82fe29f6e13687ab19ad"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+          }
+        }
+      ],
+      "purl": "pkg:npm/typescript-eslint/types@5.32.0",
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://github.com/typescript-eslint/typescript-eslint#readme"
+        },
+        {
+          "type": "vcs",
+          "url": "git+https://github.com/typescript-eslint/typescript-eslint.git"
+        }
+      ],
+      "type": "library",
+      "bom-ref": "pkg:npm/typescript-eslint/types@5.32.0"
+    },
+    {
+      "group": "typescript-eslint",
+      "name": "typescript-estree",
+      "version": "5.32.0",
+      "description": "A parser that converts TypeScript source code into an ESTree compatible form",
+      "scope": "optional",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "65501492f3e4dc84c6b422d4e49e1ab42c3d453c4af9245cea15ea2ed9650b6b0649e30558df98c1b88947d085ad2149df0e1225f716b43c0d6ff0e65081dd86"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-2-Clause",
+            "url": "https://opensource.org/licenses/BSD-2-Clause"
+          }
+        }
+      ],
+      "purl": "pkg:npm/typescript-eslint/typescript-estree@5.32.0",
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://github.com/typescript-eslint/typescript-eslint#readme"
+        },
+        {
+          "type": "vcs",
+          "url": "git+https://github.com/typescript-eslint/typescript-eslint.git"
+        }
+      ],
+      "type": "library",
+      "bom-ref": "pkg:npm/typescript-eslint/typescript-estree@5.32.0"
+    },
+    {
+      "group": "typescript-eslint",
+      "name": "visitor-keys",
+      "version": "5.32.0",
+      "description": "Visitor keys used to help traverse the TypeScript-ESTree AST",
+      "scope": "optional",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "4b9e313876607d3862677f3f6464e0076aeac79d42309e4c09f553d88a652b843b860cc67ded272f32c271e9c39dcfdc4a33f9ebc85d78a7de0dc060a8d1c3fe"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+          }
+        }
+      ],
+      "purl": "pkg:npm/typescript-eslint/visitor-keys@5.32.0",
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://github.com/typescript-eslint/typescript-eslint#readme"
+        },
+        {
+          "type": "vcs",
+          "url": "git+https://github.com/typescript-eslint/typescript-eslint.git"
+        }
+      ],
+      "type": "library",
+      "bom-ref": "pkg:npm/typescript-eslint/visitor-keys@5.32.0"
     },
     {
       "group": "typescript-eslint",
@@ -12544,13 +12714,13 @@
     {
       "group": "",
       "name": "octokit",
-      "version": "1.7.1",
+      "version": "1.8.1",
       "description": "The all-batteries-included GitHub SDK for Browsers, Node.js, and Deno",
       "scope": "required",
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "d5bede46053cb967ad1ce5abf1ff69b67568d8429bae439fa1c31e41da600adeed97f2caebb1e9b45b32d978387cc8ec27ffa89e80495b4872fdf3b4227dffb8"
+          "content": "c412ca1488af6e5ef09cbc31ccb62e0cefc90cd631772c684a316b97f40cad8fdfc06190618925bca5034d4c86314d1a5cfad0b49d086671b7057a429034335a"
         }
       ],
       "licenses": [
@@ -12561,7 +12731,7 @@
           }
         }
       ],
-      "purl": "pkg:npm/octokit@1.7.1",
+      "purl": "pkg:npm/octokit@1.8.1",
       "externalReferences": [
         {
           "type": "website",
@@ -12573,7 +12743,7 @@
         }
       ],
       "type": "library",
-      "bom-ref": "pkg:npm/octokit@1.7.1"
+      "bom-ref": "pkg:npm/octokit@1.8.1"
     },
     {
       "group": "",

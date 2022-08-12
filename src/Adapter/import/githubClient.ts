@@ -3,7 +3,6 @@ import { components  } from "@octokit/openapi-types";
 import * as dotenv from "dotenv";
 
 
-type DirectoryItem = components["schemas"]["content-directory"][number];
 /**
  * Wrapper for the octokit github client implementation. Used to download repos from github.
  */
@@ -32,9 +31,9 @@ export class GithubClient {
     /**
      * Downloads the github repo with the given url.
      * @param {string} url The repo url.
-     * @returns {Promise<unknown>} The content of the repo.
+     * @returns {Promise<any>} The content of the repo.
      */
-    async downloadRepo(url: string): Promise<unknown> {
+    async downloadRepo(url: string): Promise<any> {
         let repoOwner = '';
         let repoName = '';
         try {
@@ -47,7 +46,7 @@ export class GithubClient {
                 console.log(repoInfo);
                 throw new Error('Could not find repository');
             }
-            const {data}   = await this.octokit.rest.repos.getContent({
+            const data  = this.octokit.rest.repos.getContent({
                 owner: repoOwner,
                 repo: repoName,
                 path: ''
@@ -75,7 +74,7 @@ export class GithubClient {
             let repo = '';
             if(filtered != null && filtered[2] != undefined && filtered[3] != undefined){
                 user = filtered[2];
-                repo = filtered[3].replace(new RegExp('.git$'), '').replace(new RegExp('#readme'),'');
+                repo = filtered[3].replace(new RegExp('.git$'), '')
                 return [user, repo];
             }else{
                 throw new Error('Invalid GitHub link.');  

@@ -49,19 +49,16 @@ export class Downloader{
         let readme = '';
         let license = '';
         try {
-            const repoData =  this.githubClient.downloadRepo(url);
-            if (!Array.isArray(repoData)) {
+            const {data} = await this.githubClient.downloadRepo(url);
+            if (!Array.isArray(data)) {
                 throw new Error('Could not find repository.')
-              }
-            
-            for (let i in repoData) {
-                let fileName = repoData[i]['name'];
-                //check if filename = license or license.*
-                if (fileName.toLowerCase() === 'license' || fileName.match(new RegExp('license\.[\w]*'), 'i')) {
-                    license = await this.makeGetRequest(repoData[i]['download_url']);
-                } else if (fileName === 'README.md'){
-                    console.log("README LOL");
-                    readme = await this.makeGetRequest(repoData[i]['download_url']);
+            } 
+            for (let i = 0; i < data.length; i++) {
+                let fileName = data[i].name;
+                if (fileName.toLowerCase() === 'license' || fileName.match(new RegExp('license\.[\w]*' ,'i'))) {
+                    license = await this.makeGetRequest(data[i]['download_url']);
+                } else if (fileName.toLowerCase() === 'readme.md'){
+                    readme = await this.makeGetRequest(data[i]['download_url']);
                 }
             }
         } catch (err: any) {
@@ -70,14 +67,6 @@ export class Downloader{
         }
         return [license, readme];
     }
-
-    /* license : {
-        name : license name??
-        id : given 
-        text: the downloaded text
-        url: the link it was downloaded from (given)
-        }
-    */
 
     /**
      * Downloads the website with the given URL with the assumption that it cannot contain a README file.

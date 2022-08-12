@@ -19,6 +19,7 @@ export class LicenseChecker {
   packageInfos!: PackageInfo[];
   bomPath!: string;
   bomData!: string;
+  noCopyrightList: PackageInfo[] = [];
 
   constructor() {
     this.logger = Logger.getInstance();
@@ -85,7 +86,7 @@ export class LicenseChecker {
             this.logger
           );
           if (license != '') {
-            packageInfo.licenseTexts.push(license);
+            packageInfo.licenseTexts!.push(license);
             //this.writeLicenseToDisk(license, packageInfo.toString());
           }
           packageInfo.readme = readme;
@@ -121,21 +122,27 @@ export class LicenseChecker {
   parseCopyright(): void {
     let copyrightParser = new CopyrightParser();
     for (let i = 0; i < this.packageInfos.length; i++) {
-      for (let j = 0; j < this.packageInfos[i].licenseTexts.length; j++) {
+      let licenseTexts = this.packageInfos[i].licenseTexts!; // readability
+      for (let j = 0; j < licenseTexts.length; j++) {
         let copyright = copyrightParser.extractCopyright(
-          this.packageInfos[i].licenseTexts[j],
+          licenseTexts[j],
           this.logger
         );
         // if the last license does not contain the copyright check the README
-        if(j == this.packageInfos[i].licenseTexts.length - 1 && copyright === ''){
+        if(j == licenseTexts.length - 1 && copyright === ''){
           console.log(`No copyright found inside License for ${this.packageInfos[i].name} checking README...`)
           copyright = copyrightParser.extractCopyright(
-            this.packageInfos[i].readme,
+            this.packageInfos[i].readme!,
             this.logger
           )
+          // If copyright Still not found after checking readme:
+          if (copyright === ''){
+            console.log(`No success, no copyright found for ${this.packageInfos[i].name}!`) // Add some prompt to enter manually...
+            // collect package infos without copyright for the option to fill in manually.
+            this.noCopyrightList.push(this.packageInfos[i]);
+          }
         }
         if (copyright === '') {
-          console.log(`No success, no copyright found for ${this.packageInfos[i].name}!`) // Add some prompt to enter manually...
           continue;
         }
         copyright = copyrightParser.removeOverheadFromCopyright(copyright);
@@ -157,6 +164,20 @@ export class LicenseChecker {
       throw err;
     }
   }
+
+  /*
+  * Exports a file that hold all uncomplete PackageInfo objects.
+  */
+  exportMissingObjects(): void {
+    let cycloneDXExporter = new CycloneDXExporter();
+    try {
+      cycloneDXExporter.export(this.noCopyrightList, 'json-missing-values', this.bomData);
+    } catch (err) {
+      throw err;
+    }
+  }
+
+
 
   /**
    * Checks whether the bom contains license information for the given package.
@@ -180,5 +201,10 @@ export class LicenseChecker {
       Array.isArray(packageInfo['externalReferences']) &&
       packageInfo['externalReferences'].length > 0
     );
+  }
+
+  hasCopyright(packageInfo: PackageInfo): boolean{
+    console.log(packageInfo.copyright);
+    return packageInfo.copyright !== '';
   }
 }

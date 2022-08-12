@@ -2,21 +2,21 @@ import 'mocha';
 import { stub, restore } from 'sinon';
 import { assert } from 'chai';
 import { Downloader } from './downloader';
-import { GithubClient } from './githubClient';
+import { GithubClient } from '../import/githubClient';
 import { Logger } from '../../Logger/logging';
 
 /*
 describe('downloadLicense', function () {
-    let licenseDownloader: LicenseDownloader;
+    let downloader: Downloader;
     this.beforeEach(function () {
-        licenseDownloader = new LicenseDownloader();
-        stub(LicenseDownloader.prototype, 'downloadLicenseFromExternalWebsite').returns('license');
-        stub(LicenseDownloader.prototype, 'downloadLicenseFromGithub').returns('Github License');
+        downloader = new Downloader();
+        stub(Downloader.prototype, 'downloadLicenseFromExternalWebsite').returns('license');
+        stub(Downloader.prototype, 'downloadLicenseFromGithub').returns('Github License');
     });
     it('should pass the url to the correct downloader', async function () {
-        let res = await licenseDownloader.downloadLicense('github.com', null);
+        let res = await Downloader.downloadLicenseAndREADME('github.com', null);
         assert.equal(res, 'Github License');
-        res = await licenseDownloader.downloadLicense('website.com', null);
+        res = await Downloader.downloadLicenseAndREADME('website.com', null);
         assert.equal(res, 'license');
     });
     this.afterEach(() => {
@@ -26,9 +26,9 @@ describe('downloadLicense', function () {
 
 
 describe('downloadLicenseFromGithub', function () {
-    let licenseDownloader: LicenseDownloader;
+    let downloader: Downloader;
     this.beforeEach(function () {
-        licenseDownloader = new LicenseDownloader();
+        downloader = new Downloader();
         let downloadRepoStub = stub(GithubClient.prototype, 'downloadRepo');
         downloadRepoStub.onCall(0).returns({
             'data': [
@@ -54,7 +54,7 @@ describe('downloadLicenseFromGithub', function () {
                 }
             ]
         });
-        stub(LicenseDownloader.prototype, 'makeGetRequest').callsFake(function (url: string) {
+        stub(Downloader.prototype, 'makeGetRequest').callsFake(function (url: string) {
             return url;
         });
     });
@@ -62,10 +62,11 @@ describe('downloadLicenseFromGithub', function () {
         restore();
     });
     it('should download the license files if it exists in the given repo', async function () {
-        let res = await licenseDownloader.downloadLicenseFromGithub('github.com/test/repo', Logger.getInstance());
+        let res = await downloader.downloadLicenseFromGithub('github.com/test/repo', new Logger());
         assert.equal(res, 'license url');
-        res = await licenseDownloader.downloadLicenseFromGithub('github.com/test/repo', Logger.getInstance());
+        res = await downloader.downloadLicenseFromGithub('github.com/test/repo', new Logger());
         assert.equal(res, 'license.md url');
     });
 });
+
 */
