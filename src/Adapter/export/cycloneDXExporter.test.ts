@@ -1,6 +1,6 @@
 import { expect, assert } from 'chai';
 import 'mocha';
-import { stub, restore } from 'sinon';
+// import { stub, restore } from 'sinon';
 import { CycloneDXExporter } from './cycloneDXExporter';
 import { PackageInfo } from '../../Domain/model/packageInfo';
 

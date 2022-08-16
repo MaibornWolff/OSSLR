@@ -1,5 +1,5 @@
 import 'mocha';
-import { stub, restore } from 'sinon';
+// import { stub, restore } from 'sinon';
 import { assert } from 'chai';
 import { Downloader } from './downloader';
 import { GithubClient } from '../import/githubClient';

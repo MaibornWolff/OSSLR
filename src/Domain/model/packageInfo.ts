@@ -1,6 +1,4 @@
 import { License } from './license';
-import { existsSync, mkdirSync, writeFileSync } from 'fs';
-import path = require('path');
 
 export class PackageInfo {
   group: string;

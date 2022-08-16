@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
-import path = require('path');
+import * as path from 'path';
 import { PackageInfo } from '../../Domain/model/packageInfo';
 import { Exporter } from './exporter';
 import { BOMFile } from './../../Domain/model/updatedBOM'

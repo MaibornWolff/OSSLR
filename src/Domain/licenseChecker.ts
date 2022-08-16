@@ -10,7 +10,7 @@ import { CycloneDXExporter } from '../Adapter/export/cycloneDXExporter';
 import { PDFExporter } from '../Adapter/export/pdfExporter';
 import { MissingValuesExporter } from '../Adapter/export/missingValuesExporter';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
-import path = require('path');
+import * as path from 'path';
 
 
 /**
