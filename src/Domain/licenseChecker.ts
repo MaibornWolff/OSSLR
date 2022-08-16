@@ -1,8 +1,6 @@
 import { SingleBar, Presets } from 'cli-progress';
 import { CopyrightParser } from '../Adapter/import/Parsers/copyrightParser';
 import { CycloneDXParser } from '../Adapter/import/Parsers/cycloneDXParser';
-import { PureJSONParser } from '../Adapter/import/Parsers/pureJSONparser';
-import { InputParser } from '../Adapter/import/Parsers/inputParser';
 import { Downloader } from '../Adapter/import/downloader';
 import { Logger } from '../Logger/logging';
 import { PackageInfo } from './model/packageInfo';
