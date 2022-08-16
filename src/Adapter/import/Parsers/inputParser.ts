@@ -7,15 +7,6 @@ import { readFileSync } from 'fs';
  */
 export abstract class InputParser {
     /**
-     * The file format of the bom file.
-     */
-    format: string;
-
-    constructor(format: string) {
-        this.format = format;
-    }
-
-    /**
      * Reads the bom file at the given url.
      * @param url The url of the bom file.
      * @returns The content of the bom file.

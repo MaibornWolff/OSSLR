@@ -29,6 +29,8 @@ async function main() {
         await licenseChecker.downloadPackageData();
         // Parses that data for copyright (searches for copyright with RegEx)
         licenseChecker.parseCopyright();
+        // Combines missingValues.json and retrieved values from bom.json
+        licenseChecker.combine();
         // Exports said copyright data into a pdf
         licenseChecker.export();
         // Creates a file with all packagesInfos which are missing important values

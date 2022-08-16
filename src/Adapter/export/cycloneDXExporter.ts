@@ -10,9 +10,6 @@ export class CycloneDXExporter implements Exporter {
             case 'json':
                 this.exportJson(packageInfos, originalBom, 'updatedBom.json');
                 break;
-            case 'json-missing-values':
-                this.exportMissingValuesJson(packageInfos, originalBom, 'missingValues.json')
-                break;
             default:
                 throw new Error(`Unsupported export file format: ${format}`);
         }
@@ -26,21 +23,6 @@ export class CycloneDXExporter implements Exporter {
                 mkdirSync('out');
             }
             writeFileSync(path.join('out', fileName), JSON.stringify(bomJson, null, 4));
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    exportMissingValuesJson(packageInfos: PackageInfo[], originalBom: string, fileName: string){
-        try {
-            packageInfos.forEach(p  => {
-                p.licenseTexts = undefined;
-                p.readme = undefined;
-             });
-            if (!existsSync('out')) {
-                mkdirSync('out');
-            }
-            writeFileSync(path.join('out', fileName),  JSON.stringify(packageInfos, null, 4));
         } catch (err) {
             console.error(err);
         }

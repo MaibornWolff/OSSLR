@@ -1,29 +1,35 @@
 import { SingleBar, Presets } from 'cli-progress';
 import { CopyrightParser } from '../Adapter/import/Parsers/copyrightParser';
 import { CycloneDXParser } from '../Adapter/import/Parsers/cycloneDXParser';
+import { PureJSONParser } from '../Adapter/import/Parsers/pureJSONparser';
 import { InputParser } from '../Adapter/import/Parsers/inputParser';
 import { Downloader } from '../Adapter/import/downloader';
 import { Logger } from '../Logger/logging';
 import { PackageInfo } from './model/packageInfo';
 import { CycloneDXExporter } from '../Adapter/export/cycloneDXExporter';
 import { PDFExporter } from '../Adapter/export/pdfExporter';
+import { MissingValuesExporter } from '../Adapter/export/missingValuesExporter';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import path = require('path');
+
 
 /**
  * This class is responsible for distributing the different tasks to the responsible classes.
  */
 export class LicenseChecker {
   logger: Logger;
-  parser!: InputParser;
+  parser!: CycloneDXParser;
   packageInfos!: PackageInfo[];
   bomPath!: string;
   bomData!: string;
+  missingValuesPath: string = path.join('out', 'missingValues.json');
   noCopyrightList: PackageInfo[] = [];
 
   constructor() {
     this.logger = Logger.getInstance();
   }
+
+  // this weird
   /**
    * Initializes the correct parser for the given BOM format.
    * @param bomFormat Format of the BOM.
@@ -52,6 +58,26 @@ export class LicenseChecker {
       throw err;
     }
   }
+
+  
+   combine(){
+    if (this.missingValuesFileExists()){
+      const missingValues = this.parser.readInput(this.missingValuesPath);
+      let filled = this.parser.parseInput(missingValues);
+      let input = this.packageInfos;
+      for (let i = 0; i < filled.length; i++) {
+        for (let j = 0; j < input.length; j++) {
+          if(filled[i].name === input[j].name &&
+            filled[i].group === input[j].group &&
+              filled[i].version === input[j].version){
+            input[j] = filled[i];
+          }
+        }
+      }
+    }
+  }
+
+
 
   /**
    * Coordinates the download of license and README.md files for all packages.
@@ -87,7 +113,6 @@ export class LicenseChecker {
           );
           if (license != '') {
             packageInfo.licenseTexts!.push(license);
-            //this.writeLicenseToDisk(license, packageInfo.toString());
           }
           packageInfo.readme = readme;
         }
@@ -169,9 +194,10 @@ export class LicenseChecker {
   * Exports a file that hold all uncomplete PackageInfo objects.
   */
   exportMissingObjects(): void {
-    let cycloneDXExporter = new CycloneDXExporter();
+    //let cycloneDXExporter = new CycloneDXExporter();
+    let missingValuesExporter = new MissingValuesExporter();
     try {
-      cycloneDXExporter.export(this.noCopyrightList, 'json-missing-values', this.bomData);
+      missingValuesExporter.export(this.noCopyrightList);
     } catch (err) {
       throw err;
     }
@@ -207,4 +233,9 @@ export class LicenseChecker {
     console.log(packageInfo.copyright);
     return packageInfo.copyright !== '';
   }
+
+  missingValuesFileExists(): boolean {
+    return existsSync(path.join('out', 'missingValues.json'));
+  }
+
 }

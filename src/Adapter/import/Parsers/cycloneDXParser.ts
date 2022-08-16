@@ -6,8 +6,11 @@ import { License } from '../../../Domain/model/license';
  * Input Parser implementation for the CycloneDX format. Extracts package information from the bom file and stores them in a PackageInfo object.
  */
 export class CycloneDXParser extends InputParser {
+    format: string;
+
     constructor(format: string) {
-        super(format);
+        super();
+        this.format = format;
     }
 
     /**
@@ -24,24 +27,30 @@ export class CycloneDXParser extends InputParser {
         }
     }
 
+    // filter by name and group!
+
     /**
      * Parser for bom files in json format.
      * @param data The content of the bom file to be parsed.
      * @returns List of PackageInfo objects containing the extracted information.
      */
-    parseJSON(data: string): PackageInfo[] {
+    parseJSON(data: string): PackageInfo[] { // is this name fitting?
         let rawData = JSON.parse(data);
         let packageInfos = [];
         for (let i in rawData['components']) {
             let pkg = rawData['components'][i];
             let licenses = [];
             let licensesProPkg = this.extractLicensesFromPkg(pkg['licenses']);
+            let copyright = '';
             for (let j in licensesProPkg) {
                 licenses.push(licensesProPkg[j]);
             }
             let extRefs = [];
             for (let j in pkg['externalReferences']) {
                 extRefs.push(pkg['externalReferences'][j]['url']);
+            }
+            if (pkg.copyright){
+                copyright = pkg.copyright;
             }
             let packageInfo = new PackageInfo(
                 pkg['group'],
@@ -51,12 +60,14 @@ export class CycloneDXParser extends InputParser {
                 extRefs,
                 [],
                 '',
-                ''
+                copyright
             );
             packageInfos.push(packageInfo);
         }
         return packageInfos;
     }
+
+    
 
     extractLicensesFromPkg(parsedLicense: []): License[] {
         let licenses = [];
