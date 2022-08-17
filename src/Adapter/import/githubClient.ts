@@ -42,8 +42,6 @@ export class GithubClient {
                 repoOwner = repoInfo[0];
                 repoName = repoInfo[1];
             } else {
-                console.log(url);
-                console.log(repoInfo);
                 throw new Error('Could not find repository');
             }
             const data  = this.octokit.rest.repos.getContent({

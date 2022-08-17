@@ -1,23 +1,20 @@
 import { assert } from 'chai';
-import { Logger } from '../../../Logger/logging';
 import { CopyrightParser } from './copyrightParser';
 
 describe('extractCopyright', function () {
     let copyrightParser: CopyrightParser;
-    let logger: Logger;
     this.beforeEach(function () {
         copyrightParser = new CopyrightParser();
-        logger = Logger.getInstance();
     });
     it('should extract Copyright notices including (c) annotation', function () {
-        assert.equal(copyrightParser.extractCopyright('Not this copyright (c) Owner Name', logger), 'copyright (c) Owner Name');
-        assert.equal(copyrightParser.extractCopyright('More Text \n(C) Copyright 2020', logger), '(C) Copyright 2020');
-        assert.equal(copyrightParser.extractCopyright('© Copyright', logger), '© Copyright');
+        assert.equal(copyrightParser.extractCopyright('Not this copyright (c) Owner Name'), 'copyright (c) Owner Name');
+        assert.equal(copyrightParser.extractCopyright('More Text \n(C) Copyright 2020'), '(C) Copyright 2020');
+        assert.equal(copyrightParser.extractCopyright('© Copyright'), '© Copyright');
     });
     it('should extract Copyright notices including a year specification', function () {
-        assert.equal(copyrightParser.extractCopyright('copyright 2019-2020', logger), 'copyright 2019-2020');
-        assert.equal(copyrightParser.extractCopyright('Text \nCopyright 2020 Owner', logger), 'Copyright 2020 Owner');
-        assert.equal(copyrightParser.extractCopyright('Copyright © 2020', logger), 'Copyright © 2020');
+        assert.equal(copyrightParser.extractCopyright('copyright 2019-2020'), 'copyright 2019-2020');
+        assert.equal(copyrightParser.extractCopyright('Text \nCopyright 2020 Owner'), 'Copyright 2020 Owner');
+        assert.equal(copyrightParser.extractCopyright('Copyright © 2020'), 'Copyright © 2020');
     });
 });
 

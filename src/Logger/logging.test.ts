@@ -2,7 +2,7 @@
 import 'mocha';
 import { assert } from 'chai';
 import { PackageInfo } from '../Domain/model/packageInfo';
-import { Logger } from './logging';
+import * as Logger from './logging';
 
 
 describe('generateLogMessage', function () {

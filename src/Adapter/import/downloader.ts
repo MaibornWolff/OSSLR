@@ -1,7 +1,7 @@
 import Axios from 'axios';
 import { GithubClient } from './githubClient';
-import { Logger } from '../../Logger/logging';
-import { ExceptionHandler } from 'winston';
+import * as Logger from '../../Logger/logging';
+
 
 /**
  * Downloads license and README files from github and the content of other external websites.
@@ -30,11 +30,11 @@ export class Downloader{
      * @param logger The logger instance.
      * @returns {Promise<[string, string]>} The content of the downloaded license or website.
      */
-    async downloadLicenseAndREADME(url: string, logger: Logger): Promise<[string, string]> {
+    async downloadLicenseAndREADME(url: string): Promise<[string, string]> {
         if (url.includes('github.com')) {
-            return await this.downloadDataFromGithub(url, logger);
+            return await this.downloadDataFromGithub(url);
         } else {
-            return await this.downloadLicenseFromExternalWebsite(url, logger);
+            return await this.downloadLicenseFromExternalWebsite(url);
         }
     }
 
@@ -45,7 +45,7 @@ export class Downloader{
      * @param {Logger} logger The logger instance.
      * @returns {[string, string]} The content of the license file. Empty string if none was found.
      */
-    async downloadDataFromGithub(url: string, logger: Logger): Promise<[string, string]> {
+    async downloadDataFromGithub(url: string): Promise<[string, string]> {
         let readme = '';
         let license = '';
         try {
@@ -62,7 +62,7 @@ export class Downloader{
                 }
             }
         } catch (err: any) {
-            logger.addToLog(err, 'Error');
+            Logger.addToLog(err, 'Error');
             return [license, readme];
         }
         return [license, readme];
@@ -75,7 +75,7 @@ export class Downloader{
      * @param {Logger} logger The logger instance.
      * @returns {Promise<[string,string]>} A string containing the content of the website as html.
      */
-    async downloadLicenseFromExternalWebsite(url: string, logger: Logger): Promise<[string,string]> {
+    async downloadLicenseFromExternalWebsite(url: string): Promise<[string,string]> {
         try {
             return [await this.makeGetRequest(url),''];
         } catch (err: any) {
@@ -85,7 +85,7 @@ export class Downloader{
             } else if (err.code == 'ENOTFOUND') {
                 errorMessage = `No response for the request ${url}.`;
             }
-            logger.addToLog(errorMessage, 'Error');
+            Logger.addToLog(errorMessage, 'Error');
             return ['',''];
         }
     }

@@ -3,7 +3,7 @@ import 'mocha';
 import { assert } from 'chai';
 import { Downloader } from './downloader';
 import { GithubClient } from '../import/githubClient';
-import { Logger } from '../../Logger/logging';
+
 
 /*
 describe('downloadLicense', function () {

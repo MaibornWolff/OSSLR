@@ -1,5 +1,4 @@
-import { debug } from 'console';
-import { Logger } from '../../../Logger/logging';
+import * as Logger from '../../../Logger/logging';
 
 export class CopyrightParser {
     /**
@@ -8,7 +7,7 @@ export class CopyrightParser {
  * @param {Logger} logger The logger instance.  
  * @returns {string} Extracted copyright notice. Empty string if no matches found.
  */
-    extractCopyright(license: string, logger: Logger): string {
+    extractCopyright(license: string): string {
         const regExps = [
             new RegExp('(©|\\(c\\))? ?copyright (©|\\(c\\))? ?[0-9]+.*', 'i'),
             new RegExp('(©|\\(c\\)) copyright.*', 'i'),
@@ -25,7 +24,7 @@ export class CopyrightParser {
         if (license.match(new RegExp('copyright.*', 'i'))) {
             let debugMatch = new RegExp('copyright.*', 'i').exec(license)
             if (debugMatch != null)
-                logger.addToLog(debugMatch[0], 'Debug');
+                Logger.addToLog(debugMatch[0], 'Debug');
         }
         return '';
     }

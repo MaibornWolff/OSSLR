@@ -23,11 +23,10 @@ export class CycloneDXParser extends InputParser {
             case 'json':
                 return this.parseJSON(data);
             default:
-                throw new Error(`Unsupported file format ${this.format}`);
+                console.error(`Error: Failed to parse file of this unsupported file format: \"filename.${this.format}\".`)
+                process.exit(1);
         }
     }
-
-    // filter by name and group!
 
     /**
      * Parser for bom files in json format.
@@ -46,8 +45,10 @@ export class CycloneDXParser extends InputParser {
                 licenses.push(licensesProPkg[j]);
             }
             let extRefs = [];
-            for (let j in pkg['externalReferences']) {
-                extRefs.push(pkg['externalReferences'][j]['url']);
+            if(pkg['externalReferences']){
+                for (let j in pkg['externalReferences']) {
+                    extRefs.push(pkg['externalReferences'][j]['url']);
+                }
             }
             if (pkg.copyright){
                 copyright = pkg.copyright;

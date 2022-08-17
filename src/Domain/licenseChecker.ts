@@ -1,42 +1,37 @@
 import { SingleBar, Presets } from 'cli-progress';
 import { CopyrightParser } from '../Adapter/import/Parsers/copyrightParser';
 import { CycloneDXParser } from '../Adapter/import/Parsers/cycloneDXParser';
-import { PureJSONParser } from '../Adapter/import/Parsers/pureJSONparser';
 import { InputParser } from '../Adapter/import/Parsers/inputParser';
 import { Downloader } from '../Adapter/import/downloader';
-import { Logger } from '../Logger/logging';
 import { PackageInfo } from './model/packageInfo';
 import { CycloneDXExporter } from '../Adapter/export/cycloneDXExporter';
 import { PDFExporter } from '../Adapter/export/pdfExporter';
 import { MissingValuesExporter } from '../Adapter/export/missingValuesExporter';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import * as path from 'path';
+import * as Logger from '../Logger/logging'
 
 
 /**
  * This class is responsible for distributing the different tasks to the responsible classes.
  */
 export class LicenseChecker {
-  logger: Logger;
   parser!: CycloneDXParser;
   packageInfos!: PackageInfo[];
   bomPath!: string;
   bomData!: string;
-  missingValuesPath: string = path.join('out', 'missingValues.json');
+  missingValuesPath!: string;
   noCopyrightList: PackageInfo[] = [];
 
-  constructor() {
-    this.logger = Logger.getInstance();
-  }
-
-  // this weird
   /**
    * Initializes the correct parser for the given BOM format.
    * @param bomFormat Format of the BOM.
    * @param bomPath Path to the BOM file.
    */
-  initParser(bomFormat: string, bomPath: string): void {
+  init(bomFormat: string, bomPath: string, manualBOM: string): void {
+    Logger.initializeLogger();
     this.bomPath = bomPath;
+    this.missingValuesPath = manualBOM;
     let dataFormat = bomPath.split('.').pop()!;
     switch (bomFormat) {
       case 'cycloneDX':
@@ -59,18 +54,19 @@ export class LicenseChecker {
     }
   }
 
-  
-   combine(){
-    if (this.missingValuesFileExists()){
+
+  combine() {
+    if (this.missingValuesFileExists()) {
       const missingValues = this.parser.readInput(this.missingValuesPath);
       let filled = this.parser.parseInput(missingValues);
       let input = this.packageInfos;
       for (let i = 0; i < filled.length; i++) {
         for (let j = 0; j < input.length; j++) {
-          if(filled[i].name === input[j].name &&
+          if (filled[i].name === input[j].name &&
             filled[i].group === input[j].group &&
-              filled[i].version === input[j].version){
-            input[j] = filled[i];
+            filled[i].version === input[j].version) {
+            input[j].licenses = filled[i].licenses;
+            input[j].copyright = filled[i].copyright;
           }
         }
       }
@@ -108,8 +104,7 @@ export class LicenseChecker {
         */
         for (let url of packageInfo.externalReferences) {
           let [license, readme] = await downloader.downloadLicenseAndREADME(
-            url,
-            this.logger
+            url
           );
           if (license != '') {
             packageInfo.licenseTexts!.push(license);
@@ -123,7 +118,7 @@ export class LicenseChecker {
       throw err;
     }
   }
-  
+
 
   /**
  * Saves the given file to the disk.
@@ -132,12 +127,12 @@ export class LicenseChecker {
  */
   writeFileToDisk(fileContent: string, fileName: string): void {
     try {
-        if (!existsSync(path.join('out', 'licenses'))) {
-            mkdirSync(path.join('out', 'licenses'));
-        }
-        writeFileSync(path.join('out', 'licenses', `${fileName}.txt`), fileContent);
+      if (!existsSync(path.join('out', 'licenses'))) {
+        mkdirSync(path.join('out', 'licenses'));
+      }
+      writeFileSync(path.join('out', 'licenses', `${fileName}.txt`), fileContent);
     } catch (err) {
-        console.error(err);
+      console.error(err);
     }
   }
 
@@ -150,22 +145,12 @@ export class LicenseChecker {
       let licenseTexts = this.packageInfos[i].licenseTexts!; // readability
       for (let j = 0; j < licenseTexts.length; j++) {
         let copyright = copyrightParser.extractCopyright(
-          licenseTexts[j],
-          this.logger
+          licenseTexts[j]
         );
         // if the last license does not contain the copyright check the README
-        if(j == licenseTexts.length - 1 && copyright === ''){
-          console.log(`No copyright found inside License for ${this.packageInfos[i].name} checking README...`)
+        if (j == licenseTexts.length - 1 && copyright === '') {
           copyright = copyrightParser.extractCopyright(
-            this.packageInfos[i].readme!,
-            this.logger
-          )
-          // If copyright Still not found after checking readme:
-          if (copyright === ''){
-            console.log(`No success, no copyright found for ${this.packageInfos[i].name}!`) // Add some prompt to enter manually...
-            // collect package infos without copyright for the option to fill in manually.
-            this.noCopyrightList.push(this.packageInfos[i]);
-          }
+            this.packageInfos[i].readme!)
         }
         if (copyright === '') {
           continue;
@@ -181,7 +166,7 @@ export class LicenseChecker {
    */
   export(): void {
     let cycloneDXExporter = new CycloneDXExporter();
-    let pdfExporter = new PDFExporter(); 
+    let pdfExporter = new PDFExporter();
     try {
       cycloneDXExporter.export(this.packageInfos, this.parser.format, this.bomData);
       pdfExporter.export(this.packageInfos);
@@ -194,10 +179,14 @@ export class LicenseChecker {
   * Exports a file that hold all uncomplete PackageInfo objects.
   */
   exportMissingObjects(): void {
-    //let cycloneDXExporter = new CycloneDXExporter();
+    this.packageInfos.forEach(packageInfo => {
+      if (packageInfo.copyright === '') {
+        this.noCopyrightList.push(packageInfo)
+      }
+    });
     let missingValuesExporter = new MissingValuesExporter();
     try {
-      missingValuesExporter.export(this.noCopyrightList);
+      missingValuesExporter.export(this.noCopyrightList, this.missingValuesPath);
     } catch (err) {
       throw err;
     }
@@ -229,13 +218,12 @@ export class LicenseChecker {
     );
   }
 
-  hasCopyright(packageInfo: PackageInfo): boolean{
-    console.log(packageInfo.copyright);
+  hasCopyright(packageInfo: PackageInfo): boolean {
     return packageInfo.copyright !== '';
   }
 
   missingValuesFileExists(): boolean {
-    return existsSync(path.join('out', 'missingValues.json'));
+    return existsSync(this.missingValuesPath);
   }
 
 }
