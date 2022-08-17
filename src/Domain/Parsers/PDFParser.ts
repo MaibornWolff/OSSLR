@@ -1,13 +1,7 @@
-import { appendFileSync } from "fs";
-import * as path from 'path';
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
-import { PackageInfo } from '../../Domain/model/packageInfo';
-import { Exporter } from './exporter';
+import { PackageInfo } from '../model/PackageInfo';
 
-export class PDFExporter implements Exporter {
-    export(packageInfos: PackageInfo[]): void {
-        let doc = new jsPDF();
+export class PDFParser {
+    parse(packageInfos: PackageInfo[]): any {
         let col = ["Group", "Name", "Version", "License", "Copyright"];
         let rows : string[][] = []
 
@@ -44,25 +38,14 @@ export class PDFExporter implements Exporter {
                 copyrightPdf = "no copyright";
             }
             rows.push([groupPdf, namePdf, versionPdf, licensePdf, copyrightPdf]);
-        })
-
-        autoTable(doc, {
-            theme: "grid",
-            head: [col],
-            body: rows
-        })
-
-        const rawOutput = doc.output("arraybuffer");
-        appendFileSync(path.join('out', 'updatedBom.pdf'), Buffer.from(rawOutput));
+        });
+       return [[col], rows]
     }
-   
-    // no license.name field in the bom file
-    extractLicense(packageInfo: PackageInfo) {
+
+    extractLicense(packageInfo: PackageInfo){
         if (packageInfo.licenses.length > 0) {
             if (packageInfo.licenses[0]['id']) {
                 return packageInfo.licenses[0]['id'];
-            //} else if (packageInfo.licenses[0]['name']) {
-            //    return packageInfo.licenses[0]['name'];
             } else {
                 return "no license";
             }

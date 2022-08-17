@@ -1,8 +1,8 @@
 import 'mocha';
 import { stub, restore } from 'sinon';
 import { assert, expect } from 'chai';
-import { CycloneDXParser } from './cycloneDXParser';
-import { PackageInfo } from '../../../Domain/model/packageInfo';
+import { CycloneDXParser } from './CycloneDXParser';
+import { PackageInfo } from '../model/PackageInfo';
 
 describe('parseInput', function () {
     this.beforeEach(function () {

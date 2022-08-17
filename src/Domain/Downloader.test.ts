@@ -1,8 +1,8 @@
 import 'mocha';
 // import { stub, restore } from 'sinon';
 import { assert } from 'chai';
-import { Downloader } from './downloader';
-import { GithubClient } from '../import/githubClient';
+import { Downloader } from './Downloader';
+import { GithubClient } from '../Adapter/Import/GithubClient';
 
 
 /*

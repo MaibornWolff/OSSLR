@@ -1,6 +1,6 @@
 import * as winston from 'winston';
-import { LicenseChecker } from '../Domain/licenseChecker';
-import { PackageInfo } from '../Domain/model/packageInfo';
+import { LicenseChecker } from '../Domain/LicenseChecker';
+import { PackageInfo } from '../Domain/model/PackageInfo';
 
 /**
  * Custom logging levels:

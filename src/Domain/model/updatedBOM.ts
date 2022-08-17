@@ -1,4 +1,4 @@
-import { License } from "./license"
+import { License } from "./License"
 // check if exists importable version from cdx or something else use this
 
 export interface BOMFile {

@@ -1,6 +1,6 @@
-import Axios from 'axios';
-import { GithubClient } from './githubClient';
-import * as Logger from '../../Logger/logging';
+import { GithubClient } from '../Adapter/Import/GithubClient';
+import { HTTPClient } from '../Adapter/Import/HTTPClient';
+import * as Logger from '../Logger/logging';
 
 
 /**
@@ -56,9 +56,9 @@ export class Downloader{
             for (let i = 0; i < data.length; i++) {
                 let fileName = data[i].name;
                 if (fileName.toLowerCase() === 'license' || fileName.match(new RegExp('license\.[\w]*' ,'i'))) {
-                    license = await this.makeGetRequest(data[i]['download_url']);
+                    license = await HTTPClient.makeGetRequest(data[i]['download_url']);
                 } else if (fileName.toLowerCase() === 'readme.md'){
-                    readme = await this.makeGetRequest(data[i]['download_url']);
+                    readme = await HTTPClient.makeGetRequest(data[i]['download_url']);
                 }
             }
         } catch (err: any) {
@@ -77,7 +77,7 @@ export class Downloader{
      */
     async downloadLicenseFromExternalWebsite(url: string): Promise<[string,string]> {
         try {
-            return [await this.makeGetRequest(url),''];
+            return [await HTTPClient.makeGetRequest(url),''];
         } catch (err: any) {
             let errorMessage = `AxiosError: ${err.code}.`;
             if (err.response) {
@@ -90,22 +90,5 @@ export class Downloader{
         }
     }
 
-    /**
-     * Performs a GET request for the given URL.
-     * @param {string} url  The URL for the request.
-     * @returns {Promise<string>} Of the result of the GET request.
-     */
-    private makeGetRequest(url: string): Promise<string> {
-        return new Promise<string>(function (resolve, reject) {
-            Axios.get(url).then(
-                (response) => {
-                    let result = response.data;
-                    resolve(result);
-                },
-                (error) => {
-                    reject(error);
-                },
-            );
-        });
-    }
+    
 }

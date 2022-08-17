@@ -1,5 +1,4 @@
 import { Octokit } from 'octokit';
-import { components  } from "@octokit/openapi-types";
 import * as dotenv from "dotenv";
 
 

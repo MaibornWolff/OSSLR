@@ -1,4 +1,4 @@
-import { LicenseChecker } from './Domain/licenseChecker';
+import { LicenseChecker } from './Domain/LicenseChecker';
 import * as path from 'path';
 
 
@@ -12,7 +12,7 @@ async function main() {
         switch(args.length) {
             case 1:
                 bomPath = args[0];
-                console.log("Second Argument has not been specified, packages where copyrights cannot be retrieved will be writen to out/missingValues.json by default");
+                console.log("Second Argument has not been specified, packages where copyrights cannot be retrieved will be written to out/missingValues.json by default");
               break;
             case 2:
                 bomPath = args[0];
@@ -33,9 +33,7 @@ async function main() {
         licenseChecker.parseCopyright();
         // Combines missingValues.json and retrieved values from bom.json
         licenseChecker.combine();
-        // Creates a file with all packagesInfos which are missing important values
-        licenseChecker.exportMissingObjects();
-        // Exports said copyright data into a pdf
+        // Exports said copyright data into a pdf, Bomfile and also exports packages with missing values to a specified path (default = missingValues.json)
         licenseChecker.export();        
     } catch (err) {
         console.log(err);

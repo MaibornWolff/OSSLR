@@ -1,4 +1,4 @@
-import { License } from './license';
+import { License } from './License';
 
 export class PackageInfo {
   group: string;

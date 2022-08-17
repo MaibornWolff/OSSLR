@@ -1,14 +1,17 @@
 import { SingleBar, Presets } from 'cli-progress';
-import { CopyrightParser } from '../Adapter/import/Parsers/copyrightParser';
-import { CycloneDXParser } from '../Adapter/import/Parsers/cycloneDXParser';
-import { Downloader } from '../Adapter/import/downloader';
-import { PackageInfo } from './model/packageInfo';
-import { CycloneDXExporter } from '../Adapter/export/cycloneDXExporter';
-import { PDFExporter } from '../Adapter/export/pdfExporter';
-import { MissingValuesExporter } from '../Adapter/export/missingValuesExporter';
+import { CopyrightParser } from './Parsers/CopyrightParser';
+import { CycloneDXParser } from './Parsers/CycloneDXParser';
+import { FileReader } from '../Adapter/Import/FileReader';
+import { Downloader } from './Downloader';
+import { PackageInfo } from './model/PackageInfo';
+import { PDFFileWriter } from '../Adapter/Export/PDFFileWriter';
+import { PDFParser } from './Parsers/PDFParser';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import * as path from 'path';
 import * as Logger from '../Logger/logging'
+import { JSONFileWriter } from '../Adapter/Export/JSONFileWriter';
+import { JSONParser } from './Parsers/JSONParser';
+import { json } from 'stream/consumers';
 
 
 /**
@@ -21,6 +24,7 @@ export class LicenseChecker {
   bomData!: string;
   missingValuesPath!: string;
   noCopyrightList: PackageInfo[] = [];
+  fileReader!: FileReader;
 
   /**
    * Initializes the correct parser for the given BOM format.
@@ -28,10 +32,12 @@ export class LicenseChecker {
    * @param bomPath Path to the BOM file.
    */
   init(bomFormat: string, bomPath: string, manualBOM: string): void {
+    this.fileReader = new FileReader();
     Logger.initializeLogger();
     this.bomPath = bomPath;
     this.missingValuesPath = manualBOM;
     let dataFormat = bomPath.split('.').pop()!;
+    
     switch (bomFormat) {
       case 'cycloneDX':
         this.parser = new CycloneDXParser(dataFormat);
@@ -46,7 +52,7 @@ export class LicenseChecker {
    */
   retrievePackageInfos(): void {
     try {
-      this.bomData = this.parser.readInput(this.bomPath);
+      this.bomData = this.fileReader.readInput(this.bomPath);
       this.packageInfos = this.parser.parseInput(this.bomData);
     } catch (err) {
       throw err;
@@ -54,9 +60,9 @@ export class LicenseChecker {
   }
 
 
-  combine() {
+  combine(): void {
     if (this.missingValuesFileExists()) {
-      const missingValues = this.parser.readInput(this.missingValuesPath);
+      const missingValues = this.fileReader.readInput(this.missingValuesPath);
       let filled = this.parser.parseInput(missingValues);
       let input = this.packageInfos;
       for (let i = 0; i < filled.length; i++) {
@@ -78,7 +84,7 @@ export class LicenseChecker {
    * Coordinates the download of license and README.md files for all packages.
    */
   // change name
-  async downloadPackageData() {
+  async downloadPackageData(){
     try {
       let downloader = new Downloader();
       downloader.authenticateGithubClient();
@@ -164,33 +170,32 @@ export class LicenseChecker {
    * Exports the BOM information.
    */
   export(): void {
-    let cycloneDXExporter = new CycloneDXExporter();
-    let pdfExporter = new PDFExporter();
-    try {
-      cycloneDXExporter.export(this.packageInfos, this.parser.format, this.bomData);
-      pdfExporter.export(this.packageInfos);
-    } catch (err) {
-      throw err;
-    }
-  }
+    let jsonParser = new JSONParser();
+    let jsonFileWriter = new JSONFileWriter();
+    let pdfParser = new PDFParser();
+    let pdfExporter = new PDFFileWriter();
 
-  /*
-  * Exports a file that hold all uncomplete PackageInfo objects.
-  */
-  exportMissingObjects(): void {
     this.packageInfos.forEach(packageInfo => {
       if (packageInfo.copyright === '') {
         this.noCopyrightList.push(packageInfo)
       }
     });
-    let missingValuesExporter = new MissingValuesExporter();
     try {
-      missingValuesExporter.export(this.noCopyrightList, this.missingValuesPath);
+      const resultBom = jsonParser.exportResultBomFile(this.packageInfos, this.parser.format, this.bomData);
+      const resultMissingValues = jsonParser.exportMissingValuesFile(this.noCopyrightList, this.missingValuesPath);
+      let newFile = path.join('out', 'updatedBom.json');
+      jsonFileWriter.write(newFile, resultBom);
+      if(typeof resultMissingValues === 'string') {
+        jsonFileWriter.write(this.missingValuesPath , resultMissingValues)
+      } else {
+        throw new Error ('Can not write File with missing values')
+      }
+      let [head, body] = pdfParser.parse(this.packageInfos);
+      pdfExporter.export(head, body);
     } catch (err) {
       throw err;
     }
   }
-
 
 
   /**

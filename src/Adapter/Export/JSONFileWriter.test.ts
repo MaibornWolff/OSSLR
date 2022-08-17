@@ -1,8 +1,8 @@
 import { expect, assert } from 'chai';
 import 'mocha';
 // import { stub, restore } from 'sinon';
-import { CycloneDXExporter } from './cycloneDXExporter';
-import { PackageInfo } from '../../Domain/model/packageInfo';
+import { JSONFileWriter } from './JSONFileWriter';
+import { PackageInfo } from '../../Domain/model/PackageInfo';
 
 
 /*

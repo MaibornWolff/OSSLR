@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 import 'mocha';
 import { assert } from 'chai';
-import { PackageInfo } from '../Domain/model/packageInfo';
+import { PackageInfo } from '../Domain/model/PackageInfo';
 import * as Logger from './logging';
 
 

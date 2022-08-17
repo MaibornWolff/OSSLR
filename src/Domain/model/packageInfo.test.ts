@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 import 'mocha';
 import { assert } from 'chai';
-import { PackageInfo } from './packageInfo';
+import { PackageInfo } from './PackageInfo';
 
 describe('toString', function () {
     let packageInfo = new PackageInfo('', '', '', [], [], [],'', '');

@@ -4,9 +4,9 @@ import { assert } from 'chai';
 import { stub, restore } from 'sinon';
 import {
   LicenseChecker
-} from './licenseChecker';
-import { PackageInfo } from './model/packageInfo';
-import { CopyrightParser } from '../Adapter/import/Parsers/copyrightParser';
+} from './LicenseChecker';
+import { PackageInfo } from './model/PackageInfo';
+import { CopyrightParser } from './Parsers/CopyrightParser';
 
 
 // describe("insertCopyrightIntoBom", function () {

@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import { CopyrightParser } from './copyrightParser';
+import { CopyrightParser } from './CopyrightParser';
 
 describe('extractCopyright', function () {
     let copyrightParser: CopyrightParser;
