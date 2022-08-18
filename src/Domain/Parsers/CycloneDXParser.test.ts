@@ -12,12 +12,6 @@ describe('parseInput', function () {
         let cycloneDXParser = new CycloneDXParser('json');
         assert.isEmpty(cycloneDXParser.parseInput(''));
     });
-    it('should throw an error if the file format is not supported', function () {
-        let cycloneDXParser = new CycloneDXParser('xml');
-        expect(() => {
-            cycloneDXParser.parseInput('');
-        }).to.throw(Error, 'Unsupported file format xml');
-    });
     this.afterEach(() => {
         restore();
     });
