@@ -49,16 +49,16 @@ export class Downloader{
         let readme = '';
         let license = '';
         try {
-            const {data} = await this.githubClient.downloadRepo(url);
+            const data = await this.githubClient.downloadRepo(url);
             if (!Array.isArray(data)) {
                 throw new Error('Could not find repository.')
             } 
             for (let i = 0; i < data.length; i++) {
                 let fileName = data[i].name;
                 if (fileName.toLowerCase() === 'license' || fileName.match(new RegExp('license\.[\w]*' ,'i'))) {
-                    license = await HTTPClient.makeGetRequest(data[i]['download_url']);
+                license = await HTTPClient.makeGetRequest(data[i]['download_url']!);
                 } else if (fileName.toLowerCase() === 'readme.md'){
-                    readme = await HTTPClient.makeGetRequest(data[i]['download_url']);
+                    readme = await HTTPClient.makeGetRequest(data[i]['download_url']!);
                 }
             }
         } catch (err: any) {

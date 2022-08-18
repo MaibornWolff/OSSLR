@@ -1,7 +1,6 @@
 import { Octokit } from "octokit";
 import * as dotenv from "dotenv";
 import { components } from "@octokit/openapi-types";
-import { OctokitResponse } from "@octokit/types";
 
 type DirectoryItem = components["schemas"]["content-directory"][number];
 
