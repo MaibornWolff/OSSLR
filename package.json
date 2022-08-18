@@ -1,6 +1,7 @@
 {
   "main": "dist/main.js",
   "dependencies": {
+    "@octokit/types": "^7.1.0",
     "@types/cli-progress": "^3.11.0",
     "@types/pdfkit": "^0.12.6",
     "axios": "^0.27.2",
