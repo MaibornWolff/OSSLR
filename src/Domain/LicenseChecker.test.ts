@@ -5,7 +5,7 @@ import { stub, restore } from 'sinon';
 import {
   LicenseChecker
 } from './LicenseChecker';
-import { PackageInfo } from './model/PackageInfo';
+import { PackageInfo } from './Model/PackageInfo';
 import { CopyrightParser } from './Parsers/CopyrightParser';
 
 

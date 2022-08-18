@@ -2,7 +2,7 @@ import { expect, assert } from 'chai';
 import 'mocha';
 // import { stub, restore } from 'sinon';
 import { JSONFileWriter } from './JSONFileWriter';
-import { PackageInfo } from '../../Domain/model/PackageInfo';
+import { PackageInfo } from '../../Domain/Model/PackageInfo';
 
 
 /*

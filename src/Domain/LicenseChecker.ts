@@ -3,15 +3,14 @@ import { CopyrightParser } from './Parsers/CopyrightParser';
 import { CycloneDXParser } from './Parsers/CycloneDXParser';
 import { FileReader } from '../Adapter/Import/FileReader';
 import { Downloader } from './Downloader';
-import { PackageInfo } from './model/PackageInfo';
+import { PackageInfo } from './Model/PackageInfo';
 import { PDFFileWriter } from '../Adapter/Export/PDFFileWriter';
 import { PDFParser } from './Parsers/PDFParser';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import * as path from 'path';
-import * as Logger from '../Logger/logging'
+import * as Logger from '../Logger/Logging'
 import { JSONFileWriter } from '../Adapter/Export/JSONFileWriter';
 import { JSONParser } from './Parsers/JSONParser';
-import { json } from 'stream/consumers';
 
 
 /**

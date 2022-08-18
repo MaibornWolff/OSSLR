@@ -2,7 +2,7 @@ import 'mocha';
 import { stub, restore } from 'sinon';
 import { assert, expect } from 'chai';
 import { CycloneDXParser } from './CycloneDXParser';
-import { PackageInfo } from '../model/PackageInfo';
+import { PackageInfo } from '../Model/PackageInfo';
 
 describe('parseInput', function () {
     this.beforeEach(function () {

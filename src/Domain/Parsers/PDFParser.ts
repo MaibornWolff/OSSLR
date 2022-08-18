@@ -1,4 +1,4 @@
-import { PackageInfo } from '../model/PackageInfo';
+import { PackageInfo } from '../Model/PackageInfo';
 
 export class PDFParser {
     parse(packageInfos: PackageInfo[]): any {

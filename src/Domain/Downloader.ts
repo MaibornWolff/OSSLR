@@ -1,6 +1,6 @@
 import { GithubClient } from '../Adapter/Import/GithubClient';
 import { HTTPClient } from '../Adapter/Import/HTTPClient';
-import * as Logger from '../Logger/logging';
+import * as Logger from '../Logger/Logging';
 
 
 /**
