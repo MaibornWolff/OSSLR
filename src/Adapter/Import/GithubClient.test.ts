@@ -1,13 +1,13 @@
-import 'mocha';
-import { assert } from 'chai';
-import { GithubClient } from './GithubClient';
+import "mocha";
+import { assert } from "chai";
+import { GithubClient } from "./GithubClient";
 
-describe('filterRepoInfoFromURL', function () {
-    let githubClient: GithubClient;
-    this.beforeEach(function () {
-        githubClient = new GithubClient();
-    });
-    /* strict typscript...
+describe("filterRepoInfoFromURL", function () {
+  let githubClient: GithubClient;
+  this.beforeEach(function () {
+    githubClient = new GithubClient();
+  });
+  /* strict typscript...
 
 
     it('should correctly extract the user and repository from the given url', function () {

@@ -1,11 +1,11 @@
-import {  writeFileSync } from 'fs';
+import { writeFileSync } from "fs";
 
 export class JSONFileWriter {
-    write(fileName: string, data: string){
-        try {
-                writeFileSync(fileName, data);
-        } catch (err) {
-            console.error(err);
-        }
+  write(fileName: string, data: string) {
+    try {
+      writeFileSync(fileName, data);
+    } catch (err) {
+      console.error(err);
     }
+  }
 }

@@ -1,9 +1,8 @@
-import 'mocha';
+import "mocha";
 // import { stub, restore } from 'sinon';
-import { assert } from 'chai';
-import { Downloader } from './Downloader';
-import { GithubClient } from '../Adapter/Import/GithubClient';
-
+import { assert } from "chai";
+import { Downloader } from "./Downloader";
+import { GithubClient } from "../Adapter/Import/GithubClient";
 
 /*
 describe('downloadLicense', function () {

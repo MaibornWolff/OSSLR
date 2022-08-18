@@ -1,4 +1,4 @@
-import { License } from './License';
+import { License } from "./License";
 
 export class PackageInfo {
   group: string;
@@ -10,7 +10,16 @@ export class PackageInfo {
   readme?: string;
   copyright: string;
 
-  constructor(group: string, name: string, version: string, licenses: License[], externalReferences: string[], licenseTexts: string[], readme:string, copyright: string) {
+  constructor(
+    group: string,
+    name: string,
+    version: string,
+    licenses: License[],
+    externalReferences: string[],
+    licenseTexts: string[],
+    readme: string,
+    copyright: string
+  ) {
     this.group = group;
     this.name = name;
     this.version = version;
@@ -26,19 +35,21 @@ export class PackageInfo {
    * @returns {string} The generated name for the package.
    */
   toString(): string {
-    let fileName = '';
-    if (this.group.trim() != '') {
-        fileName += this.group + '-';
+    let fileName = "";
+    if (this.group.trim() != "") {
+      fileName += this.group + "-";
     }
-    if (this.name.trim() != '') {
-        fileName += this.name + '-';
+    if (this.name.trim() != "") {
+      fileName += this.name + "-";
     }
-    if (fileName === '') {
-        fileName = 'unnamed-';
+    if (fileName === "") {
+      fileName = "unnamed-";
     }
-    if (this.version.trim() != '') {
-        fileName += this.version;
+    if (this.version.trim() != "") {
+      fileName += this.version;
     }
-    return fileName.charAt(fileName.length - 1) == '-' ? fileName.substring(0, fileName.length - 1) : fileName;
+    return fileName.charAt(fileName.length - 1) == "-"
+      ? fileName.substring(0, fileName.length - 1)
+      : fileName;
   }
 }

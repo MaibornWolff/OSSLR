@@ -1,7 +1,6 @@
 import Axios from 'axios';
 
 export class HTTPClient {
-    
     /**
      * Performs a GET request for the given URL.
      * @param {string} url  The URL for the request.

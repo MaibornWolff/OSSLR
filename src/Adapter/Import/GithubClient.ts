@@ -34,9 +34,10 @@ export class GithubClient {
   /**
    * Downloads the github repo with the given url.
    * @param {string} url The repo url.
-   * @returns {Promise<any>} The content of the repo.
+   * @returns {Promise<DirectoryItem[]>} The content of the repo.
    */
-  async downloadRepo(url: string): Promise<DirectoryItem[]> {
+  // async downloadRepo(url: string): Promise<DirectoryItem[]> {
+  async downloadRepo(url: string): Promise<any> {
     let repoOwner = "";
     let repoName = "";
     try {
@@ -47,12 +48,18 @@ export class GithubClient {
       } else {
         throw new Error("Could not find repository");
       }
-      const data = await this.octokit.rest.repos.getContent({
+      const {data} = await this.octokit.rest.repos.getContent({
         owner: repoOwner,
         repo: repoName,
         path: "",
       });
-      if (!Array.isArray(data)) return [];
+      //console.log(typeof data)
+      //console.log(data)
+      if (!Array.isArray(data)) {
+        console.log('Hallo')
+        return []
+      };
+      
       return data;
     } catch (err: any) {
       if (err.status == "404") {

@@ -14,6 +14,7 @@ describe('toString', function () {
         packageInfo.licenseTexts = [];
         packageInfo.copyright = '';
     });
+    
     it('should return unnamed when no name and group are available', function () {
         assert.equal(packageInfo.toString(), 'unnamed');
         packageInfo.version = '1.0';
