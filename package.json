@@ -52,6 +52,6 @@
     "test_windows": "mocha -r ts-node/register 'src/**/*.ts'",
     "test:coverage": "nyc npm run test",
     "start": "tsc && node build/main.js",
-    "license_checker": "tsc && node build/main.js"
+    "license_checker": "tsc && node build/Main.js"
   }
 }

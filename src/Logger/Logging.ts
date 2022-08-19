@@ -1,6 +1,5 @@
-import * as winston from "winston";
-import { LicenseChecker } from "../Domain/LicenseChecker";
-import { PackageInfo } from "../Domain/Model/PackageInfo";
+import * as winston from 'winston';
+import { PackageInfo } from '../Domain/Model/PackageInfo';
 
 /**
  * Custom logging levels:
@@ -10,7 +9,7 @@ import { PackageInfo } from "../Domain/Model/PackageInfo";
  * Error: error messages.
  * Debug: debug messages.
  */
-export type Level = "License" | "Error" | "Debug";
+export type Level = 'License' | 'Error' | 'Debug';
 
 let licenseLogger: winston.Logger;
 let errorLogger: winston.Logger;
@@ -23,13 +22,13 @@ let debugLogger: winston.Logger;
  */
 export function addToLog(message: string, level: Level): void {
   switch (level) {
-    case "Error":
+    case 'Error':
       errorLogger.log({
         level: level,
         message: message,
       });
       return;
-    case "Debug":
+    case 'Debug':
       debugLogger.log({
         level: level,
         message: message,
@@ -53,8 +52,8 @@ export function initializeLogger(): void {
     format: winston.format.simple(),
     transports: [
       new winston.transports.File({
-        filename: "copyright.log",
-        level: "Copyright",
+        filename: 'copyright.log',
+        level: 'Copyright',
       }),
     ],
   });
@@ -62,16 +61,23 @@ export function initializeLogger(): void {
     levels: { Error: 0 },
     format: winston.format.simple(),
     transports: [
-      new winston.transports.File({ filename: "error.log", level: "Error" }),
+      new winston.transports.File({ filename: 'error.log', level: 'Error' }),
     ],
   });
   debugLogger = winston.createLogger({
     levels: { Debug: 0 },
     format: winston.format.simple(),
     transports: [
-      new winston.transports.File({ filename: "debug.log", level: "Debug" }),
+      new winston.transports.File({ filename: 'debug.log', level: 'Debug' }),
     ],
   });
+}
+
+export function initializeSilentLogger(): void {
+  initializeLogger();
+  licenseLogger.transports[0].silent = true;
+  errorLogger.transports[0].silent = true;
+  debugLogger.transports[0].silent = true;
 }
 
 /**
@@ -85,15 +91,15 @@ export function generateLogMessage(
   level: string
 ): string {
   switch (level) {
-    case "License":
-      return "No License found for: " + packageInfo.toString();
-    case "ExtRefs":
-      return "No external references found for: " + packageInfo.toString();
-    case "Copyright":
+    case 'License':
+      return 'No License found for: ' + packageInfo.toString();
+    case 'ExtRefs':
+      return 'No external references found for: ' + packageInfo.toString();
+    case 'Copyright':
       return (
-        "Unable to extract copyright notice for: " + packageInfo.toString()
+        'Unable to extract copyright notice for: ' + packageInfo.toString()
       );
     default:
-      return "";
+      return '';
   }
 }

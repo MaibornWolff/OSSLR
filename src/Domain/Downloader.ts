@@ -1,6 +1,6 @@
-import { GithubClient } from "../Adapter/Import/GithubClient";
-import { HTTPClient } from "../Adapter/Import/HTTPClient";
-import * as Logger from "../Logger/Logging";
+import { GithubClient } from '../Adapter/Import/GithubClient';
+import { HTTPClient } from '../Adapter/Import/HTTPClient';
+import * as Logger from '../Logger/Logging';
 
 /**
  * Downloads license and README files from github and the content of other external websites.
@@ -9,9 +9,11 @@ import * as Logger from "../Logger/Logging";
  */
 export class Downloader {
   githubClient: GithubClient;
+  httpClient: HTTPClient;
 
   constructor() {
     this.githubClient = new GithubClient();
+    this.httpClient = new HTTPClient();
   }
 
   authenticateGithubClient() {
@@ -30,7 +32,7 @@ export class Downloader {
    * @returns {Promise<[string, string]>} The content of the downloaded license or website.
    */
   async downloadLicenseAndREADME(url: string): Promise<[string, string]> {
-    if (url.includes("github.com")) {
+    if (url.includes('github.com')) {
       return await this.downloadDataFromGithub(url);
     } else {
       return await this.downloadLicenseFromExternalWebsite(url);
@@ -45,26 +47,30 @@ export class Downloader {
    * @returns {[string, string]} The content of the license file. Empty string if none was found.
    */
   async downloadDataFromGithub(url: string): Promise<[string, string]> {
-    let readme = "";
-    let license = "";
+    let readme = '';
+    let license = '';
     try {
       const data = await this.githubClient.downloadRepo(url);
       if (!Array.isArray(data)) {
-        throw new Error("Could not find repository.");
+        throw new Error('Could not find repository.');
       }
       for (let i = 0; i < data.length; i++) {
         let fileName = data[i].name;
         if (
-          fileName.toLowerCase() === "license" ||
-          fileName.match(new RegExp("license.[w]*", "i"))
+          fileName.toLowerCase() === 'license' ||
+          fileName.match(new RegExp('license.[w]*', 'i'))
         ) {
-          license = await HTTPClient.makeGetRequest(data[i]["download_url"]!);
-        } else if (fileName.toLowerCase() === "readme.md") {
-          readme = await HTTPClient.makeGetRequest(data[i]["download_url"]!);
+          license = await this.httpClient.makeGetRequest(data[i]['download_url']);
+        } else if (
+          fileName.toLowerCase() === 'readme' ||
+          fileName.match(new RegExp('readme.[w]*', 'i'))
+          ) {
+          readme = await this.httpClient.makeGetRequest(data[i]['download_url']);
         }
       }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      Logger.addToLog(err, "Error");
+      Logger.addToLog(err, 'Error');
       return [license, readme];
     }
     return [license, readme];
@@ -81,16 +87,17 @@ export class Downloader {
     url: string
   ): Promise<[string, string]> {
     try {
-      return [await HTTPClient.makeGetRequest(url), ""];
+      return [await  this.httpClient.makeGetRequest(url), ''];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       let errorMessage = `AxiosError: ${err.code}.`;
       if (err.response) {
-        errorMessage = `Request ${url} failed with status ${err["response"]["status"]}. ${err["response"]["statusText"]}.`;
-      } else if (err.code == "ENOTFOUND") {
+        errorMessage = `Request ${url} failed with status ${err['response']['status']}. ${err['response']['statusText']}.`;
+      } else if (err.code == 'ENOTFOUND') {
         errorMessage = `No response for the request ${url}.`;
       }
-      Logger.addToLog(errorMessage, "Error");
-      return ["", ""];
+      Logger.addToLog(errorMessage, 'Error');
+      return ['', ''];
     }
   }
 }

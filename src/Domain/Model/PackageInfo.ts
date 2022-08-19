@@ -1,4 +1,4 @@
-import { License } from "./License";
+import { License } from './License';
 
 export class PackageInfo {
   group: string;
@@ -6,8 +6,8 @@ export class PackageInfo {
   version: string;
   licenses: License[];
   externalReferences: string[];
-  licenseTexts?: string[];
-  readme?: string;
+  licenseTexts: string[] = [];
+  readme = '';
   copyright: string;
 
   constructor(
@@ -35,20 +35,20 @@ export class PackageInfo {
    * @returns {string} The generated name for the package.
    */
   toString(): string {
-    let fileName = "";
-    if (this.group.trim() != "") {
-      fileName += this.group + "-";
+    let fileName = '';
+    if (this.group.trim() != '') {
+      fileName += this.group + '-';
     }
-    if (this.name.trim() != "") {
-      fileName += this.name + "-";
+    if (this.name.trim() != '') {
+      fileName += this.name + '-';
     }
-    if (fileName === "") {
-      fileName = "unnamed-";
+    if (fileName === '') {
+      fileName = 'unnamed-';
     }
-    if (this.version.trim() != "") {
+    if (this.version.trim() != '') {
       fileName += this.version;
     }
-    return fileName.charAt(fileName.length - 1) == "-"
+    return fileName.charAt(fileName.length - 1) == '-'
       ? fileName.substring(0, fileName.length - 1)
       : fileName;
   }

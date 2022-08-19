@@ -1,4 +1,4 @@
-import { readFileSync } from "fs";
+import { readFileSync } from 'fs';
 
 /**
  * General Input parser used to read bom files. Implementation for parsing the bom files

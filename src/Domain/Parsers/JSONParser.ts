@@ -1,6 +1,6 @@
-import { PackageInfo } from "../../Domain/Model/PackageInfo";
-import { BOMFile } from "../../Domain/Model/UpdatedBOM";
-import { License } from "../../Domain/Model/License";
+import { PackageInfo } from '../../Domain/Model/PackageInfo';
+import { License } from '../../Domain/Model/License';
+
 
 export class JSONParser {
   exportResultToBom(
@@ -13,11 +13,12 @@ export class JSONParser {
     return str;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   insertCopyrightIntoBom(packageInfos: PackageInfo[], bomJson: any) {
     for (let i = 0; i < packageInfos.length; i++) {
       let copyright = packageInfos[i].copyright;
-      if (copyright !== "") {
-        bomJson["components"][i]["copyright"] = copyright;
+      if (copyright !== '') {
+        bomJson['components'][i]['copyright'] = copyright;
       }
     }
     return bomJson;
@@ -32,13 +33,13 @@ export class JSONParser {
         name: p.name,
         version: p.version,
         licenses: this.licenseToBOMJSON(p.licenses),
-        copyright: "",
+        copyright: '',
       });
     }
-    return JSON.stringify({ "components": components }, null, 4);
+    return JSON.stringify({ 'components': components }, null, 4);
   }
 
-  licenseToBOMJSON(licenses: License[]): any {
+  licenseToBOMJSON(licenses: License[]): object {
     let result = [];
     for (let i = 0; i < licenses.length; i++) {
       result.push({ license: { id: licenses[i].id, url: licenses[i].url } });

@@ -6,7 +6,7 @@ export class HTTPClient {
      * @param {string} url  The URL for the request.
      * @returns {Promise<string>} Of the result of the GET request.
      */
-    public static makeGetRequest(url: string): Promise<string> {
+    public makeGetRequest(url: string): Promise<string> {
         return new Promise<string>(function (resolve, reject) {
             Axios.get(url).then(
                 (response) => {

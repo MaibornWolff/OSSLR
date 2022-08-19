@@ -1,71 +1,89 @@
-import "mocha";
-// import { stub, restore } from 'sinon';
-import { assert } from "chai";
-import { Downloader } from "./Downloader";
-import { GithubClient } from "../Adapter/Import/GithubClient";
-
-/*
-describe('downloadLicense', function () {
-    let downloader: Downloader;
-    this.beforeEach(function () {
-        downloader = new Downloader();
-        stub(Downloader.prototype, 'downloadLicenseFromExternalWebsite').returns('license');
-        stub(Downloader.prototype, 'downloadLicenseFromGithub').returns('Github License');
-    });
-    it('should pass the url to the correct downloader', async function () {
-        let res = await Downloader.downloadLicenseAndREADME('github.com', null);
-        assert.equal(res, 'Github License');
-        res = await Downloader.downloadLicenseAndREADME('website.com', null);
-        assert.equal(res, 'license');
-    });
-    this.afterEach(() => {
-        restore();
-    });
-});
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import 'mocha';
+import { stub, restore } from 'sinon';
+import { assert } from 'chai';
+import { Downloader } from './Downloader';
+import { GithubClient } from '../Adapter/Import/GithubClient';
+import * as Logger from '../Logger/Logging';
+import { HTTPClient } from '../Adapter/Import/HTTPClient';
 
 
 describe('downloadLicenseFromGithub', function () {
     let downloader: Downloader;
     this.beforeEach(function () {
+        Logger.initializeSilentLogger();
         downloader = new Downloader();
         let downloadRepoStub = stub(GithubClient.prototype, 'downloadRepo');
-        downloadRepoStub.onCall(0).returns({
-            'data': [
-                {
-                    'name': 'readme',
-                    'download_url': 'readme.md'
-                },
-                {
-                    'name': 'license',
-                    'download_url': 'license url'
-                }
-            ]
-        });
-        downloadRepoStub.onCall(1).returns({
-            'data': [
-                {
-                    'name': 'readme.md',
-                    'download_url': 'readme.md'
-                },
-                {
-                    'name': 'license.md',
-                    'download_url': 'license.md url'
-                }
-            ]
-        });
-        stub(Downloader.prototype, 'makeGetRequest').callsFake(function (url: string) {
-            return url;
-        });
+        let httpStub = stub(HTTPClient.prototype, 'makeGetRequest');
+
+        httpStub.onCall(0).returns(
+            new Promise<string>((resolve) => {
+                let value = 'license';
+                resolve(value);
+            }));
+
+        httpStub.onCall(2).returns(
+            new Promise<string>((resolve) => {
+                let value = 'license';
+                resolve(value);
+            }));
+
+        httpStub.onCall(1).returns(
+            new Promise<string>((resolve) => {
+                let value = 'readme';
+                resolve(value);
+            }));
+        
+        httpStub.onCall(3).returns(
+            new Promise<string>((resolve) => {
+                let value = 'readme';
+                resolve(value);
+            }));
+
+        downloadRepoStub.onCall(0).returns(
+            new Promise<any>((resolve) => {
+                let value: any = [
+                    {
+                        'name': 'license',
+                        'download_url': 'license url'
+                    },
+                    {
+                        'name': 'readme',
+                        'download_url': 'readme.md'
+                    }
+                        
+                    ];
+                resolve(value);
+            })
+        );
+
+        downloadRepoStub.onCall(1).returns(
+            new Promise<any>((resolve) => {
+                let value: any = [
+                    {
+                        'name': 'license.md',
+                        'download_url': 'license.md url'
+                    },
+                    {
+                        'name': 'readme.md',
+                        'download_url': 'readme.md'
+                    }  
+                    ];
+                resolve(value);
+            })
+        );
+
     });
+
+   
+
     this.afterEach(() => {
         restore();
     });
     it('should download the license files if it exists in the given repo', async function () {
-        let res = await downloader.downloadLicenseFromGithub('github.com/test/repo', new Logger());
-        assert.equal(res, 'license url');
-        res = await downloader.downloadLicenseFromGithub('github.com/test/repo', new Logger());
-        assert.equal(res, 'license.md url');
+        let res = await downloader.downloadDataFromGithub('github.com/test/repo');
+        assert.deepEqual(res, ['license', 'readme']);
+        res = await downloader.downloadDataFromGithub('github.com/test/repo');
+        assert.deepEqual(res, ['license','readme']);
     });
 });
-
-*/

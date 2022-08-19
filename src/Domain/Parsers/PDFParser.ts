@@ -1,8 +1,8 @@
-import { PackageInfo } from "../Model/PackageInfo";
+import { PackageInfo } from '../Model/PackageInfo';
 
 export class PDFParser {
-  parse(packageInfos: PackageInfo[]): any {
-    let col = ["Group", "Name", "Version", "License", "Copyright"];
+  parse(packageInfos: PackageInfo[]): string[][][] {
+    let col = ['Group', 'Name', 'Version', 'License', 'Copyright'];
     let rows: string[][] = [];
 
     let groupPdf: string;
@@ -12,30 +12,30 @@ export class PDFParser {
     let copyrightPdf: string;
 
     packageInfos.forEach((packageInfo) => {
-      if (packageInfo.group !== "") {
+      if (packageInfo.group !== '') {
         groupPdf = packageInfo.group;
       } else {
-        groupPdf = "no group";
+        groupPdf = 'no group';
       }
 
-      if (packageInfo.name !== "") {
+      if (packageInfo.name !== '') {
         namePdf = packageInfo.name;
       } else {
-        namePdf = "no name";
+        namePdf = 'no name';
       }
 
-      if (packageInfo.version !== "") {
+      if (packageInfo.version !== '') {
         versionPdf = packageInfo.version;
       } else {
-        versionPdf = "no version";
+        versionPdf = 'no version';
       }
 
       licensePdf = this.extractLicense(packageInfo);
 
-      if (packageInfo.copyright !== "") {
+      if (packageInfo.copyright !== '') {
         copyrightPdf = packageInfo.copyright;
       } else {
-        copyrightPdf = "no copyright";
+        copyrightPdf = 'no copyright';
       }
       rows.push([groupPdf, namePdf, versionPdf, licensePdf, copyrightPdf]);
     });
@@ -44,13 +44,13 @@ export class PDFParser {
 
   extractLicense(packageInfo: PackageInfo) {
     if (packageInfo.licenses.length > 0) {
-      if (packageInfo.licenses[0]["id"]) {
-        return packageInfo.licenses[0]["id"];
+      if (packageInfo.licenses[0]['id']) {
+        return packageInfo.licenses[0]['id'];
       } else {
-        return "no license";
+        return 'no license';
       }
     } else {
-      return "no license";
+      return 'no license';
     }
   }
 }

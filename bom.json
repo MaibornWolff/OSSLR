@@ -17073,6 +17073,7 @@
       "bom-ref": "pkg:npm/yocto-queue@0.1.0"
     }
   ],
+  
   "externalReferences": [
     {
       "type": "other",

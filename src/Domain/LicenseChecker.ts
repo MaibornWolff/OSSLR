@@ -1,16 +1,16 @@
-import { SingleBar, Presets } from "cli-progress";
-import { CopyrightParser } from "./Parsers/CopyrightParser";
-import { CycloneDXParser } from "./Parsers/CycloneDXParser";
-import { FileReader } from "../Adapter/Import/FileReader";
-import { Downloader } from "./Downloader";
-import { PackageInfo } from "./Model/PackageInfo";
-import { PDFFileWriter } from "../Adapter/Export/PDFFileWriter";
-import { PDFParser } from "./Parsers/PDFParser";
-import { existsSync, mkdirSync, writeFileSync } from "fs";
-import * as path from "path";
-import * as Logger from "../Logger/Logging";
-import { JSONFileWriter } from "../Adapter/Export/JSONFileWriter";
-import { JSONParser } from "./Parsers/JSONParser";
+import { SingleBar, Presets } from 'cli-progress';
+import { CopyrightParser } from './Parsers/CopyrightParser';
+import { CycloneDXParser } from './Parsers/CycloneDXParser';
+import { FileReader } from '../Adapter/Import/FileReader';
+import { Downloader } from './Downloader';
+import { PackageInfo } from './Model/PackageInfo';
+import { PDFFileWriter } from '../Adapter/Export/PDFFileWriter';
+import { PDFParser } from './Parsers/PDFParser';
+import { existsSync, mkdirSync, writeFileSync } from 'fs';
+import * as path from 'path';
+import * as Logger from '../Logger/Logging';
+import { JSONFileWriter } from '../Adapter/Export/JSONFileWriter';
+import { JSONParser } from './Parsers/JSONParser';
 
 /**
  * This class is responsible for distributing the different tasks to the responsible classes.
@@ -34,10 +34,11 @@ export class LicenseChecker {
     Logger.initializeLogger();
     this.bomPath = bomPath;
     this.missingValuesPath = manualBOM;
-    let dataFormat = bomPath.split(".").pop()!;
+    let dataFormat = bomPath.split('.').pop();
+    if(!dataFormat) throw new Error('invalid data format');
 
     switch (bomFormat) {
-      case "cycloneDX":
+      case 'cycloneDX':
         this.parser = new CycloneDXParser(dataFormat);
         break;
       default:
@@ -65,7 +66,7 @@ export class LicenseChecker {
     try {
       let downloader = new Downloader();
       downloader.authenticateGithubClient();
-      console.log("Retrieving License Information...");
+      console.log('Retrieving License Information...');
       const progBar = new SingleBar({}, Presets.shades_classic);
       progBar.start(this.packageInfos.length, 0);
       for (let packageInfo of this.packageInfos) {
@@ -88,14 +89,14 @@ export class LicenseChecker {
           let [license, readme] = await downloader.downloadLicenseAndREADME(
             url
           );
-          if (license != "") {
-            packageInfo.licenseTexts!.push(license);
+          if (license != '') {
+            packageInfo.licenseTexts.push(license);
           }
           packageInfo.readme = readme;
         }
       }
       progBar.stop();
-      console.log("Done!");
+      console.log('Done!');
     } catch (err) {
       throw err;
     }
@@ -107,16 +108,16 @@ export class LicenseChecker {
   parseCopyright(): void {
     let copyrightParser = new CopyrightParser();
     for (let i = 0; i < this.packageInfos.length; i++) {
-      let licenseTexts = this.packageInfos[i].licenseTexts!; // readability
+      let licenseTexts = this.packageInfos[i].licenseTexts; // readability
       for (let j = 0; j < licenseTexts.length; j++) {
         let copyright = copyrightParser.extractCopyright(licenseTexts[j]);
         // if the last license does not contain the copyright check the README
-        if (j == licenseTexts.length - 1 && copyright === "") {
+        if (j == licenseTexts.length - 1 && copyright === '') {
           copyright = copyrightParser.extractCopyright(
-            this.packageInfos[i].readme!
+            this.packageInfos[i].readme
           );
         }
-        if (copyright === "") {
+        if (copyright === '') {
           continue;
         }
         copyright = copyrightParser.removeOverheadFromCopyright(copyright);
@@ -155,7 +156,7 @@ export class LicenseChecker {
     let pdfExporter = new PDFFileWriter();
 
     this.packageInfos.forEach((packageInfo) => {
-      if (packageInfo.copyright === "") {
+      if (packageInfo.copyright === '') {
         this.noCopyrightList.push(packageInfo);
       }
     });
@@ -167,7 +168,7 @@ export class LicenseChecker {
       const resultMissingValues = jsonParser.exportMissingValues(
         this.noCopyrightList
       );
-      let newFile = path.join("out", "updatedBom.json");
+      let newFile = path.join('out', 'updatedBom.json');
       jsonFileWriter.write(newFile, resultBom);
       jsonFileWriter.write(this.missingValuesPath, resultMissingValues);
       let [head, body] = pdfParser.parse(this.packageInfos);
@@ -184,11 +185,11 @@ export class LicenseChecker {
    */
   writeFileToDisk(fileContent: string, fileName: string): void {
     try {
-      if (!existsSync(path.join("out", "licenses"))) {
-        mkdirSync(path.join("out", "licenses"));
+      if (!existsSync(path.join('out', 'licenses'))) {
+        mkdirSync(path.join('out', 'licenses'));
       }
       writeFileSync(
-        path.join("out", "licenses", `${fileName}.txt`),
+        path.join('out', 'licenses', `${fileName}.txt`),
         fileContent
       );
     } catch (err) {
@@ -203,8 +204,8 @@ export class LicenseChecker {
    */
   hasLicense(packageInfo: PackageInfo): boolean {
     return (
-      Array.isArray(packageInfo["licenses"]) &&
-      packageInfo["licenses"].length > 0
+      Array.isArray(packageInfo['licenses']) &&
+      packageInfo['licenses'].length > 0
     );
   }
 
@@ -215,13 +216,13 @@ export class LicenseChecker {
    */
   hasExternalRefs(packageInfo: PackageInfo): boolean {
     return (
-      Array.isArray(packageInfo["externalReferences"]) &&
-      packageInfo["externalReferences"].length > 0
+      Array.isArray(packageInfo['externalReferences']) &&
+      packageInfo['externalReferences'].length > 0
     );
   }
 
   hasCopyright(packageInfo: PackageInfo): boolean {
-    return packageInfo.copyright !== "";
+    return packageInfo.copyright !== '';
   }
 
   missingValuesFileExists(): boolean {

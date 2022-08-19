@@ -1,8 +1,8 @@
-import { Octokit } from "octokit";
-import * as dotenv from "dotenv";
-import { components } from "@octokit/openapi-types";
+import { Octokit } from 'octokit';
+import * as dotenv from 'dotenv';
+//import { components } from '@octokit/openapi-types';
 
-type DirectoryItem = components["schemas"]["content-directory"][number];
+//type DirectoryItem = components['schemas']['content-directory'][number];
 
 /**
  * Wrapper for the octokit github client implementation. Used to download repos from github.
@@ -26,7 +26,7 @@ export class GithubClient {
       }
       this.octokit = new Octokit({ auth: access_token });
     } catch (err) {
-      console.error("Authentication with access-token failed.");
+      console.error('Authentication with access-token failed.');
       throw err;
     }
   }
@@ -37,32 +37,30 @@ export class GithubClient {
    * @returns {Promise<DirectoryItem[]>} The content of the repo.
    */
   // async downloadRepo(url: string): Promise<DirectoryItem[]> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async downloadRepo(url: string): Promise<any> {
-    let repoOwner = "";
-    let repoName = "";
+    let repoOwner = '';
+    let repoName = '';
     try {
       let repoInfo = this.filterRepoInfoFromURL(url);
       if (repoInfo != null) {
         repoOwner = repoInfo[0];
         repoName = repoInfo[1];
       } else {
-        throw new Error("Could not find repository");
+        throw new Error('Could not find repository');
       }
       const {data} = await this.octokit.rest.repos.getContent({
         owner: repoOwner,
         repo: repoName,
-        path: "",
+        path: '',
       });
-      //console.log(typeof data)
-      //console.log(data)
       if (!Array.isArray(data)) {
-        console.log('Hallo')
-        return []
-      };
-      
+        return [];
+      }
       return data;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      if (err.status == "404") {
+      if (err.status == '404') {
         throw `Repository with URL ${url} not found.`;
       } else {
         throw err;
@@ -77,20 +75,20 @@ export class GithubClient {
    */
   filterRepoInfoFromURL(url: string): string[] | undefined {
     try {
-      let re = new RegExp("github.com(/|:)([\\w-]+)/([\\w-.]+)");
+      let re = new RegExp('github.com(/|:)([\\w-]+)/([\\w-.]+)');
       let filtered = re.exec(url);
-      let user = "";
-      let repo = "";
+      let user = '';
+      let repo = '';
       if (
         filtered != null &&
         filtered[2] != undefined &&
         filtered[3] != undefined
       ) {
         user = filtered[2];
-        repo = filtered[3].replace(new RegExp(".git$"), "");
+        repo = filtered[3].replace(new RegExp('.git$'), '');
         return [user, repo];
       } else {
-        throw new Error("Invalid GitHub link.");
+        throw new Error('Invalid GitHub link.');
       }
     } catch (err) {
       console.log(err);

@@ -1,27 +1,17 @@
-import "mocha";
-import { assert } from "chai";
-import { GithubClient } from "./GithubClient";
+import 'mocha';
+import { assert } from 'chai';
+import { GithubClient } from './GithubClient';
 
-describe("filterRepoInfoFromURL", function () {
+describe('filterRepoInfoFromURL', function () {
   let githubClient: GithubClient;
   this.beforeEach(function () {
     githubClient = new GithubClient();
   });
-  /* strict typscript...
-
-
     it('should correctly extract the user and repository from the given url', function () {
-        assert.equal(githubClient.filterRepoInfoFromURL('github.com/user/repo')[0], 'user');
-        assert.equal(githubClient.filterRepoInfoFromURL('github.com/user/repo')[1], 'repo');
-        assert.equal(githubClient.filterRepoInfoFromURL('http://www.github.com/user-name/repo.name')[0], 'user-name');
-        assert.equal(githubClient.filterRepoInfoFromURL('http://www.github.com/user-name/repo.name')[1], 'repo.name');
-    });
-    it('should remove subdirectories and fragments', function () {
-        assert.equal(githubClient.filterRepoInfoFromURL('github.com/user/repo/sub/directory.git')[0], 'user');
-        assert.equal(githubClient.filterRepoInfoFromURL('github.com/user/repo/sub/directory.git')[1], 'repo');
-        assert.equal(githubClient.filterRepoInfoFromURL('github.com/user/repo/sub#readme')[0], 'user');
-        assert.equal(githubClient.filterRepoInfoFromURL('github.com/user/repo/sub#readme')[1], 'repo');
-    });
-
-    */
+        let arr = ['github.com/user/repo', 'github.com/user/repo/sub/directory.git', 'github.com/user/repo/sub#readme'];
+      for (let i = 0; i < arr.length; i++) {
+        assert.deepEqual(githubClient.filterRepoInfoFromURL(arr[i]), ['user', 'repo']);
+      }
+      assert.deepEqual(githubClient.filterRepoInfoFromURL('http://www.github.com/user-name/repo.name'), ['user-name', 'repo.name']);  
+    }); 
 });
