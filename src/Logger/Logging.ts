@@ -9,7 +9,7 @@ import { PackageInfo } from '../Domain/Model/PackageInfo';
  * Error: error messages.
  * Debug: debug messages.
  */
-export type Level = 'License' | 'Error' | 'Debug';
+export type Level = 'License' | 'Error' | 'Debug' ; // Warning
 
 let licenseLogger: winston.Logger;
 let errorLogger: winston.Logger;

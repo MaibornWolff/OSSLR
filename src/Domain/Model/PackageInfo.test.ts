@@ -33,3 +33,44 @@ describe('toString', function () {
         assert.equal(packageInfo.toString(), 'group-name');
     });
 });
+
+describe('isVersionInRangeOf', function(){
+    let local = new PackageInfo('', '', '~1.0.0', [], [], [],'', '');
+    let generated = new PackageInfo('', '', '', [], [], [],'', '');
+   
+    it('version with ~ or _._.x should match patch realeases', function(){
+        
+        generated = new PackageInfo('', '', '1.0.420', [], [], [],'', '');
+        assert.isTrue(generated.isVersionInRangeOf(local));
+        generated = new PackageInfo('', '', '2.0.0', [], [], [],'', '');
+        assert.isFalse(generated.isVersionInRangeOf(local));
+        local.version = '1.1.x';
+        generated = new PackageInfo('', '', '1.1.420', [], [], [],'', '');
+        assert.isTrue(generated.isVersionInRangeOf(local));
+        generated = new PackageInfo('', '', '1.2.0', [], [], [],'', '');
+        assert.isFalse(generated.isVersionInRangeOf(local));
+    });
+   
+    it('version with ^ or _.x should match minor releases', function(){
+        local.version = '^2.1.5';
+        generated = new PackageInfo('', '', '2.69.420', [], [], [],'', '');
+        assert.isTrue(generated.isVersionInRangeOf(local));
+        generated = new PackageInfo('', '', '2.0.15', [], [], [],'', '');
+        assert.isFalse(generated.isVersionInRangeOf(local));
+        local.version = '1.x';
+        generated = new PackageInfo('', '', '1.2.420', [], [], [],'', '');
+        assert.isTrue(generated.isVersionInRangeOf(local));
+        generated = new PackageInfo('', '', '2.0.0', [], [], [],'', '');
+        assert.isFalse(generated.isVersionInRangeOf(local));
+    });
+
+    it('version with * or just x should match all', function(){
+        local.version = '*';
+        generated = new PackageInfo('', '', '10000000.0.420', [], [], [],'', '');
+        assert.isTrue(generated.isVersionInRangeOf(local));
+        local.version = 'x';
+        generated = new PackageInfo('', '', '10000000.0.420', [], [], [],'', '');
+        assert.isTrue(generated.isVersionInRangeOf(local));
+
+    });
+});

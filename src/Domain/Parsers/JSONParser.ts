@@ -1,19 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { PackageInfo } from '../../Domain/Model/PackageInfo';
 import { License } from '../../Domain/Model/License';
 
 
 export class JSONParser {
-  exportResultToBom(
-    packageInfos: PackageInfo[],
-    originalBom: string
-  ): string {
-    let bomJson = JSON.parse(originalBom);
-    bomJson = this.insertCopyrightIntoBom(packageInfos, bomJson);
-    let str = JSON.stringify(bomJson, null, 4);
-    return str;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
   insertCopyrightIntoBom(packageInfos: PackageInfo[], bomJson: any) {
     for (let i = 0; i < packageInfos.length; i++) {
       let copyright = packageInfos[i].copyright;
@@ -24,7 +15,7 @@ export class JSONParser {
     return bomJson;
   }
 
-  exportMissingValues(packageInfos: PackageInfo[]): string {
+  parsePkgInfo(packageInfos: PackageInfo[]): any {
     let components = [];
     for (let i = 0; i < packageInfos.length; i++) {
       let p = packageInfos[i];
@@ -32,18 +23,29 @@ export class JSONParser {
         group: p.group,
         name: p.name,
         version: p.version,
-        licenses: this.licenseToBOMJSON(p.licenses),
-        copyright: '',
+        licenses: this.licenseToBOM(p.licenses),
+        copyright: p.copyright
       });
     }
-    return JSON.stringify({ 'components': components }, null, 4);
+    return {'components': components};
   }
 
-  licenseToBOMJSON(licenses: License[]): object {
+  licenseToBOM(licenses: License[]): object {
     let result = [];
     for (let i = 0; i < licenses.length; i++) {
       result.push({ license: { id: licenses[i].id, url: licenses[i].url } });
     }
     return result;
+  }
+
+  addMissingEntries(packageInfos: PackageInfo[], bomJson: any){
+    let components = bomJson['components'];
+    if(components){
+        bomJson['components'] = components.concat(this.parsePkgInfo(packageInfos).components);
+        return bomJson;
+    } else {
+      console.error('Failed to insert a new entry into the bom file.');
+      return bomJson;
+    }
   }
 }

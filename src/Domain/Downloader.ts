@@ -56,6 +56,9 @@ export class Downloader {
       }
       for (let i = 0; i < data.length; i++) {
         let fileName = data[i].name;
+        // this get request has rate limit, send token with GetRequest as well?
+        // catch if rate limit exceeded and wait 'circuit breaker' pattern
+        // what limit does github have
         if (
           fileName.toLowerCase() === 'license' ||
           fileName.match(new RegExp('license.[w]*', 'i'))

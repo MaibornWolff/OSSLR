@@ -28,11 +28,11 @@ describe('exportMissingValues', function () {
     );
     let pkg3 = new PackageInfo('', '', '', [], [], [], '', '');
 
-    let col = ['Group', 'Name', 'Version', 'License', 'Copyright'];
+    let col = ['Index', 'Group', 'Name', 'Version', 'License', 'Copyright'];
     let rows = [
-      ['ampproject', 'remapping', '2.2.0', 'Apache-2.0', 'no copyright'],
-      ['babel', 'code-frame', '7.16.7', 'MIT', 'Copyright (c) 2014-present Sebastian McKenzie and other contributors',],
-      ['no group','no name' , 'no version', 'no license', 'no copyright'],
+      ['1','ampproject', 'remapping', '2.2.0', 'Apache-2.0', 'no copyright'],
+      ['2','babel', 'code-frame', '7.16.7', 'MIT', 'Copyright (c) 2014-present Sebastian McKenzie and other contributors',],
+      ['3','no group','no name' , 'no version', 'no license', 'no copyright'],
     ];
     assert.deepEqual(parser.parse([pkg1, pkg2, pkg3]), [[col], rows]);
   });

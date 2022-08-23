@@ -90,3 +90,33 @@ describe('hasExternalReferences', function () {
     assert.isFalse(licenseChecker.hasExternalRefs(packageInfo));
   });
 });
+
+
+describe('combine', function () {
+  let licenseChecker: LicenseChecker;
+  let pkg1 = new PackageInfo('group', 'name', '1.2.3', [], [], [], '', '');
+  
+  beforeEach(function () {
+    licenseChecker = new LicenseChecker();
+    licenseChecker.packageInfos = [];
+  });
+
+  it('combine the local and generated package, if groups, names and versions match', function () {
+    let pkg2 = new PackageInfo('group', 'name', '~1.2.3', [], [], [], '', 'copyright');
+    let combinedPkg = new PackageInfo('group', 'name', '1.2.3', [], [], [], '', 'copyright');
+    licenseChecker.packageInfos.push(pkg1);
+    licenseChecker.localData.push(pkg2);
+    licenseChecker.combine();
+    assert.deepEqual(licenseChecker.packageInfos, [combinedPkg]);
+  });
+
+  it('combine the local and generated package, if groups, names and versions do not match add to packageinfos', function () {
+    let pkg3 = new PackageInfo('group', 'name2', '1.2.3', [], [], [], '', 'copyright');
+    licenseChecker.packageInfos.push(pkg1);
+    licenseChecker.localData.push(pkg3);
+    licenseChecker.combine();
+    assert.deepEqual(licenseChecker.packageInfos, [pkg1]);
+    assert.deepEqual(licenseChecker.toBeAppended, [pkg3]); // List that will be appended later on
+  });
+
+});

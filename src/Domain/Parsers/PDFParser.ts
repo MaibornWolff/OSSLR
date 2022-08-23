@@ -2,7 +2,7 @@ import { PackageInfo } from '../Model/PackageInfo';
 
 export class PDFParser {
   parse(packageInfos: PackageInfo[]): string[][][] {
-    let col = ['Group', 'Name', 'Version', 'License', 'Copyright'];
+    let col = ['Index' ,'Group', 'Name', 'Version', 'License', 'Copyright'];
     let rows: string[][] = [];
 
     let groupPdf: string;
@@ -11,7 +11,7 @@ export class PDFParser {
     let licensePdf: string;
     let copyrightPdf: string;
 
-    packageInfos.forEach((packageInfo) => {
+    packageInfos.forEach((packageInfo, index) => {
       if (packageInfo.group !== '') {
         groupPdf = packageInfo.group;
       } else {
@@ -37,7 +37,7 @@ export class PDFParser {
       } else {
         copyrightPdf = 'no copyright';
       }
-      rows.push([groupPdf, namePdf, versionPdf, licensePdf, copyrightPdf]);
+      rows.push([(index + 1).toString(), groupPdf, namePdf, versionPdf, licensePdf, copyrightPdf]);
     });
     return [[col], rows];
   }

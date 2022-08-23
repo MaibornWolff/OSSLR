@@ -43,6 +43,7 @@ export class CopyrightParser {
         }
       }
     } else {
+      // to Logger
       console.log('No match found');
     }
     // remove URLs. Inspired by: https://urlregex.com/

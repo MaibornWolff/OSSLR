@@ -4,6 +4,31 @@ import { JSONParser } from './JSONParser';
 import { PackageInfo } from '../Model/PackageInfo';
 
 
+describe('parsePkgInfo', function () {
+  let jsonParser = new JSONParser();
+  let json = {
+    'components': [{
+      'group': 'ampproject',
+      'name': 'remapping',
+      'version': '2.2.1',
+      'licenses': [
+        {
+          'license': {
+            'id': 'Apache-2.0',
+            'url': 'https://opensource.org/licenses/Apache-2.0'
+          }
+        }
+      ],
+      'copyright': ''
+    }]
+  };
+  let licenses = [{ id: 'Apache-2.0', url: 'https://opensource.org/licenses/Apache-2.0' }];
+  let packageInfo = new PackageInfo('ampproject', 'remapping', '2.2.1', licenses, [], [], '', '');
+  it('should parse packageinfo to json correctly', function () {
+    assert.deepEqual(jsonParser.parsePkgInfo([packageInfo]), json);
+  });
+});
+
 describe('insertCopyrightIntoBom', function () {
   let parser = new JSONParser();
   let pkg1 = new PackageInfo('', '', '', [], [], [], '', 'Copyright (c)');
@@ -118,7 +143,7 @@ describe('insertCopyrightIntoBom', function () {
       }
     ]
   };
-  let noCPbom  = {
+  let noCPbom = {
     'bomFormat': 'CycloneDX',
     'components': [
       {
@@ -230,35 +255,3 @@ describe('insertCopyrightIntoBom', function () {
   });
 
 });
-
-
-describe('exportMissingValues', function () {
-  let parser = new JSONParser();
-  it('Parse packageinfos into array of package components in JSON format', function () {
-    let pkg = new PackageInfo('ampproject', 'remapping', '2.2.0', [], [], [], '', '');
-    let license = { id: 'Apache-2.0', url: 'https://opensource.org/licenses/Apache-2.0' };
-    pkg.licenses.push(license);
-    let missingValues = {
-      'components': [
-        {
-          'group': 'ampproject',
-          'name': 'remapping',
-          'version': '2.2.0',
-          'licenses': [
-            {
-              'license': {
-                'id': 'Apache-2.0',
-                'url': 'https://opensource.org/licenses/Apache-2.0'
-              }
-            }
-          ],
-          'copyright': ''
-        }
-      ]
-    };
-
-    assert.deepEqual(parser.exportMissingValues([pkg]), JSON.stringify(missingValues, null, 4));
-
-  });
-});
-
