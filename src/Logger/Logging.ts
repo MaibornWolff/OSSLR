@@ -9,11 +9,12 @@ import { PackageInfo } from '../Domain/Model/PackageInfo';
  * Error: error messages.
  * Debug: debug messages.
  */
-export type Level = 'License' | 'Error' | 'Debug' ; // Warning
+export type Level = 'License' | 'Error' | 'Debug' | 'Warning';
 
 let licenseLogger: winston.Logger;
 let errorLogger: winston.Logger;
 let debugLogger: winston.Logger;
+let warningLogger: winston.Logger;
 
 /**
  * Adds an entry to the log file.
@@ -34,6 +35,12 @@ export function addToLog(message: string, level: Level): void {
         message: message,
       });
       return;
+      case 'Warning':
+        warningLogger.log({
+          level: level,
+          message: message,
+        });
+      return; 
     default:
       licenseLogger.log({
         level: level,
@@ -71,6 +78,13 @@ export function initializeLogger(): void {
       new winston.transports.File({ filename: 'debug.log', level: 'Debug' }),
     ],
   });
+  warningLogger = winston.createLogger({
+    levels: { Warning: 0},
+    format: winston.format.simple(),
+    transports: [
+      new winston.transports.File({ filename: 'warning.log', level: 'Warning' }),
+    ],
+  });
 }
 
 export function initializeSilentLogger(): void {
@@ -78,6 +92,7 @@ export function initializeSilentLogger(): void {
   licenseLogger.transports[0].silent = true;
   errorLogger.transports[0].silent = true;
   debugLogger.transports[0].silent = true;
+  warningLogger.transports[0].silent = true;
 }
 
 /**

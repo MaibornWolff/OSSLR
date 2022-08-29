@@ -44,7 +44,7 @@ export class CopyrightParser {
       }
     } else {
       // to Logger
-      console.log('No match found');
+      Logger.addToLog('No match found', 'Error');
     }
     // remove URLs. Inspired by: https://urlregex.com/
     matches = copyright.match(

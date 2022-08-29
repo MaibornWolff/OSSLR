@@ -1,4 +1,5 @@
 import { License } from './License';
+import * as Logger from '../../Logger/Logging';
 
 export class PackageInfo {
   group: string;
@@ -67,10 +68,11 @@ export class PackageInfo {
     let arr1 = local.version.split('.');
     let arr2 = this.version.split('.');
     if(!arr1 || arr1.length < 2) {
-      console.warn('Invalid version format for this local package: ' + local.toString());
+      Logger.addToLog('Invalid version format for this local package: ' + local.toString(), 'Error');
+      
       return false;
     } else if(!arr2 || arr2.length < 2){
-      console.warn('Invalid version format for this generated package: ' + this.toString());
+      Logger.addToLog('Invalid version format for this generated package: ' + this.toString(), 'Error');
       return false;
     }
     if(arr1[arr1.length - 1] === 'x'){

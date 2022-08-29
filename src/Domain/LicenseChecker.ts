@@ -72,6 +72,9 @@ export class LicenseChecker {
       downloader.authenticateGithubClient();
       console.log('Retrieving License Information...');
       const progBar = new SingleBar({}, Presets.shades_classic);
+
+
+
       progBar.start(this.packageInfos.length, 0);
       for (let packageInfo of this.packageInfos) {
         progBar.increment();
@@ -90,9 +93,17 @@ export class LicenseChecker {
         }
         */
         for (let url of packageInfo.externalReferences) {
-          let [license, readme] = await downloader.downloadLicenseAndREADME(
-            url
-          );
+          let [license, readme] = ['',''];
+          let {remaining, reset} = await downloader.getRemainingRateObj(); // here?
+          if(remaining >= 1){
+            [license, readme] = await downloader.downloadLicenseAndREADME(url);
+          } else {
+            // How long should wait before continuing, difference between time now and the reset time + 10 seconds buffer time
+            let waitTime = Math.abs(reset*1000 - Date.now()) + 10000;
+            Logger.addToLog('GitHub Request limit reached. Waiting for ' + waitTime + 'ms.', 'Warning');
+            await new Promise(r => setTimeout(r, waitTime));
+            [license, readme] = await downloader.downloadLicenseAndREADME(url);
+          }
           if (license != '') {
             packageInfo.licenseTexts.push(license);
           }
@@ -133,7 +144,7 @@ export class LicenseChecker {
   retrieveLocalData(): void{
     if (!this.localDataPath) return;
     if (!existsSync(this.localDataPath)) {
-      console.warn('Invalid local file path');
+      Logger.addToLog('Invalid local file path', 'Warning');
       return;
     }
     const temp = this.fileReader.readInput(this.localDataPath);
@@ -158,7 +169,7 @@ export class LicenseChecker {
           localDataAdded = true;
           this.toBeAppended.push(local[i]);
           // To logger 
-          console.warn('Version of package did not match in the given local file: ' + local[i].toString() + ' and the generated file by cdxegen: ' + generated[j].toString() + ' possible duplicate created.');
+          Logger.addToLog('Version of package did not match in the given local file: ' + local[i].toString() + ' and the generated file by cdxegen: ' + generated[j].toString() + ' possible duplicate created.', 'Warning');
         }
       }
       if (!localDataAdded) {
@@ -183,8 +194,7 @@ export class LicenseChecker {
       // change to this.packageinfofilter
       this.packageInfos.forEach((packageInfo) => {
         if (packageInfo.copyright === '') {
-          // To logger 
-          console.error('Failed to collect the necessary information for ' + packageInfo.toString());
+          Logger.addToLog('Failed to collect the necessary information for ' + packageInfo.toString(), 'Error');
           this.noCopyrightList.push(packageInfo);
         }
       });

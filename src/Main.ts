@@ -1,6 +1,7 @@
 import { LicenseChecker } from './Domain/LicenseChecker';
 import * as path from 'path';
 
+
 main();
 
 async function main() {
@@ -25,6 +26,7 @@ async function main() {
         );
         return;
     }
+
     let licenseChecker = new LicenseChecker();
     // Sets parser mode and passes input file
     licenseChecker.init('cycloneDX', bomPath, bomManualPath, path.join('out', 'missingValues.json'));
@@ -42,6 +44,7 @@ async function main() {
     licenseChecker.exportJSON();
     // Exports said copyright and license data into a pdf
     licenseChecker.exportPDF();
+    
   } catch (err) {
     console.log(err);
     return;

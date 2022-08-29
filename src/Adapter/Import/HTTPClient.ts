@@ -1,5 +1,7 @@
-import Axios from 'axios';
+import axios, {AxiosError} from 'axios';
+import * as Logger from '../../Logger/Logging';
 
+//https://docs.github.com/en/rest/rate-limit
 export class HTTPClient {
     /**
      * Performs a GET request for the given URL.
@@ -8,12 +10,13 @@ export class HTTPClient {
      */
     public makeGetRequest(url: string): Promise<string> {
         return new Promise<string>(function (resolve, reject) {
-            Axios.get(url).then(
+            axios.get(url).then(
                 (response) => {
                     let result = response.data;
                     resolve(result);
                 },
-                (error) => {
+                (error: AxiosError) => {
+                    Logger.addToLog(error.response?.status + ' ' + error.response?.statusText, 'Error');
                     reject(error);
                 },
             );

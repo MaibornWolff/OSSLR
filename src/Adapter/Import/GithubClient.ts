@@ -1,5 +1,7 @@
 import { Octokit } from 'octokit';
 import * as dotenv from 'dotenv';
+import * as Logger from '../../Logger/Logging';
+
 //import { components } from '@octokit/openapi-types';
 
 //type DirectoryItem = components['schemas']['content-directory'][number];
@@ -19,14 +21,13 @@ export class GithubClient {
       dotenv.config();
       const access_token = process.env.ACCESS_TOKEN;
       if (access_token == undefined) {
-        console.log(
-          'Please set your access token as an environment variable: ACCESS_TOKEN="your-token".'
-        );
-        return;
+        Logger.addToLog('Value of access-token is undefined.', 'Error');
+        throw new Error('Value of access-token is undefined.');
       }
       this.octokit = new Octokit({ auth: access_token });
     } catch (err) {
       console.error('Authentication with access-token failed.');
+      Logger.addToLog('Authentication with access-token failed.', 'Error');
       throw err;
     }
   }
@@ -49,11 +50,13 @@ export class GithubClient {
       } else {
         throw new Error('Could not find repository');
       }
-      const {data} = await this.octokit.rest.repos.getContent({
+      //unauthenticated requests, the rate limit allows you to make up to 60 requests per hour
+      const res = await this.octokit.rest.repos.getContent({
         owner: repoOwner,
         repo: repoName,
         path: '',
       });
+      const data = res.data;
       if (!Array.isArray(data)) {
         return [];
       }
@@ -88,10 +91,19 @@ export class GithubClient {
         repo = filtered[3].replace(new RegExp('.git$'), '');
         return [user, repo];
       } else {
+        Logger.addToLog('Invalid GitHub link.', 'Error');
         throw new Error('Invalid GitHub link.');
       }
     } catch (err) {
       console.log(err);
     }
+  }
+
+   // Response Schema:
+  // https://docs.github.com/en/rest/rate-limit
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async checkRateLimit(){
+    return await this.octokit.request('GET /rate_limit', {});
   }
 }

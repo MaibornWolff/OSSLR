@@ -103,4 +103,14 @@ export class Downloader {
       return ['', ''];
     }
   }
+
+  // Response Schema:
+  // https://docs.github.com/en/rest/rate-limit
+  // Returns how many Requests are available for GitHub API
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async getRemainingRateObj(){
+    let limitObject = this.githubClient.checkRateLimit();
+    const {rate} = (await limitObject).data;
+    return rate;
+  }
 }

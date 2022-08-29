@@ -26,7 +26,7 @@ describe('parsePkgInfo', function () {
   let packageInfo = new PackageInfo('ampproject', 'remapping', '2.2.1', licenses, [], [], '', '');
   it('should parse packageinfo to json correctly', function () {
     assert.deepEqual(jsonParser.parsePkgInfo([packageInfo]), json);
-  });
+  }); 
 });
 
 describe('insertCopyrightIntoBom', function () {

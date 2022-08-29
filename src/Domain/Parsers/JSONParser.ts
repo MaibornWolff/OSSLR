@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { PackageInfo } from '../../Domain/Model/PackageInfo';
 import { License } from '../../Domain/Model/License';
+import * as Logger from '../../Logger/Logging';
 
 
 export class JSONParser {
@@ -44,7 +45,7 @@ export class JSONParser {
         bomJson['components'] = components.concat(this.parsePkgInfo(packageInfos).components);
         return bomJson;
     } else {
-      console.error('Failed to insert a new entry into the bom file.');
+      Logger.addToLog('Failed to insert a new entry into the bom file.', 'Error');
       return bomJson;
     }
   }
