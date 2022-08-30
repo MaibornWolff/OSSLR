@@ -27,6 +27,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+    - run: npm i
     - run: npm install -g @appthreat/cdxgen
     - run: export FETCH_LICENSE=true
     - run: cdxgen -o bom.json
