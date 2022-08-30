@@ -43,6 +43,12 @@ To Run the license checker program:
 npm run license_checker -- "path to your input bom.json"
 ```
 
+Addtionally one can include a second file with default entries, which then will be included in the output files.
+
+```
+npm run license_checker -- "path to your input bom.json" "path to your default bom.json"
+```
+
 After the program terminates, you should see two new files in the ```out``` folder:
 ```updatedBom.json``` and ```updatedBom.pdf```. 
 
