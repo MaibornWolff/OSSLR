@@ -3,17 +3,12 @@
 
 name: LicenseChecker CI
 
-#gh workflow run auto.yml -f logLevel=warning -f tags=false -f environment=staging
-#gh workflow run auto.yml -f 
 on:
-  workflow_dispatch:
-    #inputs:
-      #user_input:
-        #description: 'Default values for the bom.json'
-        #required: false
-        #type: path
+  push:
+    branches: [ develop ]
+    
 env:
-  DEFAULT_VALUES: in/default.json
+  DEFAULT_VALUES: default.json
 
 jobs:
   run-pipe:
@@ -32,7 +27,6 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: echo 'running pipe'
-    - run: cd ../
     - run: npm i
     - run: npm install -g @appthreat/cdxgen
     - run: export FETCH_LICENSE=true
