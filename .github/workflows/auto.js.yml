@@ -38,7 +38,7 @@ jobs:
     - run: cdxgen -o bom.json
     - run: npm run license_checker -- bom.json $DEFAULT_VALUES
     
-    - uses: actions/upload-artifact@develop
+    - uses: actions/upload-artifact@v3
       with:
         name: my-artifact
         path: out
