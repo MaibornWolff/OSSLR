@@ -9,6 +9,7 @@ on:
     
 env:
   DEFAULT_VALUES: default.json
+  ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   run-pipe:
