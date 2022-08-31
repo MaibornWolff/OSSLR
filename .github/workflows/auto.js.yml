@@ -10,6 +10,7 @@ on:
 env:
   DEFAULT_VALUES: default.json
   ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  FETCH_LICENSE: true
 
 jobs:
   run-pipe:
@@ -34,11 +35,10 @@ jobs:
     - run: touch out/missingValues.json
     - run: npm i
     - run: npm install -g @appthreat/cdxgen
-    - run: export FETCH_LICENSE=true
     - run: cdxgen -o bom.json
     - run: npm run license_checker -- bom.json $DEFAULT_VALUES
     
     - uses: actions/upload-artifact@v3
       with:
-        name: my-artifact
+        name: output-files
         path: out
