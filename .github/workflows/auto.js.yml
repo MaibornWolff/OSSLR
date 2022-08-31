@@ -5,7 +5,7 @@ name: LicenseChecker CI
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ develop, workflow_dispatch ]
     
 env:
   DEFAULT_VALUES: default.json
