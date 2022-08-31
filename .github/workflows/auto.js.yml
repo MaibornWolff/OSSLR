@@ -37,3 +37,8 @@ jobs:
     - run: export FETCH_LICENSE=true
     - run: cdxgen -o bom.json
     - run: npm run license_checker -- bom.json $DEFAULT_VALUES
+    
+    - uses: actions/upload-artifact@develop
+      with:
+        name: my-artifact
+        path: out
