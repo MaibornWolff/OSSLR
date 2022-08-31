@@ -28,7 +28,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: echo 'running pipe'
-    - run: touch out/updatedBom.json & out/updatedBom.pdf & out/missingValues.json
+    - run: touch out/updatedBom.json & touch out/updatedBom.pdf & touch out/missingValues.json
     - run: npm i
     - run: npm install -g @appthreat/cdxgen
     - run: export FETCH_LICENSE=true
