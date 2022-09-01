@@ -1,0 +1,18 @@
+{
+    "components": [
+        {
+            "group": "ampproject",
+            "name": "remapping",
+            "version": "~2.2.0",
+            "licenses": [
+                {
+                    "license": {
+                        "id": "Swag-License",
+                        "url": "https://opensource.org/licenses/Apache-2.0"
+                    }
+                }
+            ],
+            "copyright": "Mein COpyright"
+        }
+    ]
+}
