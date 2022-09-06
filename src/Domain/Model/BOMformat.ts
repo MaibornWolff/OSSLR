@@ -5,8 +5,8 @@ export interface BOMformat {
   version?: number | string,
   metadata? : {
     timestamp?: string,
-    tools?: [{vendor: string, name: string, version: string}] 
-    authors?: [{name: string, email: string}]
+    tools?: {vendor: string, name: string, version: string}[] 
+    authors?: {name: string, email: string}[]
   }
   components: 
     {
@@ -22,6 +22,9 @@ export interface BOMformat {
       type?: string;
       'bom-ref'?: string;  
       copyright?: string;
+      mime_type?: string;
+      supplier?: {name: string, url:[string], contact:{name:string, email:string, phone:string}}
+      author?: {name: string, email: string}
     }[];
   services?: {
     'bom-ref': string;
