@@ -8,7 +8,24 @@ OSSLR is a script that adds copyright notices to your existing CycloneDX Softwar
 - It currently only supports SBOMs provided in JSON format
 - The result can be exported as a PDF or JSON
 
-## Setup
+## For easy use
+
+- Place the Docker file into your project root directory
+- Then run:
+  ```
+  docker build . osslr_image
+  ```
+  this will create a docker image
+- Then run:
+  ```
+  docker run -v $(pwd)/out:/home/app/OSSLR/out osslr_image -e ACCESS_TOKEN="your github access-token"
+  ```
+  this will start the container and the osslr script
+- After the program terminates, you should see three new files in the ```out``` folder in your project root directory:
+```updatedBom.json```, ```updatedBom.pdf``` and ```missingValues.json```. 
+
+
+## Manual Setup
 
 Download script for generating SBOM (Software Bill-of-Materials) that will contain the compilation of all project dependencies in JSON and XML format.
 
