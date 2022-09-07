@@ -19,8 +19,7 @@ OSSLR is a script that adds copyright notices to your existing CycloneDX Softwar
   - ```updatedBom.pdf```
   - ```missingValues.json``` 
 
-Alternatively you can clone our OSSLR image from docker hub
-  Source: ...
+<!--- Alternatively you can clone the OSSLR image from docker hub _-->
 
 ## Manual Set-up
 
