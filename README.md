@@ -8,7 +8,7 @@ OSSLR is a script that adds copyright notices to your existing CycloneDX Softwar
 - It currently only supports SBOMs provided in JSON format
 - The result can be exported as a PDF or JSON
 
-## For easy use
+## Set up with Docker
 
 - Place the **Dockerfile** into your **project root directory**
 - Inside your shell in your **project root directory** run these two commands:
