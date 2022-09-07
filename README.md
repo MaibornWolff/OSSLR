@@ -11,7 +11,7 @@ OSSLR is a script that adds copyright notices to your existing CycloneDX Softwar
 ## For easy use
 
 - Place the **Dockerfile** into your **project root directory**
-- In your shell inside your **project root directory** run these two commands:
+- Inside your shell in your **project root directory** run these two commands:
   - ```docker build . osslr_image``` this will create a docker image.
   - ```docker run -v $(pwd)/out:/home/app/OSSLR/out osslr_image -e ACCESS_TOKEN="your github access-token"``` this will start the container and the **OSSLR** script.
 - After the program terminates, you should see three new files in the ```out``` folder in your project root directory:
