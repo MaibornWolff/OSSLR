@@ -1,3 +1,4 @@
+// unfinished
 export interface BOMformat {
   bomFormat?: string;
   specVersion?: string,

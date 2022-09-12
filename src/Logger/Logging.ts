@@ -4,10 +4,10 @@ import { PackageInfo } from '../Domain/Model/PackageInfo';
 /**
  * Custom logging levels:
  * License: no license information found in bom file
- * ExtRefs: not external references found in bom file
  * Copyright: unable to extract copyright notice from external refs.
  * Error: error messages.
  * Debug: debug messages.
+ * Warning: warning messages.
  */
 export type Level = 'License' | 'Error' | 'Debug' | 'Warning';
 
@@ -87,6 +87,9 @@ export function initializeLogger(): void {
   });
 }
 
+/*
+* Initilize silent Logger, to stop logging
+*/
 export function initializeSilentLogger(): void {
   initializeLogger();
   licenseLogger.transports[0].silent = true;

@@ -4,8 +4,6 @@ import * as Logger from '../Logger/Logging';
 
 /**
  * Downloads license and README files from github and the content of other external websites.
- * Name proposals: Web scraper, downloader, data retriever, golden rtriever, data collector, data import,
- *                 data loader,
  */
 export class Downloader {
   githubClient: GithubClient;
@@ -104,13 +102,15 @@ export class Downloader {
     }
   }
 
-  // Response Schema:
-  // https://docs.github.com/en/rest/rate-limit
-  // Returns how many Requests are available for GitHub API
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async getRemainingRateObj(){
+  /**
+   * Returns an object with usefull information to determine how many Requests are still available for GitHub API
+   * For more information: https://docs.github.com/en/rest/rate-limit
+   * @returns {Promise<{ limit: number, used: number, remaining: number, reset: number }} request rate object 
+   */
+  async getRemainingRateObj(): Promise<{ limit: number, used: number, remaining: number, reset: number }>{
     let limitObject = this.githubClient.checkRateLimit();
     const {rate} = (await limitObject).data;
+    console.log(rate);
     return rate;
   }
 }

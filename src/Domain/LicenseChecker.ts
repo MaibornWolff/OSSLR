@@ -62,43 +62,27 @@ export class LicenseChecker {
     }
   }
 
-  /**
-   * Coordinates the download of license and README.md files for all packages.
+ /**
+   * Downloads package data, namely the license texts and the readme.
    */
-  // change name
   async downloadPackageData() {
     try {
       let downloader = new Downloader();
       downloader.authenticateGithubClient();
       console.log('Retrieving License Information...');
+      // progBar is a progression indicator for better user experience
       const progBar = new SingleBar({}, Presets.shades_classic);
-
-
-
       progBar.start(this.packageInfos.length, 0);
       for (let packageInfo of this.packageInfos) {
         progBar.increment();
-
-        /*
-        // LOGGING FOR DEBUGGING:
-        if (!this.hasLicense(packageInfo)) {
-          let message = Logger.generateLogMessage(packageInfo, 'License');
-          this.logger.addToLog(message, 'License');
-          continue;
-        }
-        if (!this.hasExternalRefs(packageInfo)) {
-          let message = Logger.generateLogMessage(packageInfo, 'ExtRefs');
-          this.logger.addToLog(message, 'ExtRefs');
-          continue;
-        }
-        */
         for (let url of packageInfo.externalReferences) {
           let [license, readme] = ['',''];
-          let {remaining, reset} = await downloader.getRemainingRateObj(); // here?
+          let {remaining, reset} = await downloader.getRemainingRateObj();
+          // Checks how many request are still availabe to make to GitHub
           if(remaining >= 1){
             [license, readme] = await downloader.downloadLicenseAndREADME(url);
           } else {
-            // How long should wait before continuing, difference between time now and the reset time + 10 seconds buffer time
+            // Timer for how long should wait before continuing, difference between time now and the reset time + 10 seconds buffer time
             let waitTime = Math.abs(reset*1000 - Date.now()) + 10000;
             Logger.addToLog('GitHub Request limit reached. Waiting for ' + waitTime + 'ms.', 'Warning');
             await new Promise(r => setTimeout(r, waitTime));
@@ -141,6 +125,9 @@ export class LicenseChecker {
     }
   }
   
+   /**
+   * Extracts the package information from the file with default values and saves them in a list of PackageInfo objects.
+   */
   retrieveLocalData(): void{
     if (!this.localDataPath) return;
     if (!existsSync(this.localDataPath)) {
@@ -151,7 +138,9 @@ export class LicenseChecker {
     this.localData= this.parser.parseInput(temp);
   }
 
-  // manual vs input vs local...
+  /**
+   * Combines the information that has been retrieves thorugh external references and the ones given by the user.
+   */
   combine(): void {
     let local: PackageInfo[] = this.localData;
     let generated: PackageInfo[] = this.packageInfos;
@@ -178,6 +167,9 @@ export class LicenseChecker {
     }
   }
 
+  /**
+   * Exports updatedBom.json file and the file tracking packages with missing license/copyright
+   */
   exportJSON(): void {
     let jsonParser = new JSONParser();
     let jsonFileWriter = new JSONFileWriter();
@@ -216,6 +208,9 @@ export class LicenseChecker {
     }
   }
 
+  /**
+   * Exports updatedBom.pdf file
+   */
   exportPDF(): void {
     try {
       let pdfParser = new PDFParser();
@@ -271,9 +266,5 @@ export class LicenseChecker {
       Array.isArray(packageInfo['externalReferences']) &&
       packageInfo['externalReferences'].length > 0
     );
-  }
-
-  hasCopyright(packageInfo: PackageInfo): boolean {
-    return packageInfo.copyright !== '';
   }
 }

@@ -4,7 +4,12 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
 export class PDFFileWriter {
-    export(head: string [][], body: string[][]): void {
+   /**
+   * Writes the given information into a PDF file given 
+   * @param {string[][]} head Names of the columns
+   * @param {string[][]} body Content of the rows
+   */
+    export(head: string[][], body: string[][]): void {
         let doc = new jsPDF();
         autoTable(doc, {
             theme: 'grid',

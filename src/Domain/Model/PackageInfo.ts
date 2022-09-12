@@ -53,12 +53,19 @@ export class PackageInfo {
       ? fileName.substring(0, fileName.length - 1)
       : fileName;
   }
-
+  /**
+   * Checks wether Packages are equal in terms of name and group.
+   * @returns {boolean}
+   */
   samePackage(local: PackageInfo): boolean {
     return local.name === this.name && local.group === this.group;
   }
 
-  // REWORK should go upwards so that ~
+  /**
+   * Checks wether this PackageInfo is in the version range of the local PackageInfo.
+   * @param {PackageInfo} local is a PackageInfo stems from the default values that have been given by the user.
+   * @returns {boolean}
+   */
   isVersionInRangeOf(local: PackageInfo) : boolean{
     // this <=> generated
     // local <=> input file
@@ -96,6 +103,7 @@ export class PackageInfo {
     return local.version === this.version;
   }
 
+  // Helper funtions to compare version strings
   private smallerEq(a: string, b: string): boolean{
     return parseInt(a, 10) <= parseInt(b, 10);
   } 

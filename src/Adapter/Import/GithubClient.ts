@@ -1,10 +1,10 @@
 import { Octokit } from 'octokit';
 import * as dotenv from 'dotenv';
 import * as Logger from '../../Logger/Logging';
-
+// Sadly the imported types dont match with GitHub repsonses:
 //import { components } from '@octokit/openapi-types';
 
-//type DirectoryItem = components['schemas']['content-directory'][number];
+
 
 /**
  * Wrapper for the octokit github client implementation. Used to download repos from github.
@@ -35,9 +35,8 @@ export class GithubClient {
   /**
    * Downloads the github repo with the given url.
    * @param {string} url The repo url.
-   * @returns {Promise<DirectoryItem[]>} The content of the repo.
+   * @returns {Promise<any>} The content of the repo.
    */
-  // async downloadRepo(url: string): Promise<DirectoryItem[]> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async downloadRepo(url: string): Promise<any> {
     let repoOwner = '';
@@ -99,11 +98,8 @@ export class GithubClient {
     }
   }
 
-   // Response Schema:
-  // https://docs.github.com/en/rest/rate-limit
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async checkRateLimit(){
+  async checkRateLimit(): Promise<any> {
     return await this.octokit.request('GET /rate_limit', {});
   }
 }
