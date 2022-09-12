@@ -5,8 +5,14 @@ import * as Logger from '../../Logger/Logging';
 
 
 export class JSONParser {
- 
-  insertCopyrightIntoBom(packageInfos: PackageInfo[], bomJson: any) {
+
+   /**
+   * Insert copyright attribute to bom json object
+   * @param {PackageInfo[]} packageInfos PackageInfo array
+   * @param {any} bomjson The original extracted bom json object notice.
+   * @returns {any} updated bom json object
+   */
+  insertCopyrightIntoBom(packageInfos: PackageInfo[], bomJson: any): any {
     for (let i = 0; i < packageInfos.length; i++) {
       let copyright = packageInfos[i].copyright;
       if (copyright !== '') {
@@ -16,6 +22,11 @@ export class JSONParser {
     return bomJson;
   }
 
+  /**
+   * Parses PackageInfo array into a json object 
+   * @param {PackageInfo[]} copyright The original extracted copyright notice.
+   * @returns {any} updated bom json object
+   */
   parsePkgInfo(packageInfos: PackageInfo[]): any {
     let components = [];
     for (let i = 0; i < packageInfos.length; i++) {
@@ -31,6 +42,11 @@ export class JSONParser {
     return {'components': components};
   }
 
+  /**
+   * Parses License for bom json object 
+   * @param {License[]} licenses License object
+   * @returns {object} updated bom json object
+   */
   licenseToBOM(licenses: License[]): object {
     let result = [];
     for (let i = 0; i < licenses.length; i++) {
@@ -39,6 +55,12 @@ export class JSONParser {
     return result;
   }
 
+  /**
+   * Parses License for bom json object 
+   * @param {PackageInfo[]} licenses License object
+   * @param {any} bomJson bom json object
+   * @returns {object} bomJson updated bom json object
+   */
   addMissingEntries(packageInfos: PackageInfo[], bomJson: any){
     let components = bomJson['components'];
     if(components){
