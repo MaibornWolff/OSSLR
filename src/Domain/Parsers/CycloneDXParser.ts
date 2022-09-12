@@ -36,7 +36,6 @@ export class CycloneDXParser {
    * @returns List of PackageInfo objects containing the extracted information.
    */
   parseJSON(data: string): PackageInfo[] {
-    // is this name fitting?
     let rawData = JSON.parse(data);
     let packageInfos = [];
     for (let i in rawData['components']) {
@@ -70,13 +69,18 @@ export class CycloneDXParser {
     }
     return packageInfos;
   }
-
-  extractLicensesFromPkg(parsedLicense: object[]): License[] {
+  
+   /**
+   * Parser bom files, that parses the license attribute to a License object
+   * @param bomLicenses Array of licenses in bom format from a particular package.
+   * @returns List of License objects containing the extracted information.
+   */
+  extractLicensesFromPkg(bomLicenses: object[]): License[] {
     let licenses = [];
-    for (let j in parsedLicense) {
+    for (let j in bomLicenses) {
       let licenseId: string;
       let licenseUrl: string;
-      let license = JSON.parse(JSON.stringify(parsedLicense[j]));
+      let license = JSON.parse(JSON.stringify(bomLicenses[j]));
       if (license['license']['id']) {
         licenseId = license['license']['id'];
       } else if (license['license']['name']) {

@@ -6,7 +6,7 @@ import { Downloader } from './Downloader';
 import { PackageInfo } from './Model/PackageInfo';
 import { PDFFileWriter } from '../Adapter/Export/PDFFileWriter';
 import { PDFParser } from './Parsers/PDFParser';
-import { existsSync, mkdirSync, writeFileSync } from 'fs';
+import { existsSync } from 'fs';
 import * as path from 'path';
 import * as Logger from '../Logger/Logging';
 import { JSONFileWriter } from '../Adapter/Export/JSONFileWriter';
@@ -39,14 +39,23 @@ export class LicenseChecker {
     this.missingValuesPath = missingValues;
     this.localDataPath = localDataPath;
     let dataFormat = bomPath.split('.').pop();
-    if (!dataFormat) throw new Error('invalid data format');
-
+    if (!dataFormat) {
+      // data format is the file format and currently only json is supported
+      Logger.addToLog('Invalid data format', 'Error');
+      console.error('Invalid data format');
+      process.exit(1);
+    }
     switch (bomFormat) {
+      // bomformat is the actual format of the bom object, currently only cycloneDX is supported
       case 'cycloneDX':
         this.parser = new CycloneDXParser(dataFormat);
         break;
       default:
-        throw new Error(`Unsupported Bom Format ${bomFormat}`);
+        Logger.addToLog( `Unsupported Bom Format ${bomFormat}`, 'Error');
+        console.error(
+          `Unsupported Bom Format ${bomFormat}!`
+        );
+        process.exit(1);
     }
   }
 
@@ -58,7 +67,9 @@ export class LicenseChecker {
       this.bomData = this.fileReader.readInput(this.bomPath);
       this.packageInfos = this.parser.parseInput(this.bomData);
     } catch (err) {
-      throw err;
+      Logger.addToLog('Failed to retrieve Package informations', 'Error');
+      console.error('Failed to retrieve Package informations');
+      process.exit(1);
     }
   }
 
@@ -84,6 +95,7 @@ export class LicenseChecker {
           } else {
             // Timer for how long should wait before continuing, difference between time now and the reset time + 10 seconds buffer time
             let waitTime = Math.abs(reset*1000 - Date.now()) + 10000;
+            console.warn('GitHub Request limit reached. Waiting for ' + waitTime + 'ms.');
             Logger.addToLog('GitHub Request limit reached. Waiting for ' + waitTime + 'ms.', 'Warning');
             await new Promise(r => setTimeout(r, waitTime));
             [license, readme] = await downloader.downloadLicenseAndREADME(url);
@@ -97,7 +109,9 @@ export class LicenseChecker {
       progBar.stop();
       console.log('Done!');
     } catch (err) {
-      throw err;
+      Logger.addToLog('Failed to download package data', 'Error');
+      console.error('Failed to download package data');
+      process.exit(1);
     }
   }
 
@@ -131,7 +145,8 @@ export class LicenseChecker {
   retrieveLocalData(): void{
     if (!this.localDataPath) return;
     if (!existsSync(this.localDataPath)) {
-      Logger.addToLog('Invalid local file path', 'Warning');
+      console.warn('Invalid local file path to default values');
+      Logger.addToLog('Invalid local file path to default values', 'Warning');
       return;
     }
     const temp = this.fileReader.readInput(this.localDataPath);
@@ -157,7 +172,7 @@ export class LicenseChecker {
         } else if (generated[j].samePackage(local[i])) {
           localDataAdded = true;
           this.toBeAppended.push(local[i]);
-          // To logger 
+          console.warn('Version of package did not match in the given local file: ' + local[i].toString() + ' and the generated file by cdxegen: ' + generated[j].toString() + ' possible duplicate created.');
           Logger.addToLog('Version of package did not match in the given local file: ' + local[i].toString() + ' and the generated file by cdxegen: ' + generated[j].toString() + ' possible duplicate created.', 'Warning');
         }
       }
@@ -183,13 +198,15 @@ export class LicenseChecker {
       // Adding entries which are in the input file but missing in the generated file
       resultBom = jsonParser.addMissingEntries(this.toBeAppended, resultBom);
 
-      // change to this.packageinfofilter
+      // this.packageInfos.filter()
       this.packageInfos.forEach((packageInfo) => {
         if (packageInfo.copyright === '') {
-          Logger.addToLog('Failed to collect the necessary information for ' + packageInfo.toString(), 'Error');
+          console.warn('Failed to collect the necessary information for ' + packageInfo.toString());
+          Logger.addToLog('Failed to collect the necessary information for ' + packageInfo.toString(), 'Warning');
           this.noCopyrightList.push(packageInfo);
         }
       });
+      
 
       // Parse packageInfo into a array of Json objects
       let resultMissingValues = jsonParser.parsePkgInfo(
@@ -204,7 +221,9 @@ export class LicenseChecker {
       jsonFileWriter.write(this.missingValuesPath, stringMissingValues);
 
     } catch (err) {
-      throw err;
+      Logger.addToLog('Failed to export output into a json file', 'Error');
+      console.error('Failed to export output into a json file');
+      process.exit(1);
     }
   }
 
@@ -220,27 +239,9 @@ export class LicenseChecker {
       let [head, body] = pdfParser.parse(this.packageInfos);
       pdfExporter.export(head, body);
     } catch (err) {
-      throw err;
-    }
-  }
-
-
-  /**
-   * Saves the given file to the disk.
-   * @param {string} fileContent The license to be saved.
-   * @param {string} fileName The information about the corresponding package in string form.
-   */
-  writeFileToDisk(fileContent: string, fileName: string): void {
-    try {
-      if (!existsSync(path.join('out', 'licenses'))) {
-        mkdirSync(path.join('out', 'licenses'));
-      }
-      writeFileSync(
-        path.join('out', 'licenses', `${fileName}.txt`),
-        fileContent
-      );
-    } catch (err) {
-      console.error(err);
+      Logger.addToLog('Failed to export output into a pdf file', 'Error');
+      console.error('Failed to export output into a pdf file');
+      process.exit(1);
     }
   }
 

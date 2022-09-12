@@ -18,7 +18,9 @@ export class Downloader {
     try {
       this.githubClient.authenticateClient();
     } catch (err) {
-      throw err;
+      console.error('Failed to authenticate GitHub client');
+      Logger.addToLog('Failed to authenticate GitHub client' , 'Error');
+      process.exit(1);
     }
   }
 
@@ -41,7 +43,6 @@ export class Downloader {
    * Downloads the content of the github repository with the given URL and
    * returns the license and README file if it exists as a tuple.
    * @param {string} url The API-URL of the github repository.
-   * @param {Logger} logger The logger instance.
    * @returns {[string, string]} The content of the license file. Empty string if none was found.
    */
   async downloadDataFromGithub(url: string): Promise<[string, string]> {
@@ -50,13 +51,12 @@ export class Downloader {
     try {
       const data = await this.githubClient.downloadRepo(url);
       if (!Array.isArray(data)) {
-        throw new Error('Could not find repository.');
+         console.error('Could not find repository');
+         Logger.addToLog('Could not find repository', 'Error');
+         process.exit(1);
       }
       for (let i = 0; i < data.length; i++) {
         let fileName = data[i].name;
-        // this get request has rate limit, send token with GetRequest as well?
-        // catch if rate limit exceeded and wait 'circuit breaker' pattern
-        // what limit does github have
         if (
           fileName.toLowerCase() === 'license' ||
           fileName.match(new RegExp('license.[w]*', 'i'))
@@ -71,8 +71,9 @@ export class Downloader {
       }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
+      console.error(err);
       Logger.addToLog(err, 'Error');
-      return [license, readme];
+      process.exit(1);
     }
     return [license, readme];
   }

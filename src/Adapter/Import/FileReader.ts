@@ -16,7 +16,8 @@ export class FileReader {
       return readFileSync(url).toString();
     } catch (err) {
       Logger.addToLog(`Couldn't load bom.json from ${url}.`, 'Error');
-      throw err;
+      console.error(`Couldn't load bom.json from ${url}.`, 'Error');
+      process.exit(1);
     }
   }
 }

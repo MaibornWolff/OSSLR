@@ -1,29 +1,31 @@
 import { LicenseChecker } from './Domain/LicenseChecker';
 import * as path from 'path';
+import * as Logger from './Logger/Logging' ;
 
 
 main();
 
 async function main() {
-  try {
     let args = process.argv.slice(2);
     let bomPath;
     let bomManualPath;
     switch (args.length) {
       case 1:
         bomPath = args[0];
-        console.log(
+        console.warn(
           'Second Argument has not been specified'
         );
+        Logger.addToLog('Second Argument has not been specified','Warning');
         break;
       case 2:
         bomPath = args[0];
         bomManualPath = args[1];
         break;
       default:
-        console.log(
+        console.error(
           'At least one argument is required, namely the path to the input JSON file.'
         );
+        Logger.addToLog('At least one argument is required, namely the path to the input JSON file.','Error');
         return;
     }
 
@@ -44,9 +46,4 @@ async function main() {
     licenseChecker.exportJSON();
     // Exports said copyright and license data into a pdf
     licenseChecker.exportPDF();
-    
-  } catch (err) {
-    console.log(err);
-    return;
-  }
 }
