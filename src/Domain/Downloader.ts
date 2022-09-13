@@ -1,3 +1,4 @@
+import { resourceLimits } from 'worker_threads';
 import { GithubClient } from '../Adapter/Import/GithubClient';
 import { HTTPClient } from '../Adapter/Import/HTTPClient';
 import * as Logger from '../Logger/Logging';
@@ -61,12 +62,18 @@ export class Downloader {
           fileName.toLowerCase() === 'license' ||
           fileName.match(new RegExp('license.[w]*', 'i'))
         ) {
-          license = await this.httpClient.makeGetRequest(data[i]['download_url']);
+
+          //url = data[i]['download_url'];
+          //license = await this.httpClient.makeGetRequest(url);
+          license = await this.urlRequestHandler(data[i]);
+
         } else if (
           fileName.toLowerCase() === 'readme' ||
           fileName.match(new RegExp('readme.[w]*', 'i'))
           ) {
-          readme = await this.httpClient.makeGetRequest(data[i]['download_url']);
+          //url = data[i]['download_url'];
+          //readme = await this.httpClient.makeGetRequest(url);
+          readme = await this.urlRequestHandler(data[i]);
         }
       }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -111,7 +118,24 @@ export class Downloader {
   async getRemainingRateObj(): Promise<{ limit: number, used: number, remaining: number, reset: number }>{
     let limitObject = this.githubClient.checkRateLimit();
     const {rate} = (await limitObject).data;
-    console.log(rate);
     return rate;
+  }
+
+  async urlRequestHandler(file: any) : Promise<string>{
+    let url = file['download_url'];
+    if(!url){
+      console.warn(`Invalid ${file.name}-URL: ${url}`);
+      Logger.addToLog(`Invalid ${file.name}-URL: ${url}`, 'Warning'); // this.filterRepoInfoFromURL(url)
+      return '';
+    }
+
+    const result = await this.httpClient.makeGetRequest(url);
+    if (!(typeof result === 'string')){
+      console.warn(`Get request failed for ${file.name}-URL: ${url}`);
+      Logger.addToLog(`Get request failed for ${file.name}-URL: ${url}`, 'Warning'); // this.filterRepoInfoFromURL(url)
+      return '';
+    }
+    return result;
+
   }
 }
