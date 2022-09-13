@@ -1,4 +1,3 @@
-import { resourceLimits } from 'worker_threads';
 import { GithubClient } from '../Adapter/Import/GithubClient';
 import { HTTPClient } from '../Adapter/Import/HTTPClient';
 import * as Logger from '../Logger/Logging';
@@ -121,18 +120,19 @@ export class Downloader {
     return rate;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async urlRequestHandler(file: any) : Promise<string>{
     let url = file['download_url'];
     if(!url){
       console.warn(`Invalid ${file.name}-URL: ${url}`);
-      Logger.addToLog(`Invalid ${file.name}-URL: ${url}`, 'Warning'); // this.filterRepoInfoFromURL(url)
+      Logger.addToLog(`Invalid ${file.name}-URL: ${url}`, 'Warning');
       return '';
     }
 
     const result = await this.httpClient.makeGetRequest(url);
     if (!(typeof result === 'string')){
       console.warn(`Get request failed for ${file.name}-URL: ${url}`);
-      Logger.addToLog(`Get request failed for ${file.name}-URL: ${url}`, 'Warning'); // this.filterRepoInfoFromURL(url)
+      Logger.addToLog(`Get request failed for ${file.name}-URL: ${url}`, 'Warning');
       return '';
     }
     return result;
