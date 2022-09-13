@@ -61,18 +61,13 @@ export class Downloader {
           fileName.toLowerCase() === 'license' ||
           fileName.match(new RegExp('license.[w]*', 'i'))
         ) {
-
-          //url = data[i]['download_url'];
-          //license = await this.httpClient.makeGetRequest(url);
-          license = await this.urlRequestHandler(data[i]);
+          license = await this.urlRequestHandler(data[i], url);
 
         } else if (
           fileName.toLowerCase() === 'readme' ||
           fileName.match(new RegExp('readme.[w]*', 'i'))
           ) {
-          //url = data[i]['download_url'];
-          //readme = await this.httpClient.makeGetRequest(url);
-          readme = await this.urlRequestHandler(data[i]);
+          readme = await this.urlRequestHandler(data[i], url);
         }
       }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -121,18 +116,18 @@ export class Downloader {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async urlRequestHandler(file: any) : Promise<string>{
-    let url = file['download_url'];
-    if(!url){
-      console.warn(`Invalid ${file.name}-URL: ${url}`);
-      Logger.addToLog(`Invalid ${file.name}-URL: ${url}`, 'Warning');
+  async urlRequestHandler(file: any, url: string) : Promise<string>{
+    let download_url = file['download_url'];
+    if(!download_url){
+      console.warn(`Invalid downlaod URL for ${file.name} file, repository URL: ${url}`);
+      Logger.addToLog(`Invalid downlaod URL for ${file.name} file, repository URL: ${url}`, 'Warning');
       return '';
     }
 
     const result = await this.httpClient.makeGetRequest(url);
     if (!(typeof result === 'string')){
-      console.warn(`Get request failed for ${file.name}-URL: ${url}`);
-      Logger.addToLog(`Get request failed for ${file.name}-URL: ${url}`, 'Warning');
+      console.warn(`Get request failed for ${file.name} file from: ${url}`);
+      Logger.addToLog(`Get request failed for ${file.name} file from: ${url}`, 'Warning');
       return '';
     }
     return result;
