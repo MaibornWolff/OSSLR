@@ -59,9 +59,6 @@ export class GithubClient {
         path: '',
       });
       const data = res.data;
-      if (!Array.isArray(data)) {
-        return [];
-      }
       return data;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
