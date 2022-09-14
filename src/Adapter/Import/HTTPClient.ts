@@ -1,4 +1,4 @@
-import axios, {AxiosError} from 'axios';
+import axios from 'axios';
 import * as Logger from '../../Logger/Logging';
 
 export class HTTPClient {
@@ -7,43 +7,22 @@ export class HTTPClient {
      * @param {string} url  The URL for the request.
      * @returns {Promise<string>} Of the result of the GET request.
      */
-    public makeGetRequest(url: string): Promise<string> {
-        try{
-        let pomis = new Promise<string>(function (resolve, reject) {
-            axios.get(url)
-            .then(
+    
+    async makeGetRequest(url: string): Promise<string> {
+        let res = await axios.get(url).then(
                 (response) => {
-                    let result = response.data;
-                    resolve(result);
+                    let result: string = response.data;
+                    return result;
                 },
-                (error: AxiosError) => {
-                    Logger.addToLog(error.response?.status + ' ' + error.response?.statusText, 'Error');
-                    reject(error);
+                // In case request fails returns empty string
+                () => {
+                    console.warn(`Get Request failed for ${url}`);
+                    Logger.addToLog(`Get Request failed for ${url}`, 'Warning');
+                    return '';
                 },
             );
-        });
-        return pomis;
-        } catch(err){
-            return new Promise(()=>{return '';});
-        }
-        
+        return res;
     }
-    /*
-    public makeGetRequest(url: string): Promise<string> {
-        return new Promise<string>(function (resolve, reject) {
-            axios.get(url).then(
-                (response) => {
-                    let result = response.data;
-                    resolve(result);
-                },
-                (error: AxiosError) => {
-                    Logger.addToLog(error.response?.status + ' ' + error.response?.statusText, 'Error');
-                    reject(error);
-                },
-            );
-        });
-    }
-    */
 }    
     
    

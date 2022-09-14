@@ -62,14 +62,12 @@ export class Downloader {
           fileName.match(new RegExp('license.[w]*', 'i'))
         ) {
           license = await this.urlRequestHandler(data[i], url);
-          //license = await this.httpClient.makeGetRequest(data[i]['download_url']);
 
         } else if (
           fileName.toLowerCase() === 'readme' ||
           fileName.match(new RegExp('readme.[w]*', 'i'))
           ) {
           readme = await this.urlRequestHandler(data[i], url);
-          //readme = await this.httpClient.makeGetRequest(data[i]['download_url']);
         }
       }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -119,19 +117,14 @@ export class Downloader {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async urlRequestHandler(file: any, url: string) : Promise<string>{
+    // download_url !== url, url is here only for proper error message
     let download_url = file['download_url'];
     if(!download_url){
       console.warn(`Invalid downlaod URL for ${file.name} file, repository URL: ${url}`);
       Logger.addToLog(`Invalid downlaod URL for ${file.name} file, repository URL: ${url}`, 'Warning');
       return '';
     }
-
-    const result = await this.httpClient.makeGetRequest(url);
-    if (!(typeof result === 'string')){
-      console.warn(`Get request failed for ${file.name} file from: ${url}`);
-      Logger.addToLog(`Get request failed for ${file.name} file from: ${url}`, 'Warning');
-      return '';
-    }
+    const result = await this.httpClient.makeGetRequest(download_url);
     return result;
 
   }

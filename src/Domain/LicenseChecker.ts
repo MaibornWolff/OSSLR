@@ -102,7 +102,9 @@ export class LicenseChecker {
           if (license != '') {
             packageInfo.licenseTexts.push(license);
           }
-          packageInfo.readme = readme;
+          if(readme != ''){
+            packageInfo.readme = readme;
+          }
         }
       }
       progBar.stop();
