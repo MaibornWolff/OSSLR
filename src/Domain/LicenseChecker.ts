@@ -182,7 +182,6 @@ export class LicenseChecker {
   }
 
   createOutputDir(){
-   
       try {
         if (!existsSync(path.join('out'))) {
           mkdirSync(path.join('out'));
