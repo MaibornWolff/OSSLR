@@ -8,6 +8,28 @@ export class HTTPClient {
      * @returns {Promise<string>} Of the result of the GET request.
      */
     public makeGetRequest(url: string): Promise<string> {
+        try{
+        let pomis = new Promise<string>(function (resolve, reject) {
+            axios.get(url)
+            .then(
+                (response) => {
+                    let result = response.data;
+                    resolve(result);
+                },
+                (error: AxiosError) => {
+                    Logger.addToLog(error.response?.status + ' ' + error.response?.statusText, 'Error');
+                    reject(error);
+                },
+            );
+        });
+        return pomis;
+        } catch(err){
+            return new Promise(()=>{return '';});
+        }
+        
+    }
+    /*
+    public makeGetRequest(url: string): Promise<string> {
         return new Promise<string>(function (resolve, reject) {
             axios.get(url).then(
                 (response) => {
@@ -21,6 +43,7 @@ export class HTTPClient {
             );
         });
     }
+    */
 }    
     
    

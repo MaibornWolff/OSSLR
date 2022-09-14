@@ -9,6 +9,7 @@ async function main() {
     let args = process.argv.slice(2);
     let bomPath;
     let bomManualPath;
+    Logger.initializeLogger();
     switch (args.length) {
       case 1:
         bomPath = args[0];
@@ -42,6 +43,8 @@ async function main() {
     licenseChecker.retrieveLocalData();
      // Combines missingValues.json and retrieved values from bom.json
     licenseChecker.combine();
+    // Creates output directory
+    licenseChecker.createOutputDir();
     // Exports Bomfile and also exports packages with missing values to missingValues.json
     licenseChecker.exportJSON();
     // Exports said copyright and license data into a pdf

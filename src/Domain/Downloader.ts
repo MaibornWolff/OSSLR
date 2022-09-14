@@ -61,13 +61,15 @@ export class Downloader {
           fileName.toLowerCase() === 'license' ||
           fileName.match(new RegExp('license.[w]*', 'i'))
         ) {
-          license = await this.urlRequestHandler(data[i], url);
+          //license = await this.urlRequestHandler(data[i], url);
+          license = await this.httpClient.makeGetRequest(data[i]['download_url']);
 
         } else if (
           fileName.toLowerCase() === 'readme' ||
           fileName.match(new RegExp('readme.[w]*', 'i'))
           ) {
-          readme = await this.urlRequestHandler(data[i], url);
+          //readme = await this.urlRequestHandler(data[i], url);
+          readme = await this.httpClient.makeGetRequest(data[i]['download_url']);
         }
       }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -76,6 +78,7 @@ export class Downloader {
       Logger.addToLog(err, 'Error');
       process.exit(1);
     }
+    console.log('Kebab');
     return [license, readme];
   }
 

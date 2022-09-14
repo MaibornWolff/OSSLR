@@ -6,7 +6,7 @@ import { Downloader } from './Downloader';
 import { PackageInfo } from './Model/PackageInfo';
 import { PDFFileWriter } from '../Adapter/Export/PDFFileWriter';
 import { PDFParser } from './Parsers/PDFParser';
-import { existsSync } from 'fs';
+import { existsSync, mkdirSync } from 'fs';
 import * as path from 'path';
 import * as Logger from '../Logger/Logging';
 import { JSONFileWriter } from '../Adapter/Export/JSONFileWriter';
@@ -34,7 +34,6 @@ export class LicenseChecker {
    */
   init(bomFormat: string, bomPath: string, localDataPath: string | undefined, missingValues: string): void {
     this.fileReader = new FileReader();
-    Logger.initializeLogger();
     this.bomPath = bomPath;
     this.missingValuesPath = missingValues;
     this.localDataPath = localDataPath;
@@ -180,6 +179,20 @@ export class LicenseChecker {
         this.toBeAppended.push(local[i]);
       }
     }
+  }
+
+  createOutputDir(){
+   
+      try {
+        if (!existsSync(path.join('out'))) {
+          mkdirSync(path.join('out'));
+        }
+      } catch (err) {
+        console.error(err);
+        Logger.addToLog('Failed to create the out directory', 'Error');
+        console.error('Failed to create the out directory');
+        process.exit(1);
+      }
   }
 
   /**
