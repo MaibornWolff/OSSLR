@@ -78,7 +78,6 @@ export class Downloader {
       Logger.addToLog(err, 'Error');
       process.exit(1);
     }
-    console.log('Kebab');
     return [license, readme];
   }
 
