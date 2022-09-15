@@ -53,14 +53,39 @@ cdxgen -o bom.json
 To Run the license checker program:
 
 ```
-npm run license_checker -- "path to your input bom.json"
+npm run license_checker -- "path/to/your/bom.json"
 ```
 
 Addtionally one can include a second file with default entries, which then will be included in the output file(s):
 
+
 ```
-npm run license_checker -- "path to your input bom.json" "path to your default bom.json"
+npm run license_checker -- "path/to/your/bom.json" "path/to/your/default.json"
 ```
+
+In the json format with this structure:
+```json
+{
+    "components": [
+        {
+            "group": "MaibornWolff",
+            "name": "OSSLR",
+            "version": "~1.2.3",
+            "licenses": [
+                {
+                    "license": {
+                        "id": "1234",
+                        "url": "https://best-license.com"
+                    }
+                }
+            ],
+            "copyright": "M-Copyright"
+        }
+    ]
+}
+
+```
+
 
 After the program terminates, you should see two new files in the ```out``` folder:
 ```updatedBom.json``` and ```updatedBom.pdf```. 
