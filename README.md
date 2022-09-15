@@ -87,8 +87,7 @@ In the json format with this structure:
 ```
 
 
-After the program terminates, you should see two new files in the ```out``` folder:
-```updatedBom.json``` and ```updatedBom.pdf```. 
+After the program terminates, you should see two new files in the ```out``` folder: ```updatedBom.json``` and ```updatedBom.pdf```. Furthermore there might be another file ```missingValues.json``` ,which is outputted, if the data retrieval failed for certain packages. These packages are then listed in the aforementioned structure.
 
 ## License
 
