@@ -42,9 +42,6 @@ For Windows systems:
 set FETCH_LICENSE=true
 ```
 
-
-## Usage
-
 To generate a BOM file of your project, run this command inside the project folder.
 
 ```
