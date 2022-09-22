@@ -10,7 +10,7 @@ export class PDFFileWriter {
    * @param {string[][]} body Content of the rows
    */
   // https://github.com/opensbom-generator/spdx-sbom-generator
-    export(head: string[][], body: string[][]): void {
+    export(head: string[][], body: string[][], fileName: string): void {
         let doc = new jsPDF();
         autoTable(doc, {
             theme: 'grid',
@@ -18,6 +18,6 @@ export class PDFFileWriter {
             body: body
         });
         const rawOutput = doc.output('arraybuffer');
-        appendFileSync(path.join('out', 'updatedBom.pdf'), Buffer.from(rawOutput));
+        appendFileSync(path.join('out', fileName), Buffer.from(rawOutput));
     }
 }

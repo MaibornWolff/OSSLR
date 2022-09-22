@@ -251,8 +251,10 @@ export class LicenseChecker {
       let pdfExporter = new PDFFileWriter();
       // Concat the missing values for pdf export 
       this.packageInfos = this.packageInfos.concat(this.toBeAppended);
-      let [head, body] = pdfParser.parse(this.packageInfos);
-      pdfExporter.export(head, body);
+      let [chead, cbody] = pdfParser.parse(this.packageInfos);
+      pdfExporter.export(chead, cbody, 'updatedBom.pdf');
+      let [lhead, lbody] = pdfParser.parceLicenseTexts(this.packageInfos);
+      pdfExporter.export(lhead, lbody, 'licenseTexts.pdf');
     } catch (err) {
       Logger.addToLog('Failed to export output into a pdf file', 'Error');
       console.error('Failed to export output into a pdf file');

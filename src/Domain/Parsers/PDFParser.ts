@@ -53,4 +53,42 @@ export class PDFParser {
       return 'no license';
     }
   }
+
+  parceLicenseTexts(packageInfos: PackageInfo[]): string[][][]{
+    let col = ['Index' ,'Group', 'Name', 'LicenseText'];
+    let rows: string[][] = [];
+
+    packageInfos.forEach((packageInfo, index) => {
+      let groupPdf: string;
+      let namePdf: string;
+      let licenseTextPdf: string;
+
+      if (packageInfo.group !== '') {
+        groupPdf = packageInfo.group;
+      } else {
+        groupPdf = 'no group';
+      }
+
+      if (packageInfo.name !== '') {
+        namePdf = packageInfo.name;
+      } else {
+        namePdf = 'no name';
+      }
+
+      if (packageInfo.licenseTexts.length >= 1) {
+        licenseTextPdf = packageInfo.licenseTexts[0];
+        for (let i = 1; i < packageInfo.licenseTexts.length; i++) {
+          licenseTextPdf += '\n\n\n';
+          licenseTextPdf += packageInfo.licenseTexts[i];
+          
+        }
+      } else {
+        licenseTextPdf = 'no license text available';
+      }
+      rows.push([(index + 1).toString() , groupPdf, namePdf, licenseTextPdf]);
+    });
+
+    return [[col], rows];
+  }
+
 }
