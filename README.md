@@ -26,7 +26,7 @@ OSSLR is a script that adds copyright notices to your existing CycloneDX Softwar
 Download script for generating SBOM (Software Bill-of-Materials) that will contain the compilation of all project dependencies in JSON and XML format.
 
 ```
-npm install -g @appthreat/cdxgen
+npm install --location=global @appthreat/cdxgen
 ```
 
 Also create an access token on GitHub by going to: Settings >> Developer Settings >> Personal Access Tokens >> Generate New Token. Paste your access token into a .env file in the project folder exactly like this: ```ACCESS_TOKEN="your-github-acces-token"```.
