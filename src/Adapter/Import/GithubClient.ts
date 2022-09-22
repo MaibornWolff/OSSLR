@@ -44,15 +44,13 @@ export class GithubClient {
     let repoName = '';
     try {
       let repoInfo = this.filterRepoInfoFromURL(url);
-      if (repoInfo != null) {
+      // check wether filtering worked or is undefined
+      if (repoInfo) {
         repoOwner = repoInfo[0];
         repoName = repoInfo[1];
-      } else {
-        console.error('Could not find package repository');
-        Logger.addToLog('Could not find package repository', 'Error');
-        process.exit(1);
       }
       //unauthenticated requests, the rate limit allows you to make up to 60 requests per hour
+      // what happens if owner and name both ''
       const res = await this.octokit.rest.repos.getContent({
         owner: repoOwner,
         repo: repoName,
@@ -62,15 +60,7 @@ export class GithubClient {
       return data;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      if (err.status == '404') {
-        console.error( `Repository with URL ${url} not found.`);
-        Logger.addToLog( `Repository with URL ${url} not found.`, 'Error');
-        process.exit(1);
-      } else {
-        console.error( `Request to ${url} failed.`);
-        Logger.addToLog( `Request to ${url} failed.`, 'Error');
-        process.exit(1);
-      }
+      return err;
     }
   }
 
@@ -94,14 +84,12 @@ export class GithubClient {
         repo = filtered[3].replace(new RegExp('.git$'), '');
         return [user, repo];
       } else {
-        console.error('Invalid GitHub link.');
-        Logger.addToLog( 'Invalid GitHub link.', 'Error');
-        process.exit(1);
+        Logger.addToLog(`Invalid GitHub link for ${url}.`, 'Warning');
+        return undefined;
       }
     } catch (err) {
-      console.error('Failed to filter out repository from GitHub link');
-      Logger.addToLog('Failed to filter out repository from GitHub link', 'Error');
-      process.exit(1);
+      Logger.addToLog(`Failed to filter out repository from GitHub link ${url}`, 'Warning');
+      return undefined;
     }
   }
 
@@ -112,6 +100,7 @@ export class GithubClient {
     } catch(err){
       console.error('Failed to acces GitHub rate limit');
       Logger.addToLog('Failed to acces GitHub rate limit', 'Error');
+      // warning
       process.exit(1);
     }
     

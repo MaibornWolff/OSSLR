@@ -9,6 +9,7 @@ export class PDFFileWriter {
    * @param {string[][]} head Names of the columns
    * @param {string[][]} body Content of the rows
    */
+  // https://github.com/opensbom-generator/spdx-sbom-generator
     export(head: string[][], body: string[][]): void {
         let doc = new jsPDF();
         autoTable(doc, {

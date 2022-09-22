@@ -48,13 +48,9 @@ export class Downloader {
   async downloadDataFromGithub(url: string): Promise<[string, string]> {
     let readme = '';
     let license = '';
+
     try {
       const data = await this.githubClient.downloadRepo(url);
-      if (!Array.isArray(data)) {
-         console.error('Could not find repository');
-         Logger.addToLog('Could not find repository', 'Error');
-         process.exit(1);
-      }
       for (let i = 0; i < data.length; i++) {
         let fileName = data[i].name;
         if (
@@ -62,7 +58,6 @@ export class Downloader {
           fileName.match(new RegExp('license.[w]*', 'i'))
         ) {
           license = await this.urlRequestHandler(data[i], url);
-
         } else if (
           fileName.toLowerCase() === 'readme' ||
           fileName.match(new RegExp('readme.[w]*', 'i'))
@@ -72,9 +67,9 @@ export class Downloader {
       }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      console.error(err);
-      Logger.addToLog(err, 'Error');
-      process.exit(1);
+      console.warn(`${err.status}, Request to ${url} failed.`);
+      Logger.addToLog(`${err.status}, Request to ${url} failed.`, 'Warning');
+      return ['',''];
     }
     return [license, readme];
   }

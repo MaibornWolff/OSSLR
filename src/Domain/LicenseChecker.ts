@@ -76,6 +76,7 @@ export class LicenseChecker {
    * Downloads package data, namely the license texts and the readme.
    */
   async downloadPackageData() {
+    // possibly remove try catch
     try {
       let downloader = new Downloader();
       downloader.authenticateGithubClient();
