@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import 'mocha';
-import { stub, restore } from 'sinon';
-import { assert } from 'chai';
-import { Downloader } from './Downloader';
-import { GithubClient } from '../Adapter/Import/GithubClient';
+import {stub, restore} from 'sinon';
+import {assert} from 'chai';
+import {Downloader} from './Downloader';
+import {GithubClient} from '../Adapter/Import/GithubClient';
 import * as Logger from '../Logger/Logging';
-import { HTTPClient } from '../Adapter/Import/HTTPClient';
+import {HTTPClient} from '../Adapter/Import/HTTPClient';
 
 
 describe('downloadLicenseFromGithub', function () {
@@ -33,7 +33,7 @@ describe('downloadLicenseFromGithub', function () {
                 let value = 'readme';
                 resolve(value);
             }));
-        
+
         httpStub.onCall(3).returns(
             new Promise<string>((resolve) => {
                 let value = 'readme';
@@ -51,8 +51,8 @@ describe('downloadLicenseFromGithub', function () {
                         'name': 'readme',
                         'download_url': 'readme.md'
                     }
-                        
-                    ];
+
+                ];
                 resolve(value);
             })
         );
@@ -67,15 +67,14 @@ describe('downloadLicenseFromGithub', function () {
                     {
                         'name': 'readme.md',
                         'download_url': 'readme.md'
-                    }  
-                    ];
+                    }
+                ];
                 resolve(value);
             })
         );
 
     });
 
-   
 
     this.afterEach(() => {
         restore();
@@ -84,6 +83,6 @@ describe('downloadLicenseFromGithub', function () {
         let res = await downloader.downloadDataFromGithub('github.com/test/repo');
         assert.deepEqual(res, ['license', 'readme']);
         res = await downloader.downloadDataFromGithub('github.com/test/repo');
-        assert.deepEqual(res, ['license','readme']);
+        assert.deepEqual(res, ['license', 'readme']);
     });
 });

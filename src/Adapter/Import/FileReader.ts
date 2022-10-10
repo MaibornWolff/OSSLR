@@ -1,5 +1,6 @@
 import { readFileSync } from 'fs';
 import * as Logger from '../../Logger/Logging';
+import {printError} from '../../Logger/ErrorFormatter';
 
 /**
  * General Input parser used to read bom files. Implementation for parsing the bom files
@@ -16,7 +17,7 @@ export class FileReader {
       return readFileSync(url).toString();
     } catch (err) {
       Logger.addToLog(`Couldn't load bom.json from ${url}.`, 'Error');
-      console.error(`Couldn't load bom.json from ${url}.`, 'Error');
+      printError(`Error: Couldn't load bom.json from ${url}.`);
       process.exit(1);
     }
   }

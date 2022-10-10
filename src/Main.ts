@@ -1,6 +1,7 @@
-import { LicenseChecker } from './Domain/LicenseChecker';
+import {LicenseChecker} from './Domain/LicenseChecker';
 import * as path from 'path';
 import * as Logger from './Logger/Logging' ;
+import {printError, printWarning} from './Logger/ErrorFormatter';
 
 
 main();
@@ -11,23 +12,23 @@ async function main() {
     let bomManualPath;
     Logger.initializeLogger();
     switch (args.length) {
-      case 1:
-        bomPath = args[0];
-        console.warn(
-          'Second Argument has not been specified'
-        );
-        Logger.addToLog('Second Argument has not been specified','Warning');
-        break;
-      case 2:
-        bomPath = args[0];
-        bomManualPath = args[1];
-        break;
-      default:
-        console.error(
-          'At least one argument is required, namely the path to the input JSON file.'
-        );
-        Logger.addToLog('At least one argument is required, namely the path to the input JSON file.','Error');
-        return;
+        case 1:
+            bomPath = args[0];
+            printWarning(
+                'Warning: Argument DEFAULT_VALUES has not been specified'
+            );
+            Logger.addToLog('Argument DEFAULT_VALUES has not been specified', 'Warning');
+            break;
+        case 2:
+            bomPath = args[0];
+            bomManualPath = args[1];
+            break;
+        default:
+            printError(
+                'Error: At least one argument is required, namely the path to the input JSON file.'
+            );
+            Logger.addToLog('At least one argument is required, namely the path to the input JSON file.', 'Error');
+            return;
     }
 
     let licenseChecker = new LicenseChecker();
@@ -41,7 +42,7 @@ async function main() {
     licenseChecker.parseCopyright();
     // Retrieves local package data that has been created manually, if available
     licenseChecker.retrieveLocalData();
-     // Combines missingValues.json and retrieved values from bom.json
+    // Combines missingValues.json and retrieved values from bom.json
     licenseChecker.combine();
     // Creates output directory
     licenseChecker.createOutputDir();
