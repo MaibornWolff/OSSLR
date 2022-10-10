@@ -36,7 +36,7 @@ jobs:
     - run: npm i
     - run: npm install -g @appthreat/cdxgen
     - run: cdxgen -o bom.json
-    - run: npm run license_checker -- bom.json $DEFAULT_VALUES
+    - run: npm run license_checker -- -p bom.json -d $DEFAULT_VALUES
     
     - uses: actions/upload-artifact@v3
       with:
