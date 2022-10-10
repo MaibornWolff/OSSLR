@@ -10,33 +10,13 @@ describe('parseCopyright', function () {
     let licenseChecker: LicenseChecker;
     this.beforeEach(function () {
         licenseChecker = new LicenseChecker();
-        licenseChecker.packageInfos = [
-            new PackageInfo('', '', '', [], [], ['Copyright (C) 2019'], '', ''),
-        ];
-        stub(CopyrightParser.prototype, 'extractCopyright').returns(
-            'Copyright (C) 2019'
-        );
-        stub(CopyrightParser.prototype, 'removeOverheadFromCopyright').returns(
-            'Copyright (C) 2019'
-        );
     });
     this.afterEach(() => {
         restore();
     });
     it('should insert the extracted copyright in the PackageInfo object', function () {
-        licenseChecker.extractCopyright();
-        assert.deepEqual(licenseChecker.packageInfos, [
-            new PackageInfo(
-                '',
-                '',
-                '',
-                [],
-                [],
-                ['Copyright (C) 2019'],
-                '',
-                'Copyright (C) 2019'
-            ),
-        ]);
+        const copyright = licenseChecker.parseCopyright('Copyright (C) 2019');
+        assert.deepEqual(copyright, 'Copyright (C) 2019');
     });
 });
 
