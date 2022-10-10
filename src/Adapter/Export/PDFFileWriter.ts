@@ -1,7 +1,7 @@
 import {appendFileSync} from 'fs';
 import * as path from 'path';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import {jsPDF} from 'jspdf';
+import 'jspdf-autotable';
 
 export class PDFFileWriter {
     /**
@@ -12,11 +12,15 @@ export class PDFFileWriter {
     // https://github.com/opensbom-generator/spdx-sbom-generator
     export(head: string[][], body: string[][], fileName: string): void {
         let doc = new jsPDF();
-        autoTable(doc, {
-            theme: 'grid',
-            head: head,
-            body: body
-        });
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        doc.autoTable({
+                theme: 'grid',
+                head: head,
+                body: body
+            }
+        );
+
         const rawOutput = doc.output('arraybuffer');
         appendFileSync(path.join('out', fileName), Buffer.from(rawOutput));
     }

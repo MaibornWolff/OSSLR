@@ -20,10 +20,6 @@ export class CopyrightParser {
                 if (copyrightMatch != null) return copyrightMatch[0];
             }
         }
-        if (license.match(new RegExp('copyright.*', 'i'))) {
-            let debugMatch = new RegExp('copyright.*', 'i').exec(license);
-            if (debugMatch != null) Logger.addToLog(debugMatch[0], 'Debug');
-        }
         return '';
     }
 

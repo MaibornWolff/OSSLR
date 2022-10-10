@@ -17,6 +17,7 @@ import {printError, printWarning} from '../Logger/ErrorFormatter';
  * This class is responsible for distributing the different tasks to the responsible classes.
  */
 export class LicenseChecker {
+    downloader!: Downloader;
     parser!: CycloneDXParser;
     packageInfos!: PackageInfo[];
     bomPath!: string;
@@ -33,7 +34,9 @@ export class LicenseChecker {
      * @param bomFormat Format of the BOM.
      * @param bomPath Path to the BOM file.
      */
-    init(bomFormat: string, bomPath: string, localDataPath: string, missingValues: string): void {
+    async init(bomFormat: string, bomPath: string, localDataPath: string, missingValues: string): Promise<void> {
+        this.downloader = new Downloader();
+        await this.downloader.authenticateGithubClient();
         this.fileReader = new FileReader();
         this.bomPath = bomPath;
         this.missingValuesPath = missingValues;
@@ -74,70 +77,51 @@ export class LicenseChecker {
     /**
      * Downloads package data, namely the license texts and the readme.
      */
-    async downloadPackageData() {
-        // possibly remove try catch
-        try {
-            let downloader = new Downloader();
-            await downloader.authenticateGithubClient();
-            console.log('Retrieving License Information...');
-            // progBar is a progression indicator for better user experience
-            const progBar = new SingleBar({}, Presets.shades_classic);
-            progBar.start(this.packageInfos.length, 0);
-            for (let packageInfo of this.packageInfos) {
-                progBar.increment();
-                for (let url of packageInfo.externalReferences) {
-                    let [license, readme] = ['', ''];
-                    let {remaining, reset} = await downloader.getRemainingRateObj();
-                    // Checks how many request are still available to make to GitHub
-                    if (remaining >= 1) {
-                        [license, readme] = await downloader.downloadLicenseAndREADME(url);
-                    } else {
-                        // Timer for how long should wait before continuing, difference between time now and the reset time + 10 seconds buffer time
-                        let waitTime = Math.abs(reset * 1000 - Date.now()) + 10000;
-                        printWarning('Warning: GitHub Request limit reached. Waiting for ' + waitTime + 'ms.');
-                        Logger.addToLog('GitHub Request limit reached. Waiting for ' + waitTime + 'ms.', 'Warning');
-                        await new Promise(r => setTimeout(r, waitTime));
-                        [license, readme] = await downloader.downloadLicenseAndREADME(url);
-                    }
-                    if (license != '') {
-                        packageInfo.licenseTexts.push(license);
-                    }
-                    if (readme != '') {
-                        packageInfo.readme = readme;
-                    }
+    async extractCopyright() {
+        console.log('Retrieving License Information...');
+        // progBar is a progression indicator for better user experience
+        const progBar = new SingleBar({}, Presets.shades_classic);
+        progBar.start(this.packageInfos.length, 0);
+        for (let packageInfo of this.packageInfos) {
+            progBar.increment();
+            for (let url of packageInfo.externalReferences) {
+                if (packageInfo.copyright !== '') {
+                    break;
+                }
+                let [license, readme] = await this.downloadLicense(url);
+                if (license != '') {
+                    packageInfo.copyright = this.parseCopyright(license);
+                }
+                if (readme != '' && packageInfo.copyright === '') {
+                    packageInfo.copyright = this.parseCopyright(license);
                 }
             }
-            progBar.stop();
-            console.log('Done!');
-        } catch (err) {
-            Logger.addToLog('Failed to download package data', 'Error');
-            printError('Error: Failed to download package data');
-            process.exit(1);
         }
+        progBar.stop();
+        console.log('Done!');
+    }
+
+    async downloadLicense(url: string) {
+        let {remaining, reset} = await this.downloader.getRemainingRateObj();
+        // Checks how many request are still available to make to GitHub
+        if (remaining < 1) {
+            let waitTime = Math.abs(reset * 1000 - Date.now()) + 10000;
+            Logger.addToLog('GitHub Request limit reached. Waiting for ' + waitTime + 'ms.', 'Warning');
+            await new Promise(r => setTimeout(r, waitTime));
+        }
+        return await this.downloader.downloadLicenseAndREADME(url);
     }
 
     /**
      * Coordinates the parsing of the downloaded license files.
      */
-    parseCopyright(): void {
+    parseCopyright(source: string): string {
         let copyrightParser = new CopyrightParser();
-        for (let i = 0; i < this.packageInfos.length; i++) {
-            let licenseTexts = this.packageInfos[i].licenseTexts; // readability
-            for (let j = 0; j < licenseTexts.length; j++) {
-                let copyright = copyrightParser.extractCopyright(licenseTexts[j]);
-                // if the last license does not contain the copyright check the README
-                if (j == licenseTexts.length - 1 && copyright === '') {
-                    copyright = copyrightParser.extractCopyright(
-                        this.packageInfos[i].readme
-                    );
-                }
-                if (copyright === '') {
-                    continue;
-                }
-                copyright = copyrightParser.removeOverheadFromCopyright(copyright);
-                this.packageInfos[i].copyright = copyright;
-            }
+        let copyright = copyrightParser.extractCopyright(source);
+        if (copyright != '') {
+            copyright = copyrightParser.removeOverheadFromCopyright(copyright);
         }
+        return copyright;
     }
 
     /**
@@ -252,12 +236,11 @@ export class LicenseChecker {
             this.packageInfos = this.packageInfos.concat(this.toBeAppended);
             let [chead, cbody] = pdfParser.parse(this.packageInfos);
             pdfExporter.export(chead, cbody, 'updatedBom.pdf');
-            let [lhead, lbody] = pdfParser.parseLicenseTexts(this.packageInfos);
-            pdfExporter.export(lhead, lbody, 'licenseTexts.pdf');
-        } catch (err) {
-            Logger.addToLog('Failed to export output into a pdf file', 'Error');
-            printError('Error: Failed to export output into a pdf file');
-            process.exit(1);
+            // let [lhead, lbody] = pdfParser.parseLicenseTexts(this.packageInfos);
+            // pdfExporter.export(lhead, lbody, 'licenseTexts.pdf');
+        } catch (err: any) {
+            Logger.addToLog(err, 'Error');
+            printError(err);
         }
     }
 

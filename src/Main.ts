@@ -27,13 +27,11 @@ if (args.defaultsPath === '') {
 
 let licenseChecker = new LicenseChecker();
 // Sets parser mode and passes input file
-licenseChecker.init('cycloneDX', args.bomPath, args.defaultsPath, path.join('out', 'missingValues.json'));
+await licenseChecker.init('cycloneDX', args.bomPath, args.defaultsPath, path.join('out', 'missingValues.json'));
 // Extracts relevant Package data from the given JSON file
 licenseChecker.retrievePackageInfos();
-// Downloads data (currently licenses and README files) from given source link
-await licenseChecker.downloadPackageData();
-// Parses that data for copyright (searches for copyright with RegEx)
-licenseChecker.parseCopyright();
+// Downloads data (currently licenses and README files) from given source link and tries to extract copyright notice
+await licenseChecker.extractCopyright();
 // Retrieves local package data that has been created manually, if available
 licenseChecker.retrieveLocalData();
 // Combines missingValues.json and retrieved values from bom.json

@@ -97,7 +97,6 @@ export class GithubClient {
         try {
             return await this.octokit.request('GET /rate_limit', {});
         } catch (err) {
-            printError('Error: Failed to acces GitHub rate limit');
             Logger.addToLog('Failed to acces GitHub rate limit', 'Error');
             // warning
             process.exit(1);

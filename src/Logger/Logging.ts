@@ -11,10 +11,7 @@ import {PackageInfo} from '../Domain/Model/PackageInfo';
  */
 export type Level = 'License' | 'Error' | 'Debug' | 'Warning';
 
-let licenseLogger: winston.Logger;
-let errorLogger: winston.Logger;
-let debugLogger: winston.Logger;
-let warningLogger: winston.Logger;
+let logger: winston.Logger;
 
 /**
  * Adds an entry to the log file.
@@ -22,31 +19,10 @@ let warningLogger: winston.Logger;
  * @param {string} level The level of the log message.
  */
 export function addToLog(message: string, level: Level): void {
-    switch (level) {
-        case 'Error':
-            errorLogger.log({
-                level: level,
-                message: message,
-            });
-            return;
-        case 'Debug':
-            debugLogger.log({
-                level: level,
-                message: message,
-            });
-            return;
-        case 'Warning':
-            warningLogger.log({
-                level: level,
-                message: message,
-            });
-            return;
-        default:
-            licenseLogger.log({
-                level: level,
-                message: message,
-            });
-    }
+    logger.log({
+        level: level,
+        message: message,
+    });
 }
 
 /**
@@ -54,35 +30,11 @@ export function addToLog(message: string, level: Level): void {
  * packages where no copyright notice could be found and error messages.
  */
 export function initializeLogger(): void {
-    licenseLogger = winston.createLogger({
-        levels: {License: 0, ExtRefs: 1, Copyright: 2},
-        format: winston.format.simple(),
-        transports: [
-            new winston.transports.File({
-                filename: 'copyright.log',
-                level: 'Copyright',
-            }),
-        ],
-    });
-    errorLogger = winston.createLogger({
-        levels: {Error: 0},
+    logger = winston.createLogger({
+        levels: {Error: 0, Warning: 1},
         format: winston.format.simple(),
         transports: [
             new winston.transports.File({filename: 'error.log', level: 'Error'}),
-        ],
-    });
-    debugLogger = winston.createLogger({
-        levels: {Debug: 0},
-        format: winston.format.simple(),
-        transports: [
-            new winston.transports.File({filename: 'debug.log', level: 'Debug'}),
-        ],
-    });
-    warningLogger = winston.createLogger({
-        levels: {Warning: 0},
-        format: winston.format.simple(),
-        transports: [
-            new winston.transports.File({filename: 'warning.log', level: 'Warning'}),
         ],
     });
 }
@@ -92,10 +44,7 @@ export function initializeLogger(): void {
 */
 export function initializeSilentLogger(): void {
     initializeLogger();
-    licenseLogger.transports[0].silent = true;
-    errorLogger.transports[0].silent = true;
-    debugLogger.transports[0].silent = true;
-    warningLogger.transports[0].silent = true;
+    logger.transports[0].silent = true;
 }
 
 /**

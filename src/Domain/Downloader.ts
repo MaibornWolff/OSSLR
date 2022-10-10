@@ -68,7 +68,6 @@ export class Downloader {
             }
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
-            printWarning(`Warning: ${err.status}, Request to ${url} failed.`);
             Logger.addToLog(`${err.status}, Request to ${url} failed.`, 'Warning');
             return ['', ''];
         }
@@ -95,8 +94,7 @@ export class Downloader {
             } else if (err.code == 'ENOTFOUND') {
                 errorMessage = `No response for the request ${url}.`;
             }
-            printError('Error' + errorMessage);
-            Logger.addToLog(errorMessage, 'Error');
+            Logger.addToLog(errorMessage, 'Warning');
             return ['', ''];
         }
     }
@@ -117,7 +115,6 @@ export class Downloader {
         // download_url !== url, url is here only for proper error message
         let download_url = file['download_url'];
         if (!download_url) {
-            printWarning(`Warning: Invalid downlaod URL for ${file.name} file, repository URL: ${url}`);
             Logger.addToLog(`Invalid downlaod URL for ${file.name} file, repository URL: ${url}`, 'Warning');
             return '';
         }

@@ -24,7 +24,7 @@ describe('parseCopyright', function () {
         restore();
     });
     it('should insert the extracted copyright in the PackageInfo object', function () {
-        licenseChecker.parseCopyright();
+        licenseChecker.extractCopyright();
         assert.deepEqual(licenseChecker.packageInfos, [
             new PackageInfo(
                 '',

@@ -17,7 +17,6 @@ export class HTTPClient {
             },
             // In case request fails returns empty string
             () => {
-                printWarning(`Warning: Get Request failed for ${url}`);
                 Logger.addToLog(`Get Request failed for ${url}`, 'Warning');
                 return '';
             },
