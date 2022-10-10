@@ -50,14 +50,26 @@ cdxgen -o bom.json
 To Run the license checker program:
 
 ```
-npm run license_checker -- "path/to/your/bom.json"
+npm run license_checker -- --bomFile="path/to/your/bom.json"
+```
+
+Or:
+
+```
+npm run license_checker -- -p "path/to/your/bom.json"
 ```
 
 Addtionally one can include a second file with default entries, which then will be included in the output file(s):
 
 
 ```
-npm run license_checker -- "path/to/your/bom.json" "path/to/your/default.json"
+npm run license_checker -- --bomPath="path/to/your/bom.json" --defaultsPath="path/to/your/default.json"
+```
+
+Or:
+
+```
+npm run license_checker -- -p "path/to/your/bom.json" -d "path/to/your/default.json"
 ```
 
 In the json format with this structure:

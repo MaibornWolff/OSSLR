@@ -14,4 +14,4 @@ WORKDIR /home/app/
 ENV FETCH_LICENSE=true
 RUN cdxgen -o bom.json
 WORKDIR /home/app/OSSLR
-CMD if ! [ -z "${DEFAULT_VALUES}" ]; then DEFAULT_VALUES="../${DEFAULT_VALUES}";else DEFAULT_VALUES=""; fi ; npm run license_checker "../bom.json" ${DEFAULT_VALUES}
+CMD if ! [ -z "${DEFAULT_VALUES}" ]; then DEFAULT_VALUES="../${DEFAULT_VALUES}";else DEFAULT_VALUES=""; fi ; npm run license_checker -- -p "../bom.json" -d ${DEFAULT_VALUES}
