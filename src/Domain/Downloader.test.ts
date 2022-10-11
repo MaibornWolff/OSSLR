@@ -4,7 +4,7 @@ import {stub, restore} from 'sinon';
 import {assert} from 'chai';
 import {Downloader} from './Downloader';
 import {GithubClient} from '../Adapter/Import/GithubClient';
-import * as Logger from '../Logger/Logging';
+import * as Logger from '../Logging/Logging';
 import {HTTPClient} from '../Adapter/Import/HTTPClient';
 
 

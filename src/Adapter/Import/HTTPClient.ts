@@ -1,6 +1,5 @@
 import axios from 'axios';
-import * as Logger from '../../Logger/Logging';
-import {printWarning} from '../../Logger/ErrorFormatter';
+import * as Logger from '../../Logging/Logging';
 
 export class HTTPClient {
     /**

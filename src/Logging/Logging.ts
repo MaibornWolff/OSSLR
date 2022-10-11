@@ -40,7 +40,7 @@ export function initializeLogger(): void {
 }
 
 /*
-* Initilize silent Logger, to stop logging
+* Initilize silent Logging, to stop logging
 */
 export function initializeSilentLogger(): void {
     initializeLogger();

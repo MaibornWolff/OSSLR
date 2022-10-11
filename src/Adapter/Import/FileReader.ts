@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs';
-import * as Logger from '../../Logger/Logging';
-import {printError} from '../../Logger/ErrorFormatter';
+import * as Logger from '../../Logging/Logging';
+import {printError} from '../../Logging/ErrorFormatter';
 
 /**
  * General Input parser used to read bom files. Implementation for parsing the bom files

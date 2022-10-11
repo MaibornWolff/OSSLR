@@ -1,5 +1,5 @@
 import {License} from './License';
-import * as Logger from '../../Logger/Logging';
+import * as Logger from '../../Logging/Logging';
 
 export class PackageInfo {
     group: string;

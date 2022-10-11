@@ -1,5 +1,5 @@
 import {writeFileSync} from 'fs';
-import {printError} from '../../Logger/ErrorFormatter';
+import {printError} from '../../Logging/ErrorFormatter';
 
 export class JSONFileWriter {
     /**

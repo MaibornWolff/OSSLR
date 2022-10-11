@@ -8,15 +8,16 @@ import {PDFFileWriter} from '../Adapter/Export/PDFFileWriter';
 import {PDFParser} from './Parsers/PDFParser';
 import {existsSync, mkdirSync} from 'fs';
 import * as path from 'path';
-import * as Logger from '../Logger/Logging';
+import * as Logger from '../Logging/Logging';
 import {JSONFileWriter} from '../Adapter/Export/JSONFileWriter';
 import {JSONParser} from './Parsers/JSONParser';
-import {printError, printWarning} from '../Logger/ErrorFormatter';
+import {printError, printWarning} from '../Logging/ErrorFormatter';
 
 /**
  * This class is responsible for distributing the different tasks to the responsible classes.
  */
 export class LicenseChecker {
+    progBar!: SingleBar;
     downloader!: Downloader;
     parser!: CycloneDXParser;
     packageInfos!: PackageInfo[];
@@ -77,28 +78,29 @@ export class LicenseChecker {
     /**
      * Downloads package data, namely the license texts and the readme.
      */
-    async extractCopyright() {
+    async extractCopyrightForAllPackages() {
         console.log('Retrieving License Information...');
-        // progBar is a progression indicator for better user experience
-        const progBar = new SingleBar({}, Presets.shades_classic);
-        progBar.start(this.packageInfos.length, 0);
-        for (let packageInfo of this.packageInfos) {
-            progBar.increment();
-            for (let url of packageInfo.externalReferences) {
-                if (packageInfo.copyright !== '') {
-                    break;
-                }
-                let [license, readme] = await this.downloadLicense(url);
-                if (license != '') {
-                    packageInfo.copyright = this.parseCopyright(license);
-                }
-                if (readme != '' && packageInfo.copyright === '') {
-                    packageInfo.copyright = this.parseCopyright(license);
-                }
+        this.progBar = new SingleBar({}, Presets.shades_classic);
+        this.progBar.start(this.packageInfos.length, 0);
+        await Promise.all(this.packageInfos.map((packageInfo, index) => this.checkExternalReferences(packageInfo, index)));
+        this.progBar.stop();
+        console.log('Done!');
+    }
+
+    async checkExternalReferences(packageInfo: PackageInfo, index: number) {
+        for (let url of packageInfo.externalReferences) {
+            if (packageInfo.copyright !== '') {
+                break;
+            }
+            let [license, readme] = await this.downloadLicense(url);
+            if (license != '') {
+                packageInfo.copyright = this.parseCopyright(license);
+            }
+            if (readme != '' && packageInfo.copyright === '') {
+                packageInfo.copyright = this.parseCopyright(license);
             }
         }
-        progBar.stop();
-        console.log('Done!');
+        this.progBar.increment();
     }
 
     async downloadLicense(url: string) {

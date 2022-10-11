@@ -1,7 +1,7 @@
 import {Octokit} from 'octokit';
 import * as dotenv from 'dotenv';
-import * as Logger from '../../Logger/Logging';
-import {printError} from '../../Logger/ErrorFormatter';
+import * as Logger from '../../Logging/Logging';
+import {printError} from '../../Logging/ErrorFormatter';
 
 
 /**

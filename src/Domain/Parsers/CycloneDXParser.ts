@@ -1,7 +1,7 @@
 import {PackageInfo} from '../Model/PackageInfo';
 import {License} from '../Model/License';
-import * as Logger from '../../Logger/Logging';
-import {printError} from '../../Logger/ErrorFormatter';
+import * as Logger from '../../Logging/Logging';
+import {printError} from '../../Logging/ErrorFormatter';
 
 /**
  * Input Parser implementation for the CycloneDX format. Extracts package information from the bom file and stores them in a PackageInfo object.

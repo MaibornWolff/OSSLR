@@ -1,7 +1,7 @@
 import {LicenseChecker} from './Domain/LicenseChecker';
 import * as path from 'path';
-import * as Logger from './Logger/Logging' ;
-import {printError, printWarning} from './Logger/ErrorFormatter';
+import * as Logger from './Logging/Logging' ;
+import {printError, printWarning} from './Logging/ErrorFormatter';
 import yargs from 'yargs';
 
 
@@ -31,7 +31,8 @@ await licenseChecker.init('cycloneDX', args.bomPath, args.defaultsPath, path.joi
 // Extracts relevant Package data from the given JSON file
 licenseChecker.retrievePackageInfos();
 // Downloads data (currently licenses and README files) from given source link and tries to extract copyright notice
-await licenseChecker.extractCopyright();
+await licenseChecker.extractCopyrightForAllPackages();
+console.log('Done!');
 // Retrieves local package data that has been created manually, if available
 licenseChecker.retrieveLocalData();
 // Combines missingValues.json and retrieved values from bom.json

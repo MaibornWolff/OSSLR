@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {PackageInfo} from '../Model/PackageInfo';
 import {License} from '../Model/License';
-import * as Logger from '../../Logger/Logging';
+import * as Logger from '../../Logging/Logging';
 
 
 export class JSONParser {

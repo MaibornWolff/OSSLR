@@ -1,7 +1,7 @@
 import {GithubClient} from '../Adapter/Import/GithubClient';
 import {HTTPClient} from '../Adapter/Import/HTTPClient';
-import * as Logger from '../Logger/Logging';
-import {printError, printWarning} from '../Logger/ErrorFormatter';
+import * as Logger from '../Logging/Logging';
+import {printError, printWarning} from '../Logging/ErrorFormatter';
 
 /**
  * Downloads license and README files from GitHub and the content of other external websites.

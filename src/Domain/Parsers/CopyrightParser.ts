@@ -1,4 +1,4 @@
-import * as Logger from '../../Logger/Logging';
+import * as Logger from '../../Logging/Logging';
 
 export class CopyrightParser {
     /**
@@ -39,7 +39,7 @@ export class CopyrightParser {
                 }
             }
         } else {
-            // to Logger
+            // to Logging
             Logger.addToLog('No match found', 'Error');
         }
         // remove URLs. Inspired by: https://urlregex.com/
