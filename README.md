@@ -13,7 +13,7 @@ OSSLR is a script that adds copyright notices to your existing CycloneDX Softwar
 - Place the **Dockerfile** into your **project root directory**
 - Inside your shell in your **project root directory** run these two commands:
   - ```docker build . -t osslr``` this will create a docker image.
-  - ```docker run -t -v ./out:/home/app/OSSLR/out  -e ACCESS_TOKEN="your github access-token" -e DEFAULT_VALUES="path/to/default-values" osslr``` this will start the container and the **OSSLR** script. The second environment variable namely the **DEFAULT_VALUES** is optional.
+  - ```docker run -t -v $(pwd)/out:/home/app/OSSLR/out -e ACCESS_TOKEN="your github access-token" -e DEFAULT_VALUES="path/to/default-values" osslr``` this will start the container and the **OSSLR** script. The second environment variable namely the **DEFAULT_VALUES** is optional.
 - After the program terminates, you should see three new files in the ```out``` folder in your project root directory:
   - ```updatedBom.json```
   - ```updatedBom.pdf```
