@@ -14,28 +14,20 @@ export class PDFParser {
         packageInfos.forEach((packageInfo, index) => {
             if (packageInfo.group !== '') {
                 groupPdf = packageInfo.group;
-            } else {
-                groupPdf = 'no group';
             }
 
             if (packageInfo.name !== '') {
                 namePdf = packageInfo.name;
-            } else {
-                namePdf = 'no name';
             }
 
             if (packageInfo.version !== '') {
                 versionPdf = packageInfo.version;
-            } else {
-                versionPdf = 'no version';
             }
 
             licensePdf = this.extractLicense(packageInfo);
 
             if (packageInfo.copyright !== '') {
                 copyrightPdf = packageInfo.copyright;
-            } else {
-                copyrightPdf = 'no copyright';
             }
             rows.push([(index + 1).toString(), groupPdf, namePdf, versionPdf, licensePdf, copyrightPdf]);
         });

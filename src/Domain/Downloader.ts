@@ -1,7 +1,7 @@
 import {GithubClient} from '../Adapter/Import/GithubClient';
 import {HTTPClient} from '../Adapter/Import/HTTPClient';
 import * as Logger from '../Logging/Logging';
-import {printError, printWarning} from '../Logging/ErrorFormatter';
+import {printError} from '../Logging/ErrorFormatter';
 
 /**
  * Downloads license and README files from GitHub and the content of other external websites.
@@ -19,8 +19,8 @@ export class Downloader {
         try {
             await this.githubClient.authenticateClient();
         } catch (err) {
-            printError('Error: Failed to authenticate GitHub client');
-            Logger.addToLog('Failed to authenticate GitHub client', 'Error');
+            printError('Error: Failed to authenticate GitHub client. Please make sure to provide a valid access token.');
+            Logger.addToLog('Failed to authenticate GitHub client. Please make sure to provide a valid access token.', 'Error');
             process.exit(1);
         }
     }
@@ -29,7 +29,6 @@ export class Downloader {
      * Passes the download task to the GitHub downloader for GitHub URLs
      * and the external website downloader for everything else.
      * @param url The URL to be downloaded.
-     * @param logger The logger instance.
      * @returns {Promise<[string, string]>} The content of the downloaded license or website.
      */
     async downloadLicenseAndREADME(url: string): Promise<[string, string]> {
@@ -56,12 +55,12 @@ export class Downloader {
                 let fileName = data[i].name;
                 if (
                     fileName.toLowerCase() === 'license' ||
-                    fileName.match(new RegExp('license.[w]*', 'i'))
+                    fileName.match(new RegExp('license.[a-zA-z]*', 'i'))
                 ) {
                     license = await this.urlRequestHandler(data[i], url);
                 } else if (
                     fileName.toLowerCase() === 'readme' ||
-                    fileName.match(new RegExp('readme.[w]*', 'i'))
+                    fileName.match(new RegExp('readme.[a-zA-z]*', 'i'))
                 ) {
                     readme = await this.urlRequestHandler(data[i], url);
                 }
@@ -78,7 +77,6 @@ export class Downloader {
      * Downloads the website with the given URL with the assumption that it cannot contain a README file.
      * Therefore, it always returns an empty string for the README part.
      * @param {string} url The URL of the website to be downloaded.
-     * @param {Logger} logger The logger instance.
      * @returns {Promise<[string,string]>} A string containing the content of the website as html.
      */
     async downloadLicenseFromExternalWebsite(
@@ -115,11 +113,9 @@ export class Downloader {
         // download_url !== url, url is here only for proper error message
         let download_url = file['download_url'];
         if (!download_url) {
-            Logger.addToLog(`Invalid downlaod URL for ${file.name} file, repository URL: ${url}`, 'Warning');
+            Logger.addToLog(`Invalid download URL for ${file.name} file, repository URL: ${url}`, 'Warning');
             return '';
         }
-        const result = await this.httpClient.makeGetRequest(download_url);
-        return result;
-
+        return await this.httpClient.makeGetRequest(download_url);
     }
 }

@@ -46,8 +46,8 @@ export class LicenseChecker {
         let dataFormat = bomPath.split('.').pop();
         if (!dataFormat) {
             // data format is the file format and currently only json is supported
-            Logger.addToLog('Invalid data format', 'Error');
-            printError('Error: Invalid data format');
+            Logger.addToLog(`Invalid file format of ${bomPath}. Currently only JSON files are supported.`, 'Error');
+            printError(`Error: Invalid file format of ${bomPath}. Currently only JSON files are supported.`);
             process.exit(1);
         }
         switch (bomFormat) {
@@ -56,8 +56,8 @@ export class LicenseChecker {
                 this.parser = new CycloneDXParser(dataFormat);
                 break;
             default:
-                Logger.addToLog(`Unsupported Bom Format ${bomFormat}`, 'Error');
-                printError(`Error: Unsupported Bom Format ${bomFormat}!`);
+                Logger.addToLog(`Unsupported Bom Format ${bomFormat}. Currently only CycloneDX format is supported.`, 'Error');
+                printError(`Error: Unsupported Bom Format ${bomFormat}. Currently only CycloneDX format is supported.`);
                 process.exit(1);
         }
     }
@@ -70,8 +70,8 @@ export class LicenseChecker {
             this.bomData = this.parser.parseInput(this.fileReader.readInput(this.bomPath));
             this.packageInfos = this.parser.parseCycloneDX(this.bomData);
         } catch (err) {
-            Logger.addToLog('Failed to retrieve Package information', 'Error');
-            printError('Error: Failed to retrieve Package information');
+            Logger.addToLog(`Unable to parse ${this.bomPath}. Please ensure that it has the correct format (CycloneDX).`, 'Error');
+            printError('Error: Unable to parse ${this.bomPath}. Please ensure that it has the correct format (CycloneDX).');
             process.exit(1);
         }
     }
@@ -83,7 +83,7 @@ export class LicenseChecker {
         console.log('Retrieving License Information...');
         this.progBar = new SingleBar({}, Presets.shades_classic);
         this.progBar.start(this.packageInfos.length, 0);
-        await Promise.all(this.packageInfos.map((packageInfo, index) => this.checkExternalReferences(packageInfo)));
+        await Promise.all(this.packageInfos.map((packageInfo) => this.checkExternalReferences(packageInfo)));
         this.progBar.stop();
         console.log('Done!');
     }
@@ -133,8 +133,8 @@ export class LicenseChecker {
     retrieveLocalData(): void {
         if (!this.localDataPath) return;
         if (!existsSync(this.localDataPath)) {
-            printWarning('Warning: Invalid local file path to default values');
-            Logger.addToLog('Invalid local file path to default values', 'Warning');
+            printWarning(`Error: Defaults file ${this.localDataPath} not found. Default values will be ignored.`);
+            Logger.addToLog(`Error: Defaults file ${this.localDataPath} not found. Default values will be ignored.`, 'Error');
             return;
         }
         const localRawData = JSON.parse(this.fileReader.readInput(this.localDataPath));
@@ -220,8 +220,9 @@ export class LicenseChecker {
             jsonFileWriter.write(newFile, stringBom);
             jsonFileWriter.write(this.missingValuesPath, stringMissingValues);
 
-        } catch (err) {
+        } catch (err: any) {
             Logger.addToLog('Failed to export output into a json file', 'Error');
+            Logger.addToLog(err, 'Error');
             printError('Error: Failed to export output into a json file');
             process.exit(1);
         }

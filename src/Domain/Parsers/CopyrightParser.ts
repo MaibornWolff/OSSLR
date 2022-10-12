@@ -1,10 +1,7 @@
-import * as Logger from '../../Logging/Logging';
-
 export class CopyrightParser {
     /**
      * Extracts copyright notice from license file or website.
      * @param {string} license Content of a license file or website potentially containing copyright notice.
-     * @param {Logger} logger The logger instance.
      * @returns {string} Extracted copyright notice. Empty string if no matches found.
      */
     extractCopyright(license: string): string {
@@ -38,9 +35,6 @@ export class CopyrightParser {
                     copyright = copyright.replace(matches[i], '');
                 }
             }
-        } else {
-            // to Logging
-            Logger.addToLog('No match found', 'Error');
         }
         // remove URLs. Inspired by: https://urlregex.com/
         matches = copyright.match(
