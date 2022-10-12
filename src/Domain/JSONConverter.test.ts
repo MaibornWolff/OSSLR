@@ -1,11 +1,11 @@
 import 'mocha';
 import {assert} from 'chai';
-import {JSONParser} from './JSONParser';
-import {PackageInfo} from '../Model/PackageInfo';
+import {JSONConverter} from './JSONConverter';
+import {PackageInfo} from './Model/PackageInfo';
 
 
 describe('parsePkgInfo', function () {
-    let jsonParser = new JSONParser();
+    let jsonParser = new JSONConverter();
     let json = {
         'components': [{
             'group': 'ampproject',
@@ -30,7 +30,7 @@ describe('parsePkgInfo', function () {
 });
 
 describe('insertCopyrightIntoBom', function () {
-    let parser = new JSONParser();
+    let parser = new JSONConverter();
     let pkg1 = new PackageInfo('', '', '', [], [], [], '', 'Copyright (c)');
     let pkg2 = new PackageInfo('', '', '', [], [], [], '', 'Very nice Copyright (c)');
     let pkg3 = new PackageInfo('', '', '', [], [], [], '', '');

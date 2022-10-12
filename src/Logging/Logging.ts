@@ -34,7 +34,7 @@ export function initializeLogger(): void {
         levels: {Error: 0, Warning: 1},
         format: winston.format.simple(),
         transports: [
-            new winston.transports.File({filename: 'error.log', level: 'Error'}),
+            new winston.transports.File({filename: 'error.log', level: 'Warning'}),
         ],
     });
 }

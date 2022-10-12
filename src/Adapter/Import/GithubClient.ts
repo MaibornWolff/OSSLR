@@ -43,7 +43,7 @@ export class GithubClient {
         let repoName = '';
         try {
             let repoInfo = this.filterRepoInfoFromURL(url);
-            // check wether filtering worked or is undefined
+            // check whether filtering worked or is undefined
             if (repoInfo) {
                 repoOwner = repoInfo[0];
                 repoName = repoInfo[1];
@@ -55,8 +55,7 @@ export class GithubClient {
                 repo: repoName,
                 path: '',
             });
-            const data = res.data;
-            return data;
+            return res.data;
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             return err;
@@ -70,7 +69,7 @@ export class GithubClient {
      */
     filterRepoInfoFromURL(url: string): string[] | undefined {
         try {
-            let re = new RegExp('github.com(/|:)([\\w-]+)/([\\w-.]+)');
+            let re = new RegExp('github.com([/:])([\\w-]+)/([\\w-.]+)');
             let filtered = re.exec(url);
             let user = '';
             let repo = '';

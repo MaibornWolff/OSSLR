@@ -5,12 +5,13 @@ import {printError, printWarning} from './Logging/ErrorFormatter';
 import yargs from 'yargs';
 
 
+
+Logger.initializeLogger();
 let args = yargs(process.argv.slice(2)).options({
     bomPath: {type: 'string', alias: 'p', default: ''},
     defaultsPath: {type: 'string', alias: 'd', default: ''}
 }).parseSync();
 
-Logger.initializeLogger();
 if (args.bomPath === '') {
     printError(
         'Error: Path to bom.json not specified. Specify using --bomPath=PATH/TO/YOUR/BOM.JSON.'
@@ -32,7 +33,6 @@ await licenseChecker.init('cycloneDX', args.bomPath, args.defaultsPath, path.joi
 licenseChecker.retrievePackageInfos();
 // Downloads data (currently licenses and README files) from given source link and tries to extract copyright notice
 await licenseChecker.extractCopyrightForAllPackages();
-console.log('Done!');
 // Retrieves local package data that has been created manually, if available
 licenseChecker.retrieveLocalData();
 // Combines missingValues.json and retrieved values from bom.json

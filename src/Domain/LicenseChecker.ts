@@ -10,8 +10,9 @@ import {existsSync, mkdirSync} from 'fs';
 import * as path from 'path';
 import * as Logger from '../Logging/Logging';
 import {JSONFileWriter} from '../Adapter/Export/JSONFileWriter';
-import {JSONParser} from './Parsers/JSONParser';
+import {JSONConverter} from './JSONConverter';
 import {printError, printWarning} from '../Logging/ErrorFormatter';
+import {CycloneDX} from './Model/CycloneDX';
 
 /**
  * This class is responsible for distributing the different tasks to the responsible classes.
@@ -22,7 +23,7 @@ export class LicenseChecker {
     parser!: CycloneDXParser;
     packageInfos!: PackageInfo[];
     bomPath!: string;
-    bomData!: string;
+    bomData!: CycloneDX;
     missingValuesPath!: string;
     localDataPath!: string;
     localData: PackageInfo[] = [];
@@ -66,8 +67,8 @@ export class LicenseChecker {
      */
     retrievePackageInfos(): void {
         try {
-            this.bomData = this.fileReader.readInput(this.bomPath);
-            this.packageInfos = this.parser.parseInput(this.bomData);
+            this.bomData = this.parser.parseInput(this.fileReader.readInput(this.bomPath));
+            this.packageInfos = this.parser.parseCycloneDX(this.bomData);
         } catch (err) {
             Logger.addToLog('Failed to retrieve Package information', 'Error');
             printError('Error: Failed to retrieve Package information');
@@ -82,12 +83,12 @@ export class LicenseChecker {
         console.log('Retrieving License Information...');
         this.progBar = new SingleBar({}, Presets.shades_classic);
         this.progBar.start(this.packageInfos.length, 0);
-        await Promise.all(this.packageInfos.map((packageInfo, index) => this.checkExternalReferences(packageInfo, index)));
+        await Promise.all(this.packageInfos.map((packageInfo, index) => this.checkExternalReferences(packageInfo)));
         this.progBar.stop();
         console.log('Done!');
     }
 
-    async checkExternalReferences(packageInfo: PackageInfo, index: number) {
+    async checkExternalReferences(packageInfo: PackageInfo) {
         for (let url of packageInfo.externalReferences) {
             if (packageInfo.copyright !== '') {
                 break;
@@ -136,8 +137,8 @@ export class LicenseChecker {
             Logger.addToLog('Invalid local file path to default values', 'Warning');
             return;
         }
-        const temp = this.fileReader.readInput(this.localDataPath);
-        this.localData = this.parser.parseInput(temp);
+        const localRawData = JSON.parse(this.fileReader.readInput(this.localDataPath));
+        this.localData = this.parser.parseCycloneDX(localRawData);
     }
 
     /**
@@ -186,17 +187,16 @@ export class LicenseChecker {
      * Exports updatedBom.json file and the file tracking packages with missing license/copyright
      */
     exportJSON(): void {
-        let jsonParser = new JSONParser();
+        let jsonParser = new JSONConverter();
         let jsonFileWriter = new JSONFileWriter();
         try {
             // Adding copyrights to packages
-            let resultBom = JSON.parse(this.bomData);
-            resultBom = jsonParser.insertCopyrightIntoBom(
+            this.bomData = jsonParser.insertCopyrightIntoBom(
                 this.packageInfos,
-                resultBom
+                this.bomData
             );
             // Adding entries which are in the input file but missing in the generated file
-            resultBom = jsonParser.addMissingEntries(this.toBeAppended, resultBom);
+            this.bomData = jsonParser.addMissingEntries(this.toBeAppended, this.bomData);
 
             // this.packageInfos.filter()
             this.packageInfos.forEach((packageInfo) => {
@@ -213,7 +213,7 @@ export class LicenseChecker {
                 this.noCopyrightList
             );
             // Stringify results so that they can be written
-            const stringBom = JSON.stringify(resultBom, null, 4);
+            const stringBom = JSON.stringify(this.bomData, null, 4);
             const stringMissingValues = JSON.stringify(resultMissingValues, null, 4);
 
             let newFile = path.join('out', 'updatedBom.json');

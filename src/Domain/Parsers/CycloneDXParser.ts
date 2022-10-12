@@ -2,6 +2,7 @@ import {PackageInfo} from '../Model/PackageInfo';
 import {License} from '../Model/License';
 import * as Logger from '../../Logging/Logging';
 import {printError} from '../../Logging/ErrorFormatter';
+import {CycloneDX} from '../Model/CycloneDX';
 
 /**
  * Input Parser implementation for the CycloneDX format. Extracts package information from the bom file and stores them in a PackageInfo object.
@@ -18,10 +19,10 @@ export class CycloneDXParser {
      * @param {string} data The content of the bom file to be parsed.
      * @returns {PackageInfo[]} List of PackageInfo objects containing the extracted information.
      */
-    parseInput(data: string): PackageInfo[] {
+    parseInput(data: string): CycloneDX {
         switch (this.format) {
             case 'json':
-                return this.parseJSON(data);
+                return JSON.parse(data);
             default:
                 Logger.addToLog(`Error: Failed to parse file of this unsupported file format: \"filename.${this.format}\".`, 'Error');
                 printError(
@@ -36,11 +37,11 @@ export class CycloneDXParser {
      * @param data The content of the bom file to be parsed.
      * @returns List of PackageInfo objects containing the extracted information.
      */
-    parseJSON(data: string): PackageInfo[] {
-        let rawData = JSON.parse(data);
+    parseCycloneDX(data: CycloneDX): PackageInfo[] {
         let packageInfos = [];
-        for (let i in rawData['components']) {
-            let pkg = rawData['components'][i];
+        if (!data.components)
+            return [];
+        for (let pkg of data.components) {
             let licenses = [];
             let licensesProPkg = this.extractLicensesFromPkg(pkg['licenses']);
             let copyright = '';

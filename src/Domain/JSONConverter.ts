@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {PackageInfo} from '../Model/PackageInfo';
-import {License} from '../Model/License';
-import * as Logger from '../../Logging/Logging';
+import {PackageInfo} from './Model/PackageInfo';
+import {License} from './Model/License';
+import * as Logger from '../Logging/Logging';
+import {CycloneDX} from './Model/CycloneDX';
 
 
-export class JSONParser {
+export class JSONConverter {
 
     /**
      * Insert copyright attribute to bom json object
@@ -12,11 +13,14 @@ export class JSONParser {
      * @param {any} bomJson The original extracted bom json object notice.
      * @returns {any} updated bom json object
      */
-    insertCopyrightIntoBom(packageInfos: PackageInfo[], bomJson: any): any {
+    insertCopyrightIntoBom(packageInfos: PackageInfo[], bomJson: CycloneDX): CycloneDX {
+        if (!bomJson.components) {
+            return bomJson;
+        }
         for (let i = 0; i < packageInfos.length; i++) {
             let copyright = packageInfos[i].copyright;
             if (copyright !== '') {
-                bomJson['components'][i]['copyright'] = copyright;
+                bomJson.components[i].copyright = copyright;
             }
         }
         return bomJson;
@@ -61,10 +65,10 @@ export class JSONParser {
      * @param {any} bomJson bom json object
      * @returns {object} bomJson updated bom json object
      */
-    addMissingEntries(packageInfos: PackageInfo[], bomJson: any) {
+    addMissingEntries(packageInfos: PackageInfo[], bomJson: CycloneDX) {
         let components = bomJson['components'];
         if (components) {
-            bomJson['components'] = components.concat(this.parsePkgInfo(packageInfos).components);
+            components.concat(this.parsePkgInfo(packageInfos).components);
             return bomJson;
         } else {
             Logger.addToLog('Failed to insert a new entry into the bom file.', 'Error');
