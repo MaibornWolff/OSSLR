@@ -4,46 +4,24 @@ export class PDFParser {
     parse(packageInfos: PackageInfo[]): string[][][] {
         let col = ['Index', 'Group', 'Name', 'Version', 'License', 'Copyright'];
         let rows: string[][] = [];
-
-        let groupPdf: string;
-        let namePdf: string;
-        let versionPdf: string;
-        let licensePdf: string;
-        let copyrightPdf: string;
-
         packageInfos.forEach((packageInfo, index) => {
-            if (packageInfo.group !== '') {
-                groupPdf = packageInfo.group;
-            }
-
-            if (packageInfo.name !== '') {
-                namePdf = packageInfo.name;
-            }
-
-            if (packageInfo.version !== '') {
-                versionPdf = packageInfo.version;
-            }
-
-            licensePdf = this.extractLicense(packageInfo);
-
-            if (packageInfo.copyright !== '') {
-                copyrightPdf = packageInfo.copyright;
-            }
-            rows.push([(index + 1).toString(), groupPdf, namePdf, versionPdf, licensePdf, copyrightPdf]);
+            rows.push([
+                (index + 1).toString(),
+                packageInfo.group,
+                packageInfo.name,
+                packageInfo.version,
+                this.extractLicense(packageInfo),
+                packageInfo.copyright
+            ]);
         });
         return [[col], rows];
     }
 
     extractLicense(packageInfo: PackageInfo) {
-        if (packageInfo.licenses.length > 0) {
-            if (packageInfo.licenses[0]['id']) {
-                return packageInfo.licenses[0]['id'];
-            } else {
-                return 'no license';
-            }
-        } else {
-            return 'no license';
+        if (packageInfo.licenses.length === 0 || !packageInfo.licenses[0]['id']) {
+            return '';
         }
+        return packageInfo.licenses[0]['id'];
     }
 
     parseLicenseTexts(packageInfos: PackageInfo[]): string[][][] {

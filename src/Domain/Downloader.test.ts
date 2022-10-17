@@ -86,3 +86,18 @@ describe('downloadLicenseFromGithub', function () {
         assert.deepEqual(res, ['license', 'readme']);
     });
 });
+
+
+describe('filterRepoInfoFromURL', function () {
+    let downloader: Downloader;
+    this.beforeEach(function () {
+        downloader = new Downloader();
+    });
+    it('should correctly extract the user and repository from the given url', function () {
+        let arr = ['github.com/user/repo', 'github.com/user/repo/sub/directory.git', 'github.com/user/repo/sub#readme'];
+        for (let i = 0; i < arr.length; i++) {
+            assert.deepEqual(downloader.filterRepoInfoFromURL(arr[i]), ['user', 'repo']);
+        }
+        assert.deepEqual(downloader.filterRepoInfoFromURL('http://www.github.com/user-name/repo.name'), ['user-name', 'repo.name']);
+    });
+});

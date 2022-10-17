@@ -38,16 +38,8 @@ export class GithubClient {
      * @returns {Promise<any>} The content of the repo.
      */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async downloadRepo(url: string): Promise<any> {
-        let repoOwner = '';
-        let repoName = '';
+    async downloadRepo(repoOwner: string, repoName: string): Promise<any> {
         try {
-            let repoInfo = this.filterRepoInfoFromURL(url);
-            // check whether filtering worked or is undefined
-            if (repoInfo) {
-                repoOwner = repoInfo[0];
-                repoName = repoInfo[1];
-            }
             //unauthenticated requests, the rate limit allows you to make up to 60 requests per hour
             // what happens if owner and name both ''
             const res = await this.octokit.rest.repos.getContent({
@@ -58,36 +50,7 @@ export class GithubClient {
             return res.data;
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
-            return err;
-        }
-    }
-
-    /**
-     * Extracts the username and repository name form a GitHub URL.
-     * @param {string} url URL to the GitHub repository.
-     * @returns {string[]} A string array containing the extracted username and repository name
-     */
-    filterRepoInfoFromURL(url: string): string[] | undefined {
-        try {
-            let re = new RegExp('github.com([/:])([\\w-]+)/([\\w-.]+)');
-            let filtered = re.exec(url);
-            let user = '';
-            let repo = '';
-            if (
-                filtered != null &&
-                filtered[2] != undefined &&
-                filtered[3] != undefined
-            ) {
-                user = filtered[2];
-                repo = filtered[3].replace(new RegExp('.git$'), '');
-                return [user, repo];
-            } else {
-                Logger.addToLog(`Invalid GitHub link for ${url}.`, 'Warning');
-                return undefined;
-            }
-        } catch (err) {
-            Logger.addToLog(`Failed to filter out repository from GitHub link ${url}`, 'Warning');
-            return undefined;
+            throw err;
         }
     }
 

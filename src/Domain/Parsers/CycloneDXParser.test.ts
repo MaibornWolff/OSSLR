@@ -1,27 +1,18 @@
 import 'mocha';
-import {stub, restore} from 'sinon';
 import {assert} from 'chai';
 import {CycloneDXParser} from './CycloneDXParser';
 import {PackageInfo} from '../Model/PackageInfo';
 import {License} from '../Model/License';
+import {CycloneDX} from '../Model/CycloneDX';
 
-describe('parseInput', function () {
+describe('parseCycloneDX', function () {
+    let rawJSON: CycloneDX;
     this.beforeEach(function () {
-        stub(CycloneDXParser.prototype, 'parseJSON').returns([]);
-    });
-    it('should pass the file to the correct parser', function () {
-        let cycloneDXParser = new CycloneDXParser('json');
-        assert.isEmpty(cycloneDXParser.parseInput(''));
-    });
-    this.afterEach(() => {
-        restore();
-    });
-});
 
-describe('parseJSON', function () {
-    let rawJSON: object;
-    this.beforeEach(function () {
         rawJSON = {
+            bomFormat: '',
+            specVersion: '',
+            version: 0,
             components: [
                 {
                     group: 'group',
@@ -32,15 +23,15 @@ describe('parseJSON', function () {
                         {
                             license: {
                                 id: 'Apache-2.0',
-                                url: 'https://opensource.org/licenses/Apache-2.0',
-                            },
+                                url: 'https://opensource.org/licenses/Apache-2.0'
+                            }
                         },
                         {
                             license: {
                                 id: 'MIT',
                                 url: 'https://opensource.org/licenses/MIT',
-                            },
-                        },
+                            }
+                        }
                     ],
                     externalReferences: [
                         {
@@ -53,10 +44,10 @@ describe('parseJSON', function () {
                         },
                     ],
                 },
-            ],
+            ]
         };
     });
-    // NOTE: the properties licenseTexts, readme and copyright are set after parseJSON call
+// NOTE: the properties licenseTexts, readme and copyright are set after parseJSON call
     it('should correctly save the package information in a PackageInfo object', function () {
         let parser = new CycloneDXParser('json');
         let license1: License = {
@@ -68,7 +59,7 @@ describe('parseJSON', function () {
             url: 'https://opensource.org/licenses/MIT',
         };
 
-        assert.deepEqual(parser.parseJSON(JSON.stringify(rawJSON)), [
+        assert.deepEqual(parser.parseCycloneDX(rawJSON), [
             new PackageInfo(
                 'group',
                 'name',
@@ -82,6 +73,7 @@ describe('parseJSON', function () {
         ]);
     });
 });
+
 
 describe('extractLicensesFromPkg', function () {
     it('should correctly extract licenses of type License from a Bom JSON object', function () {

@@ -41,5 +41,7 @@ licenseChecker.combine();
 licenseChecker.createOutputDir();
 // Exports bomFile and also exports packages with missing values to missingValues.json
 licenseChecker.exportJSON();
+// Downloads Licenses appearing in SBOM
+await licenseChecker.getLicenseTexts();
 // Exports said copyright and license data into a pdf
 licenseChecker.exportPDF();

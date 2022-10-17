@@ -22,6 +22,7 @@ export class LicenseChecker {
     downloader!: Downloader;
     parser!: CycloneDXParser;
     packageInfos!: PackageInfo[];
+    licenseTexts: string[] = [];
     bomPath!: string;
     bomData!: CycloneDX;
     missingValuesPath!: string;
@@ -71,7 +72,7 @@ export class LicenseChecker {
             this.packageInfos = this.parser.parseCycloneDX(this.bomData);
         } catch (err) {
             Logger.addToLog(`Unable to parse ${this.bomPath}. Please ensure that it has the correct format (CycloneDX).`, 'Error');
-            printError('Error: Unable to parse ${this.bomPath}. Please ensure that it has the correct format (CycloneDX).');
+            printError(`Error: Unable to parse ${this.bomPath}. Please ensure that it has the correct format (CycloneDX).`);
             process.exit(1);
         }
     }
@@ -226,6 +227,38 @@ export class LicenseChecker {
             printError('Error: Failed to export output into a json file');
             process.exit(1);
         }
+    }
+
+    async getLicenseTexts() {
+        //add to pdf
+        let licenses = await this.downloader.getLicenses();
+        let licensesIdsInSbom = new Set<string>();
+        for (let pkg of this.packageInfos) {
+            if (pkg.licenses[0]) {
+                let pkgLicenseId = pkg.licenses[0].id ?? pkg.licenses[0].name ?? '';
+                if (pkgLicenseId === '') {
+                    continue;
+                }
+                if (!licenses.some((license: { licenseId: string; }) => license.licenseId === this.filterLicenseId(pkgLicenseId))) {
+                    printWarning(`Warning: Unable to retrieve License text for package ${pkg.name} with license ${pkgLicenseId}.`);
+                    Logger.addToLog(`Warning: Unable to retrieve License text for package ${pkg.name} with license ${pkgLicenseId}.`, 'Warning');
+                    continue;
+                }
+                licensesIdsInSbom.add(licenses.find((license: { licenseId: string; }) => license.licenseId === this.filterLicenseId(pkgLicenseId)).licenseId);
+            }
+        }
+        for (let pkgLicenseId of licensesIdsInSbom) {
+            let licenseDetailsUrl = licenses.find((license: { licenseId: string; }) => license.licenseId === this.filterLicenseId(pkgLicenseId)).detailsUrl;
+            this.licenseTexts.push(await this.downloader.downloadLicenseText(licenseDetailsUrl));
+        }
+    }
+
+    private filterLicenseId(pkgLicenseId: string) {
+        //TODO Remove Brackets
+        if (pkgLicenseId.match(new RegExp(' or ', 'i'))) {
+            return pkgLicenseId.split(new RegExp(' or ', 'i'))[0];
+        }
+        return pkgLicenseId;
     }
 
     /**

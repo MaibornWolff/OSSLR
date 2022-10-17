@@ -7,8 +7,9 @@ import {printError} from '../Logging/ErrorFormatter';
  * Downloads license and README files from GitHub and the content of other external websites.
  */
 export class Downloader {
-    githubClient: GithubClient;
-    httpClient: HTTPClient;
+    private githubClient: GithubClient;
+    private httpClient: HTTPClient;
+    private readonly licenseUrl = 'https://spdx.org/licenses/licenses.json';
 
     constructor() {
         this.githubClient = new GithubClient();
@@ -50,7 +51,9 @@ export class Downloader {
         let license = '';
 
         try {
-            const data = await this.githubClient.downloadRepo(url);
+            let [repoName, repoOwner] = this.filterRepoInfoFromURL(url);
+
+            const data = await this.githubClient.downloadRepo(repoOwner, repoName);
             for (let i = 0; i < data.length; i++) {
                 let fileName = data[i].name;
                 if (
@@ -71,6 +74,30 @@ export class Downloader {
             return ['', ''];
         }
         return [license, readme];
+    }
+
+    /**
+     * Extracts the username and repository name form a GitHub URL.
+     * @param {string} url URL to the GitHub repository.
+     * @returns {string[]} A string array containing the extracted username and repository name
+     */
+    filterRepoInfoFromURL(url: string): string[] {
+        let re = new RegExp('github.com([/:])([\\w-]+)/([\\w-.]+)');
+        let filtered = re.exec(url);
+        let user = '';
+        let repo = '';
+        if (
+            filtered != null &&
+            filtered[2] != undefined &&
+            filtered[3] != undefined
+        ) {
+            user = filtered[2];
+            repo = filtered[3].replace(new RegExp('.git$'), '');
+            return [user, repo];
+        } else {
+            Logger.addToLog(`Invalid GitHub link for ${url}.`, 'Warning');
+            throw new Error(`Invalid GitHub link for ${url}.`);
+        }
     }
 
     /**
@@ -117,5 +144,13 @@ export class Downloader {
             return '';
         }
         return await this.httpClient.makeGetRequest(download_url);
+    }
+
+    async getLicenses() {
+        return (await this.httpClient.makeGetRequest(this.licenseUrl)).licenses;
+    }
+
+    async downloadLicenseText(detailsUrl: string) {
+        return (await this.httpClient.makeGetRequest(detailsUrl)).licenseText;
     }
 }

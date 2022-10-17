@@ -8,8 +8,8 @@ export class HTTPClient {
      * @returns {Promise<string>} Of the result of the GET request.
      */
 
-    async makeGetRequest(url: string): Promise<string> {
-        let res = await axios.get(url).then(
+    async makeGetRequest(url: string): Promise<any> {
+        return await axios.get(url).then(
             (response) => {
                 let result: string = response.data;
                 return result;
@@ -20,7 +20,6 @@ export class HTTPClient {
                 return '';
             },
         );
-        return res;
     }
 }    
     

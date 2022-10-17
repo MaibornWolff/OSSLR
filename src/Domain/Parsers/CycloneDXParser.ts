@@ -22,7 +22,11 @@ export class CycloneDXParser {
     parseInput(data: string): CycloneDX {
         switch (this.format) {
             case 'json':
-                return JSON.parse(data);
+                try {
+                    return JSON.parse(data);
+                } catch (err) {
+                    throw err;
+                }
             default:
                 Logger.addToLog(`Error: Failed to parse file of this unsupported file format: \"filename.${this.format}\".`, 'Error');
                 printError(
@@ -43,10 +47,10 @@ export class CycloneDXParser {
             return [];
         for (let pkg of data.components) {
             let licenses = [];
-            let licensesProPkg = this.extractLicensesFromPkg(pkg['licenses']);
+            let licensesPerPkg = this.extractLicensesFromPkg(pkg.licenses);
             let copyright = '';
-            for (let j in licensesProPkg) {
-                licenses.push(licensesProPkg[j]);
+            for (let j in licensesPerPkg) {
+                licenses.push(licensesPerPkg[j]);
             }
             let extRefs = [];
             if (pkg['externalReferences']) {
@@ -58,9 +62,9 @@ export class CycloneDXParser {
                 copyright = pkg.copyright;
             }
             let packageInfo = new PackageInfo(
-                pkg['group'],
-                pkg['name'],
-                pkg['version'],
+                pkg['group'] ?? '',
+                pkg['name'] ?? '',
+                pkg['version'] ?? '',
                 licenses,
                 extRefs,
                 [],
@@ -77,7 +81,7 @@ export class CycloneDXParser {
      * @param bomLicenses Array of licenses in bom format from a particular package.
      * @returns List of License objects containing the extracted information.
      */
-    extractLicensesFromPkg(bomLicenses: object[]): License[] {
+    extractLicensesFromPkg(bomLicenses: any): License[] {
         let licenses = [];
         for (let j in bomLicenses) {
             let licenseId: string;
