@@ -22,7 +22,7 @@ export class LicenseChecker {
     downloader!: Downloader;
     parser!: CycloneDXParser;
     packageInfos!: PackageInfo[];
-    licenseTexts: string[] = [];
+    licenseTexts: Map<string, string> = new Map();
     bomPath!: string;
     bomData!: CycloneDX;
     missingValuesPath!: string;
@@ -249,7 +249,7 @@ export class LicenseChecker {
         }
         for (let pkgLicenseId of licensesIdsInSbom) {
             let licenseDetailsUrl = licenses.find((license: { licenseId: string; }) => license.licenseId === this.filterLicenseId(pkgLicenseId)).detailsUrl;
-            this.licenseTexts.push(await this.downloader.downloadLicenseText(licenseDetailsUrl));
+            this.licenseTexts.set(pkgLicenseId, await this.downloader.downloadLicenseText(licenseDetailsUrl));
         }
     }
 
