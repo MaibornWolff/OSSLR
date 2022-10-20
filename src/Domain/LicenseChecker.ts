@@ -271,7 +271,7 @@ export class LicenseChecker {
             // Concat the missing values for pdf export
             this.packageInfos = this.packageInfos.concat(this.toBeAppended);
             let [chead, cbody] = pdfParser.parse(this.packageInfos);
-            pdfExporter.export(chead, cbody, 'updatedBom.pdf');
+            pdfExporter.export(chead, cbody, this.licenseTexts, 'updatedBom.pdf');
             // let [lhead, lbody] = pdfParser.parseLicenseTexts(this.packageInfos);
             // pdfExporter.export(lhead, lbody, 'licenseTexts.pdf');
         } catch (err: any) {
