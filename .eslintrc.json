@@ -24,8 +24,7 @@
       1,
       "always"
     ],
-    "prefer-const": 0,
-    "no-useless-catch": 0,
-    "no-useless-escape": 0
+    "no-useless-escape": 0,
+    "no-explicit-any": 0
   }
 }

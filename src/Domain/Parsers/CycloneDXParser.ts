@@ -22,11 +22,7 @@ export class CycloneDXParser {
     parseInput(data: string): CycloneDX {
         switch (this.format) {
             case 'json':
-                try {
-                    return JSON.parse(data);
-                } catch (err) {
-                    throw err;
-                }
+                return JSON.parse(data);
             default:
                 Logger.addToLog(`Error: Failed to parse file of this unsupported file format: \"filename.${this.format}\".`, 'Error');
                 printError(
@@ -42,32 +38,31 @@ export class CycloneDXParser {
      * @returns List of PackageInfo objects containing the extracted information.
      */
     parseCycloneDX(data: CycloneDX): PackageInfo[] {
-        let packageInfos = [];
+        const packageInfos = [];
         if (!data.components)
             return [];
-        for (let pkg of data.components) {
-            let licenses = [];
-            let licensesPerPkg = this.extractLicensesFromPkg(pkg.licenses);
+        for (const pkg of data.components) {
+            const licenses = [];
+            const licensesPerPkg = this.extractLicensesFromPkg(pkg.licenses);
             let copyright = '';
-            for (let j in licensesPerPkg) {
+            for (const j in licensesPerPkg) {
                 licenses.push(licensesPerPkg[j]);
             }
-            let extRefs = [];
+            const extRefs = [];
             if (pkg['externalReferences']) {
-                for (let j in pkg['externalReferences']) {
+                for (const j in pkg['externalReferences']) {
                     extRefs.push(pkg['externalReferences'][j]['url']);
                 }
             }
             if (pkg.copyright) {
                 copyright = pkg.copyright;
             }
-            let packageInfo = new PackageInfo(
+            const packageInfo = new PackageInfo(
                 pkg['group'] ?? '',
                 pkg['name'] ?? '',
                 pkg['version'] ?? '',
                 licenses,
                 extRefs,
-                [],
                 '',
                 copyright
             );
@@ -82,11 +77,11 @@ export class CycloneDXParser {
      * @returns List of License objects containing the extracted information.
      */
     extractLicensesFromPkg(bomLicenses: any): License[] {
-        let licenses = [];
-        for (let j in bomLicenses) {
+        const licenses = [];
+        for (const j in bomLicenses) {
             let licenseId: string;
             let licenseUrl: string;
-            let license = JSON.parse(JSON.stringify(bomLicenses[j]));
+            const license = JSON.parse(JSON.stringify(bomLicenses[j]));
             if (license['license']['id']) {
                 licenseId = license['license']['id'];
             } else if (license['license']['name']) {

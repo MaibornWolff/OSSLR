@@ -3,6 +3,9 @@ import * as path from 'path';
 import {jsPDF} from 'jspdf';
 import 'jspdf-autotable';
 
+/**
+ * Creates a PDF from the License information and writes it do the disk.
+ */
 export class PDFFileWriter {
     private readonly topMargin = 10;
     private readonly botMargin = 10;
@@ -15,12 +18,10 @@ export class PDFFileWriter {
 
     /**
      * Writes the given information into a PDF file given
-     * @param {string[][]} head Names of the columns
-     * @param {string[][]} body Content of the rows
      */
     // https://github.com/opensbom-generator/spdx-sbom-generator
     export(head: string[][], body: string[][], licenseTexts: Map<string, string>, fileName: string): void {
-        let doc = new jsPDF();
+        const doc = new jsPDF();
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         doc.autoTable({
@@ -29,10 +30,10 @@ export class PDFFileWriter {
                 body: body
             }
         );
+        const pageHeight = doc.internal.pageSize.height;
+        const pageWidth = doc.internal.pageSize.getWidth();
         licenseTexts.forEach((licenseText, licenseId) => {
             doc.addPage();
-            let pageHeight = doc.internal.pageSize.height;
-            let pageWidth = doc.internal.pageSize.getWidth();
             let y = this.topMargin;
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
@@ -44,7 +45,7 @@ export class PDFFileWriter {
             doc.setFont(undefined, 'normal');
             doc.setFontSize(this.fontSize);
             y += this.lineSpacing + 5;
-            let splittedText = doc.splitTextToSize(licenseText, this.pageWidth);
+            const splittedText = doc.splitTextToSize(licenseText, this.pageWidth);
             splittedText.forEach((line: string) => {
                 if (y > pageHeight - this.botMargin) {
                     y = this.topMargin;

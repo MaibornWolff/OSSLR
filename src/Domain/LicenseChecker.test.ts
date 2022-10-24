@@ -22,7 +22,7 @@ describe('parseCopyright', function () {
 
 describe('hasLicense', function () {
     let licenseChecker: LicenseChecker;
-    let packageInfo = new PackageInfo('', '', '', [], [], [], '', '');
+    const packageInfo = new PackageInfo('', '', '', [], [], '', '');
     beforeEach(function () {
         licenseChecker = new LicenseChecker();
         packageInfo.group = 'group';
@@ -37,7 +37,6 @@ describe('hasLicense', function () {
             },
         ];
         packageInfo.externalReferences = [];
-        packageInfo.licenseTexts = [];
         packageInfo.copyright = '';
     });
     it('should return whether license information are available for the given package', function () {
@@ -49,7 +48,7 @@ describe('hasLicense', function () {
 
 describe('hasExternalReferences', function () {
     let licenseChecker: LicenseChecker;
-    let packageInfo = new PackageInfo('', '', '', [], [], [], '', '');
+    const packageInfo = new PackageInfo('', '', '', [], [], '', '');
     beforeEach(function () {
         licenseChecker = new LicenseChecker();
         packageInfo.group = 'group';
@@ -60,7 +59,6 @@ describe('hasExternalReferences', function () {
             'https://github.com/readme',
             'git+https://github.com/plugins.git',
         ];
-        packageInfo.licenseTexts = [];
         packageInfo.copyright = '';
     });
 
@@ -74,7 +72,7 @@ describe('hasExternalReferences', function () {
 
 describe('combine', function () {
     let licenseChecker: LicenseChecker;
-    let pkg1 = new PackageInfo('group', 'name', '1.2.3', [], [], [], '', '');
+    const pkg1 = new PackageInfo('group', 'name', '1.2.3', [], [], '', '');
 
     beforeEach(function () {
         licenseChecker = new LicenseChecker();
@@ -82,8 +80,8 @@ describe('combine', function () {
     });
 
     it('combine the local and generated package, if groups, names and versions match', function () {
-        let pkg2 = new PackageInfo('group', 'name', '~1.2.3', [], [], [], '', 'copyright');
-        let combinedPkg = new PackageInfo('group', 'name', '1.2.3', [], [], [], '', 'copyright');
+        const pkg2 = new PackageInfo('group', 'name', '~1.2.3', [], [], '', 'copyright');
+        const combinedPkg = new PackageInfo('group', 'name', '1.2.3', [], [], '', 'copyright');
         licenseChecker.packageInfos.push(pkg1);
         licenseChecker.localData.push(pkg2);
         licenseChecker.combine();
@@ -91,7 +89,7 @@ describe('combine', function () {
     });
 
     it('combine the local and generated package, if groups, names and versions do not match add to packageinfos', function () {
-        let pkg3 = new PackageInfo('group', 'name2', '1.2.3', [], [], [], '', 'copyright');
+        const pkg3 = new PackageInfo('group', 'name2', '1.2.3', [], [], '', 'copyright');
         licenseChecker.packageInfos.push(pkg1);
         licenseChecker.localData.push(pkg3);
         licenseChecker.combine();

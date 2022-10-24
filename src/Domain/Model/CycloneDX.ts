@@ -1,4 +1,6 @@
-// unfinished
+/**
+ * Partial definition of the CycloneDx format
+ */
 export interface CycloneDX {
     bomFormat: string;
     specVersion: string,

@@ -12,7 +12,6 @@ export class GithubClient {
 
     /**
      * Authenticates client via an access-token to GitHub.
-     * @returns {void}
      */
     async authenticateClient(): Promise<void> {
         try {
@@ -34,26 +33,23 @@ export class GithubClient {
 
     /**
      * Downloads the GitHub repo with the given url.
-     * @param {string} url The repo url.
-     * @returns {Promise<any>} The content of the repo.
      */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async downloadRepo(repoOwner: string, repoName: string): Promise<any> {
-        try {
-            //unauthenticated requests, the rate limit allows you to make up to 60 requests per hour
-            // what happens if owner and name both ''
-            const res = await this.octokit.rest.repos.getContent({
-                owner: repoOwner,
-                repo: repoName,
-                path: '',
-            });
-            return res.data;
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (err: any) {
-            throw err;
-        }
+        //unauthenticated requests, the rate limit allows you to make up to 60 requests per hour
+        // what happens if owner and name both ''
+        const res = await this.octokit.rest.repos.getContent({
+            owner: repoOwner,
+            repo: repoName,
+            path: '',
+        });
+        return res.data;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }
 
+    /**
+     * Checks the remaining GitHub rate limmit.
+     */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async checkRateLimit(): Promise<any> {
         try {

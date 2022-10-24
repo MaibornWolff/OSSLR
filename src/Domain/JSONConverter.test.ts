@@ -6,8 +6,8 @@ import {CycloneDX} from './Model/CycloneDX';
 
 
 describe('parsePkgInfo', function () {
-    let jsonParser = new JSONConverter();
-    let json = {
+    const jsonParser = new JSONConverter();
+    const json = {
         components: [{
             group: 'ampproject',
             name: 'remapping',
@@ -23,20 +23,19 @@ describe('parsePkgInfo', function () {
             copyright: ''
         }]
     };
-    let licenses = [{id: 'Apache-2.0', url: 'https://opensource.org/licenses/Apache-2.0'}];
-    let packageInfo = new PackageInfo('ampproject', 'remapping', '2.2.1', licenses, [], [], '', '');
+    const licenses = [{id: 'Apache-2.0', url: 'https://opensource.org/licenses/Apache-2.0'}];
+    const packageInfo = new PackageInfo('ampproject', 'remapping', '2.2.1', licenses, [], '', '');
     it('should parse packageinfo to json correctly', function () {
         assert.deepEqual(jsonParser.parsePkgInfo([packageInfo]), json);
     });
 });
 
 describe('insertCopyrightIntoBom', function () {
-    let parser = new JSONConverter();
-    let pkg1 = new PackageInfo('', '', '', [], [], [], '', 'Copyright (c)');
-    let pkg2 = new PackageInfo('', '', '', [], [], [], '', 'Very nice Copyright (c)');
-    let pkg3 = new PackageInfo('', '', '', [], [], [], '', '');
-    let bomJohnson: CycloneDX;
-    bomJohnson = {
+    const parser = new JSONConverter();
+    const pkg1 = new PackageInfo('', '', '', [], [], '', 'Copyright (c)');
+    const pkg2 = new PackageInfo('', '', '', [], [], '', 'Very nice Copyright (c)');
+    const pkg3 = new PackageInfo('', '', '', [], [], '', '');
+    const bomJohnson: CycloneDX = {
         specVersion: '',
         version: 0,
         bomFormat: 'CycloneDX',
@@ -50,7 +49,7 @@ describe('insertCopyrightIntoBom', function () {
             {}
         ]
     };
-    let noCPbom: CycloneDX = {
+    const noCPbom: CycloneDX = {
         specVersion: '',
         version: 0,
         bomFormat: 'CycloneDX',

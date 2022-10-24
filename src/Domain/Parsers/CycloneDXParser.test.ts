@@ -49,12 +49,12 @@ describe('parseCycloneDX', function () {
     });
 // NOTE: the properties licenseTexts, readme and copyright are set after parseJSON call
     it('should correctly save the package information in a PackageInfo object', function () {
-        let parser = new CycloneDXParser('json');
-        let license1: License = {
+        const parser = new CycloneDXParser('json');
+        const license1: License = {
             id: 'Apache-2.0',
             url: 'https://opensource.org/licenses/Apache-2.0',
         };
-        let license2: License = {
+        const license2: License = {
             id: 'MIT',
             url: 'https://opensource.org/licenses/MIT',
         };
@@ -66,7 +66,6 @@ describe('parseCycloneDX', function () {
                 'version',
                 [license1, license2],
                 ['https://github.com/group/name', 'https://secondLink.com'],
-                [],
                 '',
                 ''
             ),
@@ -77,8 +76,8 @@ describe('parseCycloneDX', function () {
 
 describe('extractLicensesFromPkg', function () {
     it('should correctly extract licenses of type License from a Bom JSON object', function () {
-        let parser = new CycloneDXParser('json');
-        let rawJSON = [
+        const parser = new CycloneDXParser('json');
+        const rawJSON = [
             {
                 license: {
                     id: 'MIT',

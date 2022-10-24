@@ -29,8 +29,6 @@ export class Downloader {
     /**
      * Passes the download task to the GitHub downloader for GitHub URLs
      * and the external website downloader for everything else.
-     * @param url The URL to be downloaded.
-     * @returns {Promise<[string, string]>} The content of the downloaded license or website.
      */
     async downloadLicenseAndREADME(url: string): Promise<[string, string]> {
         if (url.includes('github.com')) {
@@ -43,19 +41,17 @@ export class Downloader {
     /**
      * Downloads the content of the GitHub repository with the given URL and
      * returns the license and README file if it exists as a tuple.
-     * @param {string} url The API-URL of the GitHub repository.
-     * @returns {[string, string]} The content of the license file. Empty string if none was found.
      */
     async downloadDataFromGithub(url: string): Promise<[string, string]> {
         let readme = '';
         let license = '';
 
         try {
-            let [repoName, repoOwner] = this.filterRepoInfoFromURL(url);
+            const [repoName, repoOwner] = this.filterRepoInfoFromURL(url);
 
             const data = await this.githubClient.downloadRepo(repoOwner, repoName);
             for (let i = 0; i < data.length; i++) {
-                let fileName = data[i].name;
+                const fileName = data[i].name;
                 if (
                     fileName.toLowerCase() === 'license' ||
                     fileName.match(new RegExp('license.[a-zA-z]*', 'i'))
@@ -78,12 +74,10 @@ export class Downloader {
 
     /**
      * Extracts the username and repository name form a GitHub URL.
-     * @param {string} url URL to the GitHub repository.
-     * @returns {string[]} A string array containing the extracted username and repository name
      */
     filterRepoInfoFromURL(url: string): string[] {
-        let re = new RegExp('github.com([/:])([\\w-]+)/([\\w-.]+)');
-        let filtered = re.exec(url);
+        const re = new RegExp('github.com([/:])([\\w-]+)/([\\w-.]+)');
+        const filtered = re.exec(url);
         let user = '';
         let repo = '';
         if (
@@ -103,8 +97,6 @@ export class Downloader {
     /**
      * Downloads the website with the given URL with the assumption that it cannot contain a README file.
      * Therefore, it always returns an empty string for the README part.
-     * @param {string} url The URL of the website to be downloaded.
-     * @returns {Promise<[string,string]>} A string containing the content of the website as html.
      */
     async downloadLicenseFromExternalWebsite(
         url: string
@@ -127,10 +119,9 @@ export class Downloader {
     /**
      * Returns an object with usefull information to determine how many Requests are still available for GitHub API
      * For more information: https://docs.github.com/en/rest/rate-limit
-     * @returns {Promise<{ limit: number, used: number, remaining: number, reset: number }} request rate object
      */
     async getRemainingRateObj(): Promise<{ limit: number, used: number, remaining: number, reset: number }> {
-        let limitObject = this.githubClient.checkRateLimit();
+        const limitObject = this.githubClient.checkRateLimit();
         const {rate} = (await limitObject).data;
         return rate;
     }
@@ -138,7 +129,7 @@ export class Downloader {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async urlRequestHandler(file: any, url: string): Promise<string> {
         // download_url !== url, url is here only for proper error message
-        let download_url = file['download_url'];
+        const download_url = file['download_url'];
         if (!download_url) {
             Logger.addToLog(`Invalid download URL for ${file.name} file, repository URL: ${url}`, 'Warning');
             return '';

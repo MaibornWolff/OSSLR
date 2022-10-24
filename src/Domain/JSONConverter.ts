@@ -4,21 +4,20 @@ import {License} from './Model/License';
 import * as Logger from '../Logging/Logging';
 import {CycloneDX} from './Model/CycloneDX';
 
-
+/**
+ * Converts the PackageInfo back to json
+ */
 export class JSONConverter {
 
     /**
      * Insert copyright attribute to bom json object
-     * @param {PackageInfo[]} packageInfos PackageInfo array
-     * @param {any} bomJson The original extracted bom json object notice.
-     * @returns {any} updated bom json object
      */
     insertCopyrightIntoBom(packageInfos: PackageInfo[], bomJson: CycloneDX): CycloneDX {
         if (!bomJson.components) {
             return bomJson;
         }
         for (let i = 0; i < packageInfos.length; i++) {
-            let copyright = packageInfos[i].copyright;
+            const copyright = packageInfos[i].copyright;
             if (copyright !== '') {
                 bomJson.components[i].copyright = copyright;
             }
@@ -28,13 +27,11 @@ export class JSONConverter {
 
     /**
      * Parses PackageInfo array into a json object
-     * @param {PackageInfo[]} packageInfos the PackageInfos
-     * @returns {any} updated bom json object
      */
     parsePkgInfo(packageInfos: PackageInfo[]): any {
-        let components = [];
+        const components = [];
         for (let i = 0; i < packageInfos.length; i++) {
-            let p = packageInfos[i];
+            const p = packageInfos[i];
             components.push({
                 group: p.group,
                 name: p.name,
@@ -48,11 +45,9 @@ export class JSONConverter {
 
     /**
      * Parses License for bom json object
-     * @param {License[]} licenses License object
-     * @returns {object} updated bom json object
      */
     licenseToBOM(licenses: License[]): object {
-        let result = [];
+        const result = [];
         for (let i = 0; i < licenses.length; i++) {
             result.push({license: {id: licenses[i].id, url: licenses[i].url}});
         }
@@ -61,12 +56,9 @@ export class JSONConverter {
 
     /**
      * Parses License for bom json object
-     * @param {PackageInfo[]} licenses License object
-     * @param {any} bomJson bom json object
-     * @returns {object} bomJson updated bom json object
      */
     addMissingEntries(packageInfos: PackageInfo[], bomJson: CycloneDX) {
-        let components = bomJson['components'];
+        const components = bomJson['components'];
         if (components) {
             components.concat(this.parsePkgInfo(packageInfos).components);
             return bomJson;

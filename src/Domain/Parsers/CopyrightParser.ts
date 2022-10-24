@@ -11,9 +11,9 @@ export class CopyrightParser {
             new RegExp('copyright (©|\\(c\\)).*', 'i'),
             new RegExp('copyright [0-9]+.*', 'i'),
         ];
-        for (let i in regExps) {
+        for (const i in regExps) {
             if (license.match(regExps[i])) {
-                let copyrightMatch = regExps[i].exec(license);
+                const copyrightMatch = regExps[i].exec(license);
                 if (copyrightMatch != null) return copyrightMatch[0];
             }
         }
