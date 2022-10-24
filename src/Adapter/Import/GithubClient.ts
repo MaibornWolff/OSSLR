@@ -5,7 +5,7 @@ import {printError} from '../../Logging/ErrorFormatter';
 
 
 /**
- * Wrapper for the octokit GitHub client implementation. Used to download repos from github.
+ * Wrapper for the octokit GitHub client implementation. Used to download repos from GitHub.
  */
 export class GithubClient {
     private octokit!: Octokit; // ! indicates that the initialization happens, but not in the constructor.
@@ -48,14 +48,14 @@ export class GithubClient {
     }
 
     /**
-     * Checks the remaining GitHub rate limmit.
+     * Checks the remaining GitHub rate limit.
      */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async checkRateLimit(): Promise<any> {
         try {
             return await this.octokit.request('GET /rate_limit', {});
         } catch (err) {
-            Logger.addToLog('Failed to acces GitHub rate limit', 'Error');
+            Logger.addToLog('Failed to access GitHub rate limit', 'Error');
         }
 
     }

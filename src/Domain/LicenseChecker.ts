@@ -227,7 +227,7 @@ export class LicenseChecker {
             const newFile = path.join('out', 'updatedBom.json');
             jsonFileWriter.write(newFile, stringBom);
             jsonFileWriter.write(this.missingValuesPath, stringMissingValues);
-
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             Logger.addToLog('Failed to export output into a json file', 'Error');
             Logger.addToLog(err, 'Error');
@@ -240,8 +240,11 @@ export class LicenseChecker {
      * Checks which licenses are present in the report and triggers downloads for each license text.
      */
     async getLicenseTexts() {
-        //add to pdf
         const licenses = await this.downloader.getLicenses();
+        if (!licenses) {
+            printError('Error: Unable to retrieve License texts.');
+            process.exit(1);
+        }
         const licensesIdsInSbom = new Set<string>();
         for (const pkg of this.packageInfos) {
             if (pkg.licenses[0]) {
@@ -254,12 +257,14 @@ export class LicenseChecker {
                     Logger.addToLog(`Warning: Unable to retrieve License text for package ${pkg.name} with license ${pkgLicenseId}.`, 'Warning');
                     continue;
                 }
-                licensesIdsInSbom.add(licenses.find((license: { licenseId: string; }) => license.licenseId === this.filterLicenseId(pkgLicenseId)).licenseId);
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                licensesIdsInSbom.add(licenses.find((license: { licenseId: string; }) => license.licenseId === this.filterLicenseId(pkgLicenseId))!.licenseId);
             }
         }
         for (const pkgLicenseId of licensesIdsInSbom) {
-            const licenseDetailsUrl = licenses.find((license: { licenseId: string; }) => license.licenseId === this.filterLicenseId(pkgLicenseId)).detailsUrl;
-            this.licenseTexts.set(pkgLicenseId, await this.downloader.downloadLicenseText(licenseDetailsUrl));
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            const licenseDetailsUrl = licenses.find((license: { licenseId: string; }) => license.licenseId === this.filterLicenseId(pkgLicenseId))!.detailsUrl;
+            this.licenseTexts.set(pkgLicenseId, await this.downloader.downloadLicenseText(licenseDetailsUrl) ?? '');
         }
     }
 
@@ -290,6 +295,7 @@ export class LicenseChecker {
             this.packageInfos = this.packageInfos.concat(this.toBeAppended);
             const [chead, cbody] = pdfParser.parse(this.packageInfos);
             pdfExporter.export(chead, cbody, this.licenseTexts, 'updatedBom.pdf');
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             Logger.addToLog(err, 'Error');
             printError(err);

@@ -102,7 +102,7 @@ export class Downloader {
         url: string
     ): Promise<[string, string]> {
         try {
-            return [await this.httpClient.makeGetRequest(url), ''];
+            return [await this.httpClient.getWebsite(url), ''];
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             let errorMessage = `AxiosError: ${err.code}.`;
@@ -117,7 +117,7 @@ export class Downloader {
     }
 
     /**
-     * Returns an object with usefull information to determine how many Requests are still available for GitHub API
+     * Returns an object with useful information to determine how many Requests are still available for GitHub API
      * For more information: https://docs.github.com/en/rest/rate-limit
      */
     async getRemainingRateObj(): Promise<{ limit: number, used: number, remaining: number, reset: number }> {
@@ -134,14 +134,14 @@ export class Downloader {
             Logger.addToLog(`Invalid download URL for ${file.name} file, repository URL: ${url}`, 'Warning');
             return '';
         }
-        return await this.httpClient.makeGetRequest(download_url);
+        return await this.httpClient.getWebsite(download_url);
     }
 
     async getLicenses() {
-        return (await this.httpClient.makeGetRequest(this.licenseUrl)).licenses;
+        return (await this.httpClient.getLicense(this.licenseUrl))?.licenses;
     }
 
     async downloadLicenseText(detailsUrl: string) {
-        return (await this.httpClient.makeGetRequest(detailsUrl)).licenseText;
+        return (await this.httpClient.getLicenseDetails(detailsUrl))?.licenseText;
     }
 }
