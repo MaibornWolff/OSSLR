@@ -1,8 +1,8 @@
-import {PackageInfo} from '../Model/PackageInfo';
-import {License} from '../Model/License';
-import * as Logger from '../../Logging/Logging';
 import {printError} from '../../Logging/ErrorFormatter';
 import {CycloneDX} from '../Model/CycloneDX';
+import {Logger, LogLevel} from '../../Logging/Logging';
+import {PackageInfo} from '../Model/PackageInfo';
+import {License} from '../Model/License';
 
 /**
  * Input Parser implementation for the CycloneDX format. Extracts package information from the bom file and stores them in a PackageInfo object.
@@ -24,7 +24,7 @@ export class CycloneDXParser {
             case 'json':
                 return JSON.parse(data);
             default:
-                Logger.addToLog(`Error: Failed to parse file of this unsupported file format: \"filename.${this.format}\".`, 'Error');
+                Logger.getInstance().addToLog(`Error: Failed to parse file of this unsupported file format: \"filename.${this.format}\".`, LogLevel.ERROR);
                 printError(
                     `Error: Failed to parse file of this unsupported file format: \"filename.${this.format}\".`
                 );

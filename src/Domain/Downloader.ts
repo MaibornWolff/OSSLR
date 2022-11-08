@@ -1,6 +1,6 @@
 import {GithubClient} from '../Adapter/Import/GithubClient';
 import {HTTPClient} from '../Adapter/Import/HTTPClient';
-import * as Logger from '../Logging/Logging';
+import {Logger, LogLevel} from '../Logging/Logging';
 import {printError} from '../Logging/ErrorFormatter';
 
 /**
@@ -21,7 +21,7 @@ export class Downloader {
             await this.githubClient.authenticateClient();
         } catch (err) {
             printError('Error: Failed to authenticate GitHub client. Please make sure to provide a valid access token.');
-            Logger.addToLog('Failed to authenticate GitHub client. Please make sure to provide a valid access token.', 'Error');
+            Logger.getInstance().addToLog('Failed to authenticate GitHub client. Please make sure to provide a valid access token.', LogLevel.ERROR);
             process.exit(1);
         }
     }
@@ -66,7 +66,7 @@ export class Downloader {
             }
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
-            Logger.addToLog(`${err.status}, Request to ${url} failed.`, 'Warning');
+            Logger.getInstance().addToLog(`${err.status}, Request to ${url} failed.`, LogLevel.WARNING);
             return ['', ''];
         }
         return [license, readme];
@@ -89,7 +89,7 @@ export class Downloader {
             repo = filtered[3].replace(new RegExp('.git$'), '');
             return [user, repo];
         } else {
-            Logger.addToLog(`Invalid GitHub link for ${url}.`, 'Warning');
+            Logger.getInstance().addToLog(`Invalid GitHub link for ${url}.`, LogLevel.WARNING);
             throw new Error(`Invalid GitHub link for ${url}.`);
         }
     }
@@ -111,7 +111,7 @@ export class Downloader {
             } else if (err.code == 'ENOTFOUND') {
                 errorMessage = `No response for the request ${url}.`;
             }
-            Logger.addToLog(errorMessage, 'Warning');
+            Logger.getInstance().addToLog(errorMessage, LogLevel.WARNING);
             return ['', ''];
         }
     }
@@ -131,7 +131,7 @@ export class Downloader {
         // download_url !== url, url is here only for proper error message
         const download_url = file['download_url'];
         if (!download_url) {
-            Logger.addToLog(`Invalid download URL for ${file.name} file, repository URL: ${url}`, 'Warning');
+            Logger.getInstance().addToLog(`Invalid download URL for ${file.name} file, repository URL: ${url}`, LogLevel.WARNING);
             return '';
         }
         return await this.httpClient.getWebsite(download_url);

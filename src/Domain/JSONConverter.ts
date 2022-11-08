@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {PackageInfo} from './Model/PackageInfo';
 import {License} from './Model/License';
-import * as Logger from '../Logging/Logging';
 import {CycloneDX} from './Model/CycloneDX';
+import {Logger, LogLevel} from '../Logging/Logging';
 
 /**
  * Converts the PackageInfo back to json
@@ -63,7 +63,7 @@ export class JSONConverter {
             components.concat(this.parsePkgInfo(packageInfos).components);
             return bomJson;
         } else {
-            Logger.addToLog('Failed to insert a new entry into the bom file.', 'Error');
+            Logger.getInstance().addToLog('Failed to insert a new entry into the bom file.', LogLevel.ERROR);
             return bomJson;
         }
     }

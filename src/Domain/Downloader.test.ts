@@ -4,17 +4,17 @@ import {stub, restore} from 'sinon';
 import {assert} from 'chai';
 import {Downloader} from './Downloader';
 import {GithubClient} from '../Adapter/Import/GithubClient';
-import * as Logger from '../Logging/Logging';
 import {HTTPClient} from '../Adapter/Import/HTTPClient';
+import {Logger} from '../Logging/Logging';
 
 
 describe('downloadLicenseFromGithub', function () {
+    Logger.setSilent();
     let downloader: Downloader;
     this.beforeEach(function () {
-        Logger.initializeSilentLogger();
         downloader = new Downloader();
         const downloadRepoStub = stub(GithubClient.prototype, 'downloadRepo');
-        const httpStub = stub(HTTPClient.prototype, 'makeGetRequest');
+        const httpStub = stub(HTTPClient.prototype, 'getWebsite');
 
         httpStub.onCall(0).returns(
             new Promise<string>((resolve) => {

@@ -8,11 +8,11 @@ import {PDFFileWriter} from '../Adapter/Export/PDFFileWriter';
 import {PDFParser} from './Parsers/PDFParser';
 import {existsSync, mkdirSync} from 'fs';
 import * as path from 'path';
-import * as Logger from '../Logging/Logging';
 import {JSONFileWriter} from '../Adapter/Export/JSONFileWriter';
 import {JSONConverter} from './JSONConverter';
 import {printError, printWarning} from '../Logging/ErrorFormatter';
 import {CycloneDX} from './Model/CycloneDX';
+import {Logger, LogLevel} from '../Logging/Logging';
 
 /**
  * This class is responsible for distributing the different tasks to the responsible classes.
@@ -45,7 +45,7 @@ export class LicenseChecker {
         const dataFormat = bomPath.split('.').pop();
         if (!dataFormat) {
             // data format is the file format and currently only json is supported
-            Logger.addToLog(`Invalid file format of ${bomPath}. Currently only JSON files are supported.`, 'Error');
+            Logger.getInstance().addToLog(`Invalid file format of ${bomPath}. Currently only JSON files are supported.`, LogLevel.ERROR);
             printError(`Error: Invalid file format of ${bomPath}. Currently only JSON files are supported.`);
             process.exit(1);
         }
@@ -55,7 +55,7 @@ export class LicenseChecker {
                 this.parser = new CycloneDXParser(dataFormat);
                 break;
             default:
-                Logger.addToLog(`Unsupported Bom Format ${bomFormat}. Currently only CycloneDX format is supported.`, 'Error');
+                Logger.getInstance().addToLog(`Unsupported Bom Format ${bomFormat}. Currently only CycloneDX format is supported.`, LogLevel.ERROR);
                 printError(`Error: Unsupported Bom Format ${bomFormat}. Currently only CycloneDX format is supported.`);
                 process.exit(1);
         }
@@ -69,7 +69,7 @@ export class LicenseChecker {
             this.bomData = this.parser.parseInput(this.fileReader.readInput(this.bomPath));
             this.packageInfos = this.parser.parseCycloneDX(this.bomData);
         } catch (err) {
-            Logger.addToLog(`Unable to parse ${this.bomPath}. Please ensure that it has the correct format (CycloneDX).`, 'Error');
+            Logger.getInstance().addToLog(`Unable to parse ${this.bomPath}. Please ensure that it has the correct format (CycloneDX).`, LogLevel.ERROR);
             printError(`Error: Unable to parse ${this.bomPath}. Please ensure that it has the correct format (CycloneDX).`);
             process.exit(1);
         }
@@ -114,7 +114,7 @@ export class LicenseChecker {
         // Checks how many request are still available to make to GitHub
         if (remaining < 1) {
             const waitTime = Math.abs(reset * 1000 - Date.now()) + 10000;
-            Logger.addToLog('GitHub Request limit reached. Waiting for ' + waitTime + 'ms.', 'Warning');
+            Logger.getInstance().addToLog('GitHub Request limit reached. Waiting for ' + waitTime + 'ms.', LogLevel.WARNING);
             await new Promise(r => setTimeout(r, waitTime));
         }
         return await this.downloader.downloadLicenseAndREADME(url);
@@ -139,7 +139,7 @@ export class LicenseChecker {
         if (!this.localDataPath) return;
         if (!existsSync(this.localDataPath)) {
             printWarning(`Error: Defaults file ${this.localDataPath} not found. Default values will be ignored.`);
-            Logger.addToLog(`Error: Defaults file ${this.localDataPath} not found. Default values will be ignored.`, 'Error');
+            Logger.getInstance().addToLog(`Error: Defaults file ${this.localDataPath} not found. Default values will be ignored.`, LogLevel.ERROR);
             return;
         }
         const localRawData = JSON.parse(this.fileReader.readInput(this.localDataPath));
@@ -166,7 +166,7 @@ export class LicenseChecker {
                     localDataAdded = true;
                     this.toBeAppended.push(local[i]);
                     printWarning('Warning: Version of package did not match in the given local file: ' + local[i].toString() + ' and the generated file by cdxgen: ' + generated[j].toString() + ' possible duplicate created.');
-                    Logger.addToLog('Version of package did not match in the given local file: ' + local[i].toString() + ' and the generated file by cdxgen: ' + generated[j].toString() + ' possible duplicate created.', 'Warning');
+                    Logger.getInstance().addToLog('Version of package did not match in the given local file: ' + local[i].toString() + ' and the generated file by cdxgen: ' + generated[j].toString() + ' possible duplicate created.', LogLevel.WARNING);
                 }
             }
             if (!localDataAdded) {
@@ -185,7 +185,7 @@ export class LicenseChecker {
             }
         } catch (err) {
             printError(err);
-            Logger.addToLog('Failed to create the out directory', 'Error');
+            Logger.getInstance().addToLog('Failed to create the out directory', LogLevel.ERROR);
             printError('Error: Failed to create the out directory');
             process.exit(1);
         }
@@ -210,7 +210,7 @@ export class LicenseChecker {
             this.packageInfos.forEach((packageInfo) => {
                 if (packageInfo.copyright === '') {
                     printWarning('Warning: Failed to collect the necessary information for ' + packageInfo.toString());
-                    Logger.addToLog('Failed to collect the necessary information for ' + packageInfo.toString(), 'Warning');
+                    Logger.getInstance().addToLog('Failed to collect the necessary information for ' + packageInfo.toString(), LogLevel.WARNING);
                     this.noCopyrightList.push(packageInfo);
                 }
             });
@@ -229,8 +229,8 @@ export class LicenseChecker {
             jsonFileWriter.write(this.missingValuesPath, stringMissingValues);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
-            Logger.addToLog('Failed to export output into a json file', 'Error');
-            Logger.addToLog(err, 'Error');
+            Logger.getInstance().addToLog('Failed to export output into a json file', LogLevel.ERROR);
+            Logger.getInstance().addToLog(err, LogLevel.ERROR);
             printError('Error: Failed to export output into a json file');
             process.exit(1);
         }
@@ -254,7 +254,7 @@ export class LicenseChecker {
                 }
                 if (!licenses.some((license: { licenseId: string; }) => license.licenseId === this.filterLicenseId(pkgLicenseId))) {
                     printWarning(`Warning: Unable to retrieve License text for package ${pkg.name} with license ${pkgLicenseId}.`);
-                    Logger.addToLog(`Warning: Unable to retrieve License text for package ${pkg.name} with license ${pkgLicenseId}.`, 'Warning');
+                    Logger.getInstance().addToLog(`Warning: Unable to retrieve License text for package ${pkg.name} with license ${pkgLicenseId}.`, LogLevel.WARNING);
                     continue;
                 }
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -297,7 +297,7 @@ export class LicenseChecker {
             pdfExporter.export(chead, cbody, this.licenseTexts, 'updatedBom.pdf');
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
-            Logger.addToLog(err, 'Error');
+            Logger.getInstance().addToLog(err, LogLevel.ERROR);
             printError(err);
         }
     }
