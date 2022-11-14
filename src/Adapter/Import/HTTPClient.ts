@@ -9,8 +9,8 @@ export class HTTPClient {
     /**
      * Performs a GET request for the given URL.
      */
-    async getWebsite(url: string): Promise<string> {
-        const {data, status} = await axios.get<string>(url);
+    async getWebsite(url: string): Promise<any> {
+        const {data, status} = await axios.get<any>(url);
         if (status != HTTPClient.success) {
             Logger.getInstance().addToLog(`Error: Request for url ${url} failed with stats ${status}`, LogLevel.ERROR);
             return '';

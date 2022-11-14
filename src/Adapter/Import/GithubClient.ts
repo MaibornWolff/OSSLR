@@ -1,7 +1,7 @@
 import {Octokit} from 'octokit';
 import * as dotenv from 'dotenv';
-import * as Logger from '../../Logging/Logging';
 import {printError} from '../../Logging/ErrorFormatter';
+import {Logger, LogLevel} from '../../Logging/Logging';
 
 
 /**
@@ -18,7 +18,7 @@ export class GithubClient {
             dotenv.config();
             const access_token = process.env.ACCESS_TOKEN;
             if (access_token == undefined) {
-                Logger.addToLog('Value of access-token is undefined.', 'Error');
+                Logger.getInstance().addToLog('Value of access-token is undefined.', LogLevel.ERROR);
                 printError('Error: Value of access-token is undefined.');
                 process.exit(1);
             }
@@ -26,7 +26,7 @@ export class GithubClient {
             await this.octokit.request('GET /rate_limit', {});
         } catch (err) {
             printError('Error: Authentication with access-token failed.');
-            Logger.addToLog('Authentication with access-token failed.', 'Error');
+            Logger.getInstance().addToLog('Authentication with access-token failed.', LogLevel.ERROR);
             process.exit(1);
         }
     }
@@ -38,12 +38,17 @@ export class GithubClient {
     async downloadRepo(repoOwner: string, repoName: string): Promise<any> {
         //unauthenticated requests, the rate limit allows you to make up to 60 requests per hour
         // what happens if owner and name both ''
-        const res = await this.octokit.rest.repos.getContent({
-            owner: repoOwner,
-            repo: repoName,
-            path: '',
-        });
-        return res.data;
+        try {
+            const res = await this.octokit.rest.repos.getContent({
+                owner: repoOwner,
+                repo: repoName,
+                path: '',
+            });
+            return res.data;
+        } catch (e: any) {
+            Logger.getInstance().addToLog(e, LogLevel.ERROR);
+        }
+        return undefined;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }
 
@@ -55,7 +60,7 @@ export class GithubClient {
         try {
             return await this.octokit.request('GET /rate_limit', {});
         } catch (err) {
-            Logger.addToLog('Failed to access GitHub rate limit', 'Error');
+            Logger.getInstance().addToLog('Failed to access GitHub rate limit', LogLevel.ERROR);
         }
 
     }

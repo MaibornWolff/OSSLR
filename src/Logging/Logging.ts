@@ -40,10 +40,10 @@ export class Logger {
      */
     private initializeLogger(): void {
         this.logger = winston.createLogger({
-            levels: {Error: 0, Warning: 1, License: 2, Copyright: 3},
+            levels: {Error: 0, Warning: 1, Debug: 2},
             format: winston.format.simple(),
             transports: [
-                new winston.transports.File({filename: 'error.log', level: 'Copyright'}),
+                new winston.transports.File({filename: 'error.log', level: 'Debug'}),
             ],
         });
     }
@@ -61,16 +61,12 @@ export class Logger {
     /**
      * Generates a log message from the info of the given package depending on the given level.
      */
-    private generateLogMessage(
+    public static generateLogMessage(
         packageInfo: PackageInfo,
-        level: string
+        level: LogLevel
     ): string {
         switch (level) {
-            case 'License':
-                return 'No License found for: ' + packageInfo.toString();
-            case 'ExtRefs':
-                return 'No external references found for: ' + packageInfo.toString();
-            case 'Copyright':
+            case LogLevel.DEBUG:
                 return (
                     'Unable to extract copyright notice for: ' + packageInfo.toString()
                 );
@@ -81,7 +77,6 @@ export class Logger {
 }
 
 export enum LogLevel {
-    LICENSE = 'License',
     ERROR = 'Error',
     DEBUG = 'Debug',
     WARNING = 'Warning',

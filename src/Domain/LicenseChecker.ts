@@ -1,4 +1,4 @@
-import {SingleBar, Presets} from 'cli-progress';
+import {Presets, SingleBar} from 'cli-progress';
 import {CopyrightParser} from './Parsers/CopyrightParser';
 import {CycloneDXParser} from './Parsers/CycloneDXParser';
 import {FileReader} from '../Adapter/Import/FileReader';

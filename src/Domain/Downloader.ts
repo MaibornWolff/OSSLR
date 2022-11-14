@@ -45,10 +45,8 @@ export class Downloader {
     async downloadDataFromGithub(url: string): Promise<[string, string]> {
         let readme = '';
         let license = '';
-
         try {
-            const [repoName, repoOwner] = this.filterRepoInfoFromURL(url);
-
+            const [repoOwner, repoName] = this.filterRepoInfoFromURL(url);
             const data = await this.githubClient.downloadRepo(repoOwner, repoName);
             for (let i = 0; i < data.length; i++) {
                 const fileName = data[i].name;
@@ -121,8 +119,8 @@ export class Downloader {
      * For more information: https://docs.github.com/en/rest/rate-limit
      */
     async getRemainingRateObj(): Promise<{ limit: number, used: number, remaining: number, reset: number }> {
-        const limitObject = this.githubClient.checkRateLimit();
-        const {rate} = (await limitObject).data;
+        const limitObject = await this.githubClient.checkRateLimit();
+        const {rate} = limitObject.data;
         return rate;
     }
 

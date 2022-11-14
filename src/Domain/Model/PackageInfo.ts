@@ -1,5 +1,5 @@
 import {License} from './License';
-import * as Logger from '../../Logging/Logging';
+import {Logger, LogLevel} from '../../Logging/Logging';
 
 /**
  * Dataclass for all information linked to a package
@@ -72,10 +72,10 @@ export class PackageInfo {
         const arr1 = local.version.split('.');
         const arr2 = this.version.split('.');
         if (!arr1 || arr1.length < 2) {
-            Logger.addToLog('Invalid version format for this local package: ' + local.toString(), 'Error');
+            Logger.getInstance().addToLog('Invalid version format for this local package: ' + local.toString(), LogLevel.ERROR);
             return false;
         } else if (!arr2 || arr2.length < 2) {
-            Logger.addToLog('Invalid version format for this generated package: ' + this.toString(), 'Error');
+            Logger.getInstance().addToLog('Invalid version format for this generated package: ' + this.toString(), LogLevel.ERROR);
             return false;
         }
         if (arr1[arr1.length - 1] === 'x') {
