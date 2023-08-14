@@ -2,7 +2,10 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ 
+      main, 
+      experiment/release-pipeline 
+    ]
   pull_request:
     branches: [ main ]
 
