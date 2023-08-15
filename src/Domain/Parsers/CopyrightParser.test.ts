@@ -1,10 +1,10 @@
-import {assert} from 'chai';
+import { beforeEach, describe, it } from 'node:test';
+import assert from 'node:assert';
 import {CopyrightParser} from './CopyrightParser';
-
 
 describe('extractCopyright', function () {
     let copyrightParser: CopyrightParser;
-    this.beforeEach(function () {
+    beforeEach(function () {
         copyrightParser = new CopyrightParser();
     });
     it('should extract Copyright notices including (c) annotation', function () {
@@ -39,7 +39,7 @@ describe('extractCopyright', function () {
 
 describe('removeOverheadFromCopyright', function () {
     let copyrightParser: CopyrightParser;
-    this.beforeEach(function () {
+    beforeEach(function () {
         copyrightParser = new CopyrightParser();
     });
     it('should remove html tags', function () {

@@ -1,5 +1,5 @@
-import 'mocha';
-import {assert} from 'chai';
+import { beforeEach, describe, it } from 'node:test';
+import assert from 'node:assert';
 import {CycloneDXParser} from './CycloneDXParser';
 import {PackageInfo} from '../Model/PackageInfo';
 import {License} from '../Model/License';
@@ -7,7 +7,7 @@ import {CycloneDX} from '../Model/CycloneDX';
 
 describe('parseCycloneDX', function () {
     let rawJSON: CycloneDX;
-    this.beforeEach(function () {
+    beforeEach(function () {
 
         rawJSON = {
             bomFormat: '',
