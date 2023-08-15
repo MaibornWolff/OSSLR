@@ -69,7 +69,7 @@ describe('hasExternalReferences', function () {
 });
 
 
-describe('combine', function () {
+describe('LicenseChecker', function () {
     let licenseChecker: LicenseChecker;
     const pkg1 = new PackageInfo('group', 'name', '1.2.3', [], [], '', '');
 
