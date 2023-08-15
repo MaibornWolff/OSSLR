@@ -9,13 +9,13 @@
     "dotenv": "^16.3.1",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.5.31",
-    "mocha": "^10.2.0",
     "octokit": "^3.1.0",
     "typescript": "^5.1.6",
     "winston": "^3.10.0",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
+    "mocha": "^10.2.0",
     "@istanbuljs/nyc-config-typescript": "^1.0.2",
     "@octokit/types": "^11.1.0",
     "@types/chai": "^4.3.5",
@@ -30,7 +30,8 @@
     "nyc": "^15.1.0",
     "sinon": "^15.2.0",
     "ts-mocha": "^10.0.0",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "tsx": "^3.12.7"
   },
   "optionalDependencies": {
     "fsevents": "2.3.2"
@@ -53,6 +54,7 @@
   "scripts": {
     "test": "ts-mocha -n es-module-specifier-resolution=node -n loader=ts-node/esm/transpile-only -p tsconfig.json 'src/**/*.test.ts'",
     "test:coverage": "nyc npm run test",
+    "nodetest": "node --loader tsx --test src/**/*.nodetest.ts  src/**/**/*.nodetest.ts",
     "start": "node --no-warnings --es-module-specifier-resolution=node --loader ts-node/esm/transpile-only src/Main.ts",
     "license_checker": "node --no-warnings --es-module-specifier-resolution=node --loader ts-node/esm/transpile-only src/Main.ts"
   }

@@ -45,11 +45,11 @@ export class GithubClient {
                 path: '',
             });
             return res.data;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (e: any) {
-            Logger.getInstance().addToLog(e, LogLevel.ERROR);
+            Logger.getInstance().addToLog(e.message, LogLevel.ERROR);
         }
         return undefined;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }
 
     /**
