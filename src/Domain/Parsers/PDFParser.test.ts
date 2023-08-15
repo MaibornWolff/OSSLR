@@ -1,5 +1,5 @@
-import 'mocha';
-import {assert} from 'chai';
+import { describe, it } from 'node:test';
+import assert from 'node:assert';
 import {PackageInfo} from '../Model/PackageInfo';
 import {PDFParser} from './PDFParser';
 

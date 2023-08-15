@@ -1,9 +1,8 @@
-import 'mocha';
-import {assert} from 'chai';
+import { describe, it } from 'node:test';
+import assert from 'node:assert';
 import {JSONConverter} from './JSONConverter';
 import {PackageInfo} from './Model/PackageInfo';
 import {CycloneDX} from './Model/CycloneDX';
-
 
 describe('parsePkgInfo', function () {
     const jsonParser = new JSONConverter();
@@ -25,6 +24,7 @@ describe('parsePkgInfo', function () {
     };
     const licenses = [{id: 'Apache-2.0', url: 'https://opensource.org/licenses/Apache-2.0'}];
     const packageInfo = new PackageInfo('ampproject', 'remapping', '2.2.1', licenses, [], '', '');
+
     it('should parse packageinfo to json correctly', function () {
         assert.deepEqual(jsonParser.parsePkgInfo([packageInfo]), json);
     });
