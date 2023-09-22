@@ -43,7 +43,7 @@ export class CycloneDXParser {
             return [];
         for (const pkg of data.components) {
             const licenses = [];
-            const licensesPerPkg = this.extractLicensesFromPkg(pkg.licenses);
+            const licensesPerPkg = this.extractLicensesFromPkg(pkg.licenses as unknown[]);
             let copyright = '';
             for (const j in licensesPerPkg) {
                 licenses.push(licensesPerPkg[j]);
