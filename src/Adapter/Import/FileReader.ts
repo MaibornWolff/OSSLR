@@ -1,5 +1,7 @@
 import {readFileSync} from 'fs';
-import * as Logger from '../../Logging/Logging';
+import { Logger, LogLevel } from '../../Logging/Logging';
+
+
 import {printError} from '../../Logging/ErrorFormatter';
 
 /**
@@ -14,7 +16,8 @@ export class FileReader {
         try {
             return readFileSync(url).toString();
         } catch (err) {
-            Logger.addToLog(`Couldn't load bom.json from ${url}.`, 'Error');
+            const log = new Logger();
+            log.addToLog(`Couldn't load bom.json from ${url}.`, LogLevel.ERROR);
             printError(`Error: Couldn't load bom.json from ${url}.`);
             process.exit(1);
         }

@@ -100,7 +100,8 @@ export class Downloader {
         url: string
     ): Promise<[string, string]> {
         try {
-            return [await this.httpClient.getWebsite(url), ''];
+            const website = await this.httpClient.getWebsite(url).toString();
+            return [website, ''];
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             let errorMessage = `AxiosError: ${err.code}.`;
@@ -132,7 +133,7 @@ export class Downloader {
             Logger.getInstance().addToLog(`Invalid download URL for ${file.name} file, repository URL: ${url}`, LogLevel.WARNING);
             return '';
         }
-        return await this.httpClient.getWebsite(download_url);
+        return await this.httpClient.getWebsite(download_url).toString();
     }
 
     async getLicenses() {

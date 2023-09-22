@@ -1,4 +1,4 @@
-import axios from 'axios';
+
 import {Nullable, SPDXLicenses} from '../../Domain/Model/SPDXLicenses';
 import {SPDXLicenseDetails} from '../../Domain/Model/SPDXLicenseDetails';
 import {Logger, LogLevel} from '../../Logging/Logging';
@@ -10,7 +10,10 @@ export class HTTPClient {
      * Performs a GET request for the given URL.
      */
     async getWebsite(url: string): Promise<unknown> {
-        const {data, status} = await axios.get<unknown>(url);
+        const response = await fetch(url);
+        const data = await response.body?.toString();
+        const status = response.status;
+
         if (status != HTTPClient.success) {
             Logger.getInstance().addToLog(`Error: Request for url ${url} failed with stats ${status}`, LogLevel.ERROR);
             return '';
@@ -19,20 +22,27 @@ export class HTTPClient {
     }
 
     async getLicense(url: string): Promise<Nullable<SPDXLicenses>> {
-        const {data, status} = await axios.get<SPDXLicenses>(url);
+        const response = await fetch(url);
+        
+        const status = response.status;
+
         if (status != HTTPClient.success) {
             Logger.getInstance().addToLog(`Error: Request for url ${url} failed with stats ${status}`, LogLevel.ERROR);
             return null;
         }
+        const data = await response.json();
         return data;
     }
 
     async getLicenseDetails(url: string): Promise<Nullable<SPDXLicenseDetails>> {
-        const {data, status} = await axios.get<SPDXLicenseDetails>(url);
+        const response = await fetch(url);
+        const data = await response.json();
+        const status = response.status;
+
         if (status != HTTPClient.success) {
             Logger.getInstance().addToLog(`Error: Request for url ${url} failed with stats ${status}`, LogLevel.ERROR);
             return null;
         }
         return data;
     }
-}    
+}

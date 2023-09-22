@@ -2,7 +2,6 @@
   "main": "dist/main.js",
   "type": "module",
   "dependencies": {
-    "axios": "^1.4.0",
     "chalk": "^5.3.0",
     "ci": "^2.3.0",
     "cli-progress": "^3.12.0",
@@ -30,6 +29,7 @@
     "fsevents": "2.3.2"
   },
   "scripts": {
+    "build": "tsc",
     "test:coverage": "node --experimental-test-coverage --loader tsx --test src/**/*.test.ts  src/**/**/*.test.ts",
     "test": "node --loader tsx --test  src/**/**/*.test.ts",
     "start": "node --no-warnings --es-module-specifier-resolution=node --loader ts-node/esm/transpile-only src/Main.ts",
