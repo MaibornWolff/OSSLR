@@ -27,9 +27,17 @@ export class PDFFileWriter {
         doc.autoTable({
                 theme: 'grid',
                 head: head,
-                body: body
+                body: body,
+                columnStyles: {
+                    0: { cellWidth: 15 }, // Index
+                    1: { cellWidth: 20 }, // Group
+                    3: { cellWidth: 15 }, // Version
+                    4: { cellWidth: 25 }, // License
+                    5: { cellWidth: 40 }, // Copyright
+                },
             }
         );
+
         const pageHeight = doc.internal.pageSize.height;
         const pageWidth = doc.internal.pageSize.getWidth();
         licenseTexts.forEach((licenseText, licenseId) => {
