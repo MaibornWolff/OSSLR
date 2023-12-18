@@ -2,6 +2,9 @@
 
 OSSLR is a script that adds copyright notices to your existing CycloneDX Software Bill-of-Materials (SBOM). It generates a license report in PDF format based on that SBOM.
 
+![unit test](https://github.com/MaibornWolff/OSSLR/actions/workflows/unit-test.yml/badge.svg)
+![integration test](https://github.com/MaibornWolff/OSSLR/actions/workflows/integration-test.yml/badge.svg)
+
 ## Features
 
 - OSSLR adds copyright notices to your SBOM
