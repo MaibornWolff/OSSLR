@@ -210,6 +210,7 @@ export class LicenseChecker {
             // this.packageInfos.filter()
             this.packageInfos.forEach((packageInfo) => {
                 if (packageInfo.copyright === '') {
+                    console.log(packageInfo)
                     printWarning('Warning: Failed to collect the necessary information for ' + packageInfo.toString());
                     Logger.getInstance().addToLog('Failed to collect the necessary information for ' + packageInfo.toString(), LogLevel.WARNING);
                     this.noCopyrightList.push(packageInfo);

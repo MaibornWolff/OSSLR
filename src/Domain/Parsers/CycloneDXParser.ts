@@ -43,7 +43,7 @@ export class CycloneDXParser {
             return [];
         for (const pkg of data.components) {
             const licenses = [];
-            const licensesPerPkg = this.extractLicensesFromPkg(pkg.licenses);
+            const licensesPerPkg = this.extractLicensesFromPkg(pkg.licenses as unknown[]);
             let copyright = '';
             for (const j in licensesPerPkg) {
                 licenses.push(licensesPerPkg[j]);
@@ -76,7 +76,7 @@ export class CycloneDXParser {
      * @param bomLicenses Array of licenses in bom format from a particular package.
      * @returns List of License objects containing the extracted information.
      */
-    extractLicensesFromPkg(bomLicenses: any): License[] {
+    extractLicensesFromPkg(bomLicenses: unknown[]): License[] {
         const licenses = [];
         for (const j in bomLicenses) {
             let licenseId: string;

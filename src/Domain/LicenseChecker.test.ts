@@ -1,17 +1,16 @@
 /* eslint-disable no-undef */
-import 'mocha';
-import {assert} from 'chai';
-import {stub, restore} from 'sinon';
+import { afterEach, beforeEach, describe, it } from 'node:test';
+import assert from 'node:assert';
+import {restore} from 'sinon';
 import {LicenseChecker} from './LicenseChecker';
 import {PackageInfo} from './Model/PackageInfo';
-import {CopyrightParser} from './Parsers/CopyrightParser';
 
 describe('parseCopyright', function () {
     let licenseChecker: LicenseChecker;
-    this.beforeEach(function () {
+    beforeEach(function () {
         licenseChecker = new LicenseChecker();
     });
-    this.afterEach(() => {
+    afterEach(() => {
         restore();
     });
     it('should insert the extracted copyright in the PackageInfo object', function () {
@@ -40,9 +39,9 @@ describe('hasLicense', function () {
         packageInfo.copyright = '';
     });
     it('should return whether license information are available for the given package', function () {
-        assert.isTrue(licenseChecker.hasLicense(packageInfo));
+        assert.ok(licenseChecker.hasLicense(packageInfo));
         packageInfo.licenses = [];
-        assert.isFalse(licenseChecker.hasLicense(packageInfo));
+        assert.ok(!licenseChecker.hasLicense(packageInfo));
     });
 });
 
@@ -63,14 +62,14 @@ describe('hasExternalReferences', function () {
     });
 
     it('should return whether external references are available for the given package', function () {
-        assert.isTrue(licenseChecker.hasExternalRefs(packageInfo));
+        assert.ok(licenseChecker.hasExternalRefs(packageInfo));
         packageInfo['externalReferences'] = [];
-        assert.isFalse(licenseChecker.hasExternalRefs(packageInfo));
+        assert.ok(!licenseChecker.hasExternalRefs(packageInfo));
     });
 });
 
 
-describe('combine', function () {
+describe('LicenseChecker', function () {
     let licenseChecker: LicenseChecker;
     const pkg1 = new PackageInfo('group', 'name', '1.2.3', [], [], '', '');
 

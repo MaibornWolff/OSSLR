@@ -5,7 +5,12 @@
         "moduleResolution": "node",
         "outDir": "build",
         "resolveJsonModule": true,
-        "strict": true
+        "strict": true,
+        "allowSyntheticDefaultImports": true,
+        "lib": [
+            "ESNext",
+            "dom"
+        ]
     },
     "include": ["src/**/*"],
     "exclude": ["node_modules"]

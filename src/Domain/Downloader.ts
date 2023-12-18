@@ -100,7 +100,8 @@ export class Downloader {
         url: string
     ): Promise<[string, string]> {
         try {
-            return [await this.httpClient.getWebsite(url), ''];
+            const website = await this.httpClient.getWebsite(url).toString();
+            return [website, ''];
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             let errorMessage = `AxiosError: ${err.code}.`;
