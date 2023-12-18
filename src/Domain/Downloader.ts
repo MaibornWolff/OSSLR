@@ -133,7 +133,7 @@ export class Downloader {
             Logger.getInstance().addToLog(`Invalid download URL for ${file.name} file, repository URL: ${url}`, LogLevel.WARNING);
             return '';
         }
-        return await this.httpClient.getWebsite(download_url).toString();
+        return await this.httpClient.getWebsite(download_url);
     }
 
     async getLicenses() {
